@@ -187,7 +187,7 @@ const Login = () => {
                 alt="EuroScent Logo"
                 className="h-24 w-24 rounded-full object-cover shadow-lg ring-1 ring-border"
               />
-              <span className="font-display text-2xl font-extrabold tracking-tighter text-foreground mt-4">EuroScent</span>
+              <span className="font-serif text-3xl font-bold tracking-tight text-foreground mt-4">EuroScent</span>
               <span className="text-[10px] font-medium tracking-[0.2em] uppercase text-muted-foreground mt-1">
                 Mitarbeiter-Portal
               </span>
