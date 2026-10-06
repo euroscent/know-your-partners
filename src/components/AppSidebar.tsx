@@ -1,4 +1,4 @@
-import { Home, Users, CheckSquare, Video, Phone, LogOut, Settings, FileText, AlertTriangle, MessageCircle, Euro, ChevronDown, ChevronRight, Mail, Building2, Send, QrCode, Trophy, Shield, BookOpen, Smartphone, Database, UserPlus } from "lucide-react";
+import { Home, Users, CheckSquare, Video, LogOut, Settings, FileText, AlertTriangle, MessageCircle, Euro, ChevronDown, ChevronRight, Mail, Building2, Send, QrCode, Trophy, Shield, BookOpen, Smartphone, Database, UserPlus } from "lucide-react";
 import { useStandaloneApp } from "@/hooks/useStandaloneApp";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {

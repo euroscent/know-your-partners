@@ -132,9 +132,6 @@ const App = () => (
           <Route path="/dashboard/admin/contracts" element={<Dashboard />}>
             <Route index element={<Contracts />} />
           </Route>
-          <Route path="/dashboard/admin/phone-numbers" element={<Dashboard />}>
-            <Route index element={<PhoneNumbers />} />
-          </Route>
           <Route path="/dashboard/admin/chat-inbox" element={<Dashboard />}>
             <Route index element={<ChatInbox />} />
           </Route>
