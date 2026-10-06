@@ -1,4 +1,4 @@
-import { Home, Users, CheckSquare, Video, Phone, LogOut, Settings, FileText, AlertTriangle, MessageCircle, Euro, ChevronDown, ChevronRight, Mail, Building2, Send, QrCode, Trophy, Shield, BookOpen, Smartphone, Database } from "lucide-react";
+import { Home, Users, CheckSquare, Video, Phone, LogOut, Settings, FileText, AlertTriangle, MessageCircle, Euro, ChevronDown, ChevronRight, Mail, Building2, Send, QrCode, Trophy, Shield, BookOpen, Smartphone, Database, UserPlus } from "lucide-react";
 import { useStandaloneApp } from "@/hooks/useStandaloneApp";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { NotificationBell } from "@/components/admin/NotificationBell";
+import { useI18n, LanguageSwitch } from "@/lib/i18n";
 
 // Employee menu items (for non-admin users) - ohne Meine Aufträge
 // Note: Freelancer get different payroll item, handled dynamically
@@ -41,6 +42,7 @@ const adminOverviewItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "Postfach", url: "/dashboard/admin/chat-inbox", icon: MessageCircle },
   { title: "Mitarbeiter", url: "/dashboard/admin/employees", icon: Users },
+  { title: "Konto anlegen", url: "/dashboard/admin/create-user", icon: UserPlus },
 ];
 
 const requestItems = [
@@ -52,7 +54,6 @@ const managementItems = [
   { title: "Telefonnummern", url: "/dashboard/admin/phone-numbers", icon: Phone },
   { title: "Taskvorlagen + erstellen", url: "/dashboard/admin/task-management", icon: CheckSquare },
   { title: "Taskmails", url: "/dashboard/admin/completions", icon: Trophy },
-  { title: "Email Sender Pro", url: "/dashboard/admin/email-sender", icon: Send },
   { title: "Coupon-Verwaltung", url: "/dashboard/admin/coupons", icon: QrCode },
   { title: "Lohnabrechnungen", url: "/dashboard/admin/payroll", icon: Euro },
   { title: "Auszahlungs-Freigaben", url: "/dashboard/admin/payouts", icon: QrCode },
@@ -68,6 +69,7 @@ const settingsItems = [
 
 export function AppSidebar() {
   const { open } = useSidebar();
+  const { t } = useI18n();
   const isStandalone = useStandaloneApp();
   const location = useLocation();
   const navigate = useNavigate();
@@ -380,7 +382,7 @@ export function AppSidebar() {
         {/* Navigation */}
         <SidebarGroup>
           <SidebarGroupLabel className="text-sidebar-foreground/70 font-semibold text-xs uppercase tracking-wider">
-            {open && "NAVIGATION"}
+            {open && t("NAVIGATION")}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -391,7 +393,7 @@ export function AppSidebar() {
                       <item.icon className="h-4 w-4" />
                       {open && (
                         <div className="flex items-center justify-between flex-1">
-                          <span>{item.title}</span>
+                          <span>{t(item.title)}</span>
                           {item.title === "Postfach" && unreadMessageCount > 0 && (
                             <span className="bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
                               {unreadMessageCount}
@@ -419,7 +421,7 @@ export function AppSidebar() {
                         className={getNavCls("/dashboard/tasks") + " flex-1"}
                       >
                         <CheckSquare className="h-4 w-4" />
-                        <span>Meine Aufträge</span>
+                        <span>{t("Meine Aufträge")}</span>
                       </SidebarMenuButton>
                       <CollapsibleTrigger asChild>
                         <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
@@ -437,7 +439,7 @@ export function AppSidebar() {
                           <SidebarMenuSubItem>
                             <SidebarMenuSubButton>
                               <span className="text-muted-foreground text-sm">
-                                Keine offenen Aufträge
+                                {t("Keine offenen Aufträge")}
                               </span>
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
@@ -467,7 +469,7 @@ export function AppSidebar() {
             {/* Anfragen */}
             <SidebarGroup>
               <SidebarGroupLabel className="text-sidebar-foreground/70 font-semibold text-xs uppercase tracking-wider">
-                Anfragen
+                {t("Anfragen")}
               </SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
@@ -478,7 +480,7 @@ export function AppSidebar() {
                           <item.icon className="h-4 w-4" />
                           {open && (
                             <div className="flex items-center justify-between flex-1">
-                              <span>{item.title}</span>
+                              <span>{t(item.title)}</span>
                               {item.title === "Aufgaben-Prüfung" && pendingTasksCount > 0 && (
                                 <span className="bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
                                   {pendingTasksCount}
@@ -502,7 +504,7 @@ export function AppSidebar() {
             {/* Verwaltung */}
             <SidebarGroup>
               <SidebarGroupLabel className="text-sidebar-foreground/70 font-semibold text-xs uppercase tracking-wider">
-                Verwaltung
+                {t("Verwaltung")}
               </SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
@@ -511,7 +513,7 @@ export function AppSidebar() {
                       <SidebarMenuButton asChild>
                         <NavLink to={item.url} className={getNavCls(item.url)}>
                           <item.icon className="h-4 w-4" />
-                          {open && <span>{item.title}</span>}
+                          {open && <span>{t(item.title)}</span>}
                         </NavLink>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -529,7 +531,7 @@ export function AppSidebar() {
           {showAdminSidebar && (
             <>
               <SidebarGroupLabel className="text-sidebar-foreground/70 font-semibold text-xs uppercase tracking-wider">
-                Einstellungen
+                {t("Einstellungen")}
               </SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
@@ -538,7 +540,7 @@ export function AppSidebar() {
                       <SidebarMenuButton asChild>
                         <NavLink to={item.url} className={getNavCls(item.url)}>
                           <item.icon className="h-4 w-4" />
-                          {open && <span>{item.title}</span>}
+                          {open && <span>{t(item.title)}</span>}
                         </NavLink>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -561,10 +563,16 @@ export function AppSidebar() {
                     {userEmail}
                   </span>
                   <span className="text-xs text-sidebar-foreground/60">
-                    {isAdmin ? "Administrator" : "Mitarbeiter"}
+                    {isAdmin ? t("Administrator") : t("Mitarbeiter")}
                   </span>
                 </div>
                 <NotificationBell />
+              </div>
+            )}
+            {open && (
+              <div className="flex items-center justify-between px-2 py-2">
+                <span className="text-xs text-sidebar-foreground/60">{t("Sprache")}</span>
+                <LanguageSwitch />
               </div>
             )}
             <SidebarMenu>
@@ -573,7 +581,7 @@ export function AppSidebar() {
                   <SidebarMenuButton asChild>
                     <NavLink to="/install" className={getNavCls("/install")}>
                       <Smartphone className="h-4 w-4" />
-                      {open && <span>EPP App installieren</span>}
+                      {open && <span>EuroScent {t("App installieren")}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -581,7 +589,7 @@ export function AppSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton onClick={handleLogout}>
                   <LogOut className="h-4 w-4" />
-                  {open && <span>Abmelden</span>}
+                  {open && <span>{t("Abmelden")}</span>}
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
