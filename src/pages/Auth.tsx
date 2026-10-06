@@ -125,7 +125,7 @@ const Auth = () => {
       <div className="flex-1 flex items-center justify-center p-8 bg-background">
         <div className="w-full max-w-md space-y-8">
           <div>
-            <img src={euroscentLogoAsset.url} alt="EuroScent Logo" className="h-16 w-16 rounded-full object-cover shadow-lg ring-1 ring-border mb-6" />
+            <img src={euroscentLogoAsset} alt="EuroScent Logo" className="h-16 w-16 rounded-full object-cover shadow-lg ring-1 ring-border mb-6" />
             <h1 className="text-4xl font-bold text-foreground mb-2">
               {isSignUp ? "Firmen-Registrierung" : "EuroScent"}
             </h1>

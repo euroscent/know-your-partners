@@ -88,7 +88,7 @@ export default function Install() {
         <header className="text-center mb-8">
           <div className="relative mx-auto mb-8 h-32 w-32 flex items-center justify-center">
             <img
-              src={euroscentLogoAsset.url}
+              src={euroscentLogoAsset}
               alt="EuroScent Logo"
               className="h-full w-full rounded-full object-cover shadow-xl"
             />

@@ -44,7 +44,7 @@ export const AppSplashScreen = () => {
     >
       <div className="relative h-32 w-32 flex items-center justify-center mb-8">
         <img
-          src={euroscentLogoAsset.url}
+          src={euroscentLogoAsset}
           alt="EuroScent Logo"
           className="h-full w-full rounded-full object-cover animate-pulse"
         />

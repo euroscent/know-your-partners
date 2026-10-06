@@ -183,7 +183,7 @@ const Login = () => {
           <div className="mb-8 text-center">
             <div className="flex flex-col items-center">
               <img
-                src={euroscentLogoAsset.url}
+                src={euroscentLogoAsset}
                 alt="EuroScent Logo"
                 className="h-24 w-24 rounded-full object-cover shadow-lg ring-1 ring-border"
               />

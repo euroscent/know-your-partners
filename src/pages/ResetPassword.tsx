@@ -86,7 +86,7 @@ const ResetPassword = () => {
     <main className="min-h-screen flex items-center justify-center p-6 bg-background">
       <section className="w-full max-w-md border bg-card p-8 shadow-lg rounded-lg">
         <div className="mb-8 flex flex-col items-center text-center">
-          <img src={euroscentLogoAsset.url} alt="EuroScent Logo" className="h-12 w-12 object-contain" />
+          <img src={euroscentLogoAsset} alt="EuroScent Logo" className="h-12 w-12 object-contain" />
           <h1 className="mt-5 text-3xl font-bold text-foreground">Neues Passwort</h1>
           <p className="mt-2 text-sm text-muted-foreground">Legen Sie ein neues Passwort für Ihr Mitarbeiterkonto fest.</p>
         </div>
