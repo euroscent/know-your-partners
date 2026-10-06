@@ -588,10 +588,6 @@ const AdminApplications = () => {
             <Users className="h-4 w-4" />
             Bewerbungen ({stats.total})
           </TabsTrigger>
-          <TabsTrigger value="contacted" className="gap-2">
-            <Send className="h-4 w-4" />
-            Email Sender Pro ({stats.contacted})
-          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="applications" className="space-y-4">
@@ -818,110 +814,6 @@ const AdminApplications = () => {
         </Card>
         </TabsContent>
 
-        <TabsContent value="contacted" className="space-y-4">
-          <h2 className="text-lg font-medium">Per Email Sender Pro kontaktiert</h2>
-
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Nach Name, E-Mail oder Telefon suchen..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9"
-            />
-          </div>
-
-          <Card>
-            <CardContent className="p-0">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-[300px]">NAME</TableHead>
-                    <TableHead>KONTAKT</TableHead>
-                    <TableHead>KONTAKTIERT AM</TableHead>
-                    <TableHead>BETREFF</TableHead>
-                    <TableHead className="text-right">AKTIONEN</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredApplications.map((app) => (
-                    <TableRow key={app.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <Avatar className="h-10 w-10">
-                            <AvatarFallback className="bg-primary/10 text-primary font-medium">
-                              {getInitials(app.first_name, app.last_name)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <div className="font-medium">
-                              {app.first_name} {app.last_name}
-                            </div>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="space-y-1">
-                          <div className="text-sm flex items-center gap-1">
-                            <span>✉</span>
-                            <span>{app.email}</span>
-                          </div>
-                          <div className="text-sm text-muted-foreground flex items-center gap-1">
-                            <span>📞</span>
-                            <span>{app.phone}</span>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm">
-                          {format(new Date(app.created_at), "dd.MM.yyyy, HH:mm", {
-                            locale: de,
-                          })}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="text-sm text-muted-foreground max-w-[200px] truncate">
-                          {app.message || "–"}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="text-green-600 hover:text-green-700 hover:bg-green-50"
-                            onClick={() => {
-                              updateStatus(app.id, "pending");
-                            }}
-                          >
-                            <Check className="h-4 w-4 mr-1" />
-                            Als Bewerbung übernehmen
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="text-destructive hover:text-destructive"
-                            onClick={() => deleteApplication(app.id)}
-                          >
-                            <Trash2 className="h-4 w-4 mr-1" />
-                            Löschen
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                  {filteredApplications.length === 0 && (
-                    <TableRow>
-                      <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                        Noch keine Kontakte über Email Sender Pro
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
       </Tabs>
 
       <Dialog open={acceptDialogOpen} onOpenChange={setAcceptDialogOpen}>

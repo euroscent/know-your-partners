@@ -478,7 +478,7 @@ const slides: Slide[] = [
     features: [
       "Chat-Postfach mit Echtzeit-Nachrichten",
       "E-Mail-Zentrale mit temporären E-Mail-Adressen",
-      "Email Sender Pro für Massen-E-Mails",
+      
       "Telegram-Benachrichtigungen",
       "SMS-Weiterleitung für Verifizierungscodes"
     ]

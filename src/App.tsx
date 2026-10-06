@@ -1,3 +1,4 @@
+import { LanguageProvider } from "@/lib/i18n";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
@@ -63,7 +64,7 @@ import AdminPayouts from "./pages/admin/Payouts";
 import AdminPayroll from "./pages/admin/Payroll";
 import SubmissionsList from "./pages/admin/SubmissionsList";
 import SubmissionReview from "./pages/admin/SubmissionReview";
-import EmailSender from "./pages/admin/EmailSender";
+import CreateEmployeeAccount from "./pages/admin/CreateEmployeeAccount";
 import CouponManagement from "./pages/admin/CouponManagement";
 import TempMailInbox from "./pages/admin/TempMailInbox";
 import DataExport from "./pages/admin/DataExport";
@@ -79,6 +80,7 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
+    <LanguageProvider>
     <TooltipProvider>
       <BrowserRouter>
         <BouncingLogos />
@@ -149,8 +151,8 @@ const App = () => (
           <Route path="/dashboard/admin/submissions" element={<Dashboard />}>
             <Route index element={<SubmissionsList />} />
           </Route>
-          <Route path="/dashboard/admin/email-sender" element={<Dashboard />}>
-            <Route index element={<EmailSender />} />
+          <Route path="/dashboard/admin/create-user" element={<Dashboard />}>
+            <Route index element={<CreateEmployeeAccount />} />
           </Route>
           <Route path="/dashboard/admin/coupons" element={<Dashboard />}>
             <Route index element={<CouponManagement />} />
@@ -183,6 +185,7 @@ const App = () => (
         </MobileAppRouteGuard>
       </BrowserRouter>
     </TooltipProvider>
+    </LanguageProvider>
   </QueryClientProvider>
 );
 
