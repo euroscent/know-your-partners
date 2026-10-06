@@ -65,7 +65,6 @@ import SubmissionsList from "./pages/admin/SubmissionsList";
 import SubmissionReview from "./pages/admin/SubmissionReview";
 import CreateEmployeeAccount from "./pages/admin/CreateEmployeeAccount";
 import CouponManagement from "./pages/admin/CouponManagement";
-import DataExport from "./pages/admin/DataExport";
 
 import Presentation from "./pages/Presentation";
 import Install from "./pages/Install";
@@ -165,7 +164,6 @@ const App = () => (
           <Route path="/dashboard/admin/contract-editor/:id?" element={<ContractEditor />} />
           <Route path="/dashboard/settings" element={<Settings />} />
           <Route path="/dashboard/employee-settings" element={<EmployeeSettings />} />
-          <Route path="/dashboard/admin/data-export" element={<DataExport />} />
           <Route path="/dashboard/admin/security" element={<Dashboard />}>
             <Route index element={<SecurityMonitoring />} />
           </Route>

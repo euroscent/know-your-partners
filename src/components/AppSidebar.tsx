@@ -57,7 +57,6 @@ const managementItems = [
   { title: "Auszahlungs-Freigaben", url: "/dashboard/admin/payouts", icon: QrCode },
   
   { title: "Security Monitor", url: "/dashboard/admin/security", icon: Shield },
-  { title: "Daten Export / Import", url: "/dashboard/admin/data-export", icon: Database },
 
 ];
 
