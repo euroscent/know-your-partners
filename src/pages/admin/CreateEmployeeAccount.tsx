@@ -31,7 +31,7 @@ export default function CreateEmployeeAccount() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password.length < 8) {
-      toast({ title: t("Fehler"), description: t("Mindestens 8 Zeichen"), variant: "destructive" });
+      toast.error(t("Mindestens 8 Zeichen"));
       return;
     }
     setLoading(true);
@@ -45,11 +45,11 @@ export default function CreateEmployeeAccount() {
     });
     setLoading(false);
     if (error) {
-      toast({ title: t("Fehler"), description: error.message, variant: "destructive" });
+      toast.error(error.message);
       return;
     }
     setCreated({ username: username.trim().toLowerCase(), password });
-    toast({ title: t("Konto erstellt") });
+    toast.success(t("Konto erstellt"));
     setUsername(""); setPassword(""); setFirstName(""); setLastName(""); setEmail(""); setRole("employee");
   };
 
