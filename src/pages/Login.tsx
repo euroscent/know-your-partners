@@ -259,12 +259,6 @@ const Login = () => {
                 </a>
               </p>
               <p className="text-sm text-muted-foreground">
-                <a
-                  href="/start"
-                  className="text-primary hover:underline"
-                >
-                  Zurück zur Startseite
-                </a>
               </p>
             </div>
           </form>
