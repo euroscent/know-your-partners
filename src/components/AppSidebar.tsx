@@ -1,4 +1,4 @@
-import { Home, Users, CheckSquare, Video, Phone, LogOut, Settings, FileText, AlertTriangle, MessageCircle, Euro, ChevronDown, ChevronRight, Mail, Building2, Send, QrCode, Trophy, Shield, BookOpen, Smartphone, Database, UserPlus } from "lucide-react";
+import { Home, Users, CheckSquare, Video, LogOut, Settings, FileText, AlertTriangle, MessageCircle, Euro, ChevronDown, ChevronRight, Mail, Building2, Send, QrCode, Trophy, Shield, BookOpen, Smartphone, Database, UserPlus } from "lucide-react";
 import { useStandaloneApp } from "@/hooks/useStandaloneApp";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -51,7 +51,6 @@ const requestItems = [
 
 const managementItems = [
   { title: "E-Mail-Zentrale", url: "/dashboard/admin/temp-mail", icon: Mail },
-  { title: "Telefonnummern", url: "/dashboard/admin/phone-numbers", icon: Phone },
   { title: "Taskvorlagen + erstellen", url: "/dashboard/admin/task-management", icon: CheckSquare },
   { title: "Taskmails", url: "/dashboard/admin/completions", icon: Trophy },
   { title: "Coupon-Verwaltung", url: "/dashboard/admin/coupons", icon: QrCode },

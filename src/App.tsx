@@ -49,7 +49,6 @@ import VideoChat from "./pages/admin/VideoChat";
 import RequestCenter from "./pages/admin/RequestCenter";
 import Completions from "./pages/admin/Completions";
 import Contracts from "./pages/admin/Contracts";
-import PhoneNumbers from "./pages/admin/PhoneNumbers";
 
 import ContractEditor from "./pages/admin/ContractEditor";
 import ChatInbox from "./pages/admin/ChatInbox";
@@ -132,9 +131,6 @@ const App = () => (
           </Route>
           <Route path="/dashboard/admin/contracts" element={<Dashboard />}>
             <Route index element={<Contracts />} />
-          </Route>
-          <Route path="/dashboard/admin/phone-numbers" element={<Dashboard />}>
-            <Route index element={<PhoneNumbers />} />
           </Route>
           <Route path="/dashboard/admin/chat-inbox" element={<Dashboard />}>
             <Route index element={<ChatInbox />} />
