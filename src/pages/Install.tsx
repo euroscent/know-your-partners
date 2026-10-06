@@ -90,7 +90,7 @@ export default function Install() {
             <img
               src={euroscentLogoAsset.url}
               alt="EuroScent Logo"
-              className="h-full w-full object-contain animate-[spin_8s_linear_infinite]"
+              className="h-full w-full rounded-full object-cover shadow-xl"
             />
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">EuroScent App</h1>

@@ -46,7 +46,7 @@ export const AppSplashScreen = () => {
         <img
           src={euroscentLogoAsset.url}
           alt="EuroScent Logo"
-          className="h-full w-full object-contain animate-[spin_10s_linear_infinite]"
+          className="h-full w-full rounded-full object-cover animate-pulse"
         />
         {/* Glow effect to hide any remaining background edges during rotation */}
         <div className="absolute inset-0 bg-black/20 blur-xl -z-10 rounded-full" />
