@@ -87,17 +87,11 @@ const App = () => (
         <AdminPgpGate>
         <AnimatedRoutes>
           <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/start" element={<Start />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/install" element={<Install />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/login" element={<Login />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/register/minijob" element={<RegisterMinijob />} />
-          <Route path="/register/teilzeit" element={<RegisterTeilzeit />} />
-          <Route path="/register/vollzeit" element={<RegisterVollzeit />} />
-          <Route path="/register/freelancer" element={<RegisterFreelancer />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/documents" element={<Dashboard />}>
             <Route index element={<Documents />} />
@@ -177,29 +171,12 @@ const App = () => (
           <Route path="/dashboard/admin/contract-editor/:id?" element={<ContractEditor />} />
           <Route path="/dashboard/settings" element={<Settings />} />
           <Route path="/dashboard/employee-settings" element={<EmployeeSettings />} />
-          <Route path="/application" element={<Application />} />
-          <Route path="/application/success" element={<ApplicationSuccess />} />
-          <Route path="/services" element={<ServicesPage />} />
-          <Route path="/industries" element={<IndustriesPage />} />
-          <Route path="/partners" element={<Partners />} />
-          <Route path="/careers" element={<Careers />} />
-          <Route path="/careers/freelancer-info" element={<FreelancerInfo />} />
-          <Route path="/careers/:jobId" element={<JobDetail />} />
-          <Route path="/icon-picker" element={<IconPicker />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/impressum" element={<Impressum />} />
-          <Route path="/industries/payment-providers" element={<PaymentProviders />} />
-          <Route path="/industries/banking" element={<Banking />} />
-          <Route path="/industries/crypto" element={<Crypto />} />
-          <Route path="/industries/marketplaces" element={<Marketplaces />} />
           <Route path="/dashboard/admin/data-export" element={<DataExport />} />
           <Route path="/dashboard/admin/security" element={<Dashboard />}>
             <Route index element={<SecurityMonitoring />} />
           </Route>
-          <Route path="/presentation" element={<Presentation />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
         </AnimatedRoutes>
         </AdminPgpGate>
