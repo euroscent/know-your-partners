@@ -25,6 +25,7 @@ const isPreviewAuthContext = () => {
 };
 
 const Login = () => {
+  const { t, lang } = useI18n();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
