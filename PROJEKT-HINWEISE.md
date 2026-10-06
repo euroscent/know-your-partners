@@ -56,3 +56,9 @@ Siehe `selfhost/ANLEITUNG.md`. Kurzfassung:
 2. Keine Lovable-Cloud-Abhängigkeiten einbauen (kein `@/integrations/supabase/client`, keine Cloud-only Features).
 3. Datenbank-Änderungen immer als SQL in `selfhost/schema.sql` bzw. als neue Migration dokumentieren, damit sie im eigenen Supabase nachgezogen werden können.
 4. Bei Fragen zu Zugangsdaten: nur anon/publishable key verwenden.
+
+## Sprache
+- UI-Texte über `useI18n().t("Deutscher Text")` aus `src/lib/i18n.tsx`; Deutsch ist Standard, Englisch-Übersetzung im `en`-Wörterbuch ergänzen.
+
+## Mitarbeiterkonten
+- Admins legen Konten über die Datenbankfunktion `admin_create_employee` an (`selfhost/mitarbeiter-anlegen.sql`), nicht über den Client-Signup.
