@@ -22,12 +22,12 @@ export default defineConfig(({ mode }) => ({
       devOptions: {
         enabled: false,
       },
-      includeAssets: ["epp-app-icon-v3-192.png", "epp-app-icon-v3-512.png", "epp-app-icon-v3-maskable-512.png", "epp-apple-touch-icon-v3.png"],
+      includeAssets: ["app-icon-192.png", "app-icon-512.png", "app-icon-maskable-512.png", "apple-touch-icon.png"],
       manifest: {
-        name: "epp GmbH",
-        short_name: "EPP",
-        id: "/epp-app-v3",
-        description: "Aufträge, Demo-Daten, E-Mails und Honorarabrechnungen für EPP-Mitarbeiter.",
+        name: "EuroScent",
+        short_name: "EuroScent",
+        id: "/euroscent-app",
+        description: "Aufträge, Demo-Daten, E-Mails und Honorarabrechnungen für EuroScent-Mitarbeiter.",
         theme_color: "#000000",
         background_color: "#000000",
         display: "standalone",
@@ -37,9 +37,9 @@ export default defineConfig(({ mode }) => ({
         lang: "de",
         categories: ["business", "productivity"],
         icons: [
-          { src: "/epp-app-icon-v3-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
-          { src: "/epp-app-icon-v3-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
-          { src: "/epp-app-icon-v3-maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
+          { src: "/app-icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+          { src: "/app-icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+          { src: "/app-icon-maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
         ],
       },
       injectManifest: {
