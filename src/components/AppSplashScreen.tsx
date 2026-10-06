@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { isStandalone } from "@/lib/pwa";
-import eppLogoAsset from "@/assets/epp-logo.png.asset.json";
+import euroscentLogoAsset from "@/assets/euroscent-logo.png";
 import { cn } from "@/lib/utils";
 
 export const AppSplashScreen = () => {
@@ -44,15 +44,15 @@ export const AppSplashScreen = () => {
     >
       <div className="relative h-32 w-32 flex items-center justify-center mb-8">
         <img
-          src={eppLogoAsset.url}
-          alt="EPP Logo"
-          className="h-full w-full object-contain animate-[spin_10s_linear_infinite]"
+          src={euroscentLogoAsset}
+          alt="EuroScent Logo"
+          className="h-full w-full rounded-full object-cover animate-pulse"
         />
         {/* Glow effect to hide any remaining background edges during rotation */}
         <div className="absolute inset-0 bg-black/20 blur-xl -z-10 rounded-full" />
       </div>
       <div className="absolute bottom-12 text-center">
-        <p className="text-white text-lg font-medium tracking-wider">epp GmbH</p>
+        <p className="text-white text-lg font-medium tracking-wider">EuroScent</p>
       </div>
     </div>
   );

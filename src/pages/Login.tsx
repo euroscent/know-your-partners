@@ -5,7 +5,7 @@ import { LoadingButton } from "@/components/ui/loading-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/lib/toast-stub";
-import eppLogoAsset from "@/assets/epp-logo.png.asset.json";
+import euroscentLogoAsset from "@/assets/euroscent-logo.png";
 import { Eye, EyeOff } from "lucide-react";
 
 const PUBLISHED_LOGIN_URL = "https://trust-gateway-lab.lovable.app/login";
@@ -181,18 +181,17 @@ const Login = () => {
       <div className="w-full max-w-md">
         <div className="bg-card p-8 rounded-lg shadow-lg border">
           <div className="mb-8 text-center">
-            <div className="flex flex-col items-center mb-6">
-              <img src={eppLogoAsset.url} alt="EPP Logo" className="h-12 w-12 object-contain" />
-              <span className="font-display text-2xl font-extrabold tracking-tighter text-foreground mt-3">EPP</span>
-              <span className="text-[9px] font-medium tracking-[0.15em] uppercase text-muted-foreground mt-1">
-                Engineering · Partnership · Possibilities
+            <div className="flex flex-col items-center">
+              <img
+                src={euroscentLogoAsset}
+                alt="EuroScent Logo"
+                className="h-24 w-24 rounded-full object-cover shadow-lg ring-1 ring-border"
+              />
+              <span className="font-display text-2xl font-extrabold tracking-tighter text-foreground mt-4">EuroScent</span>
+              <span className="text-[10px] font-medium tracking-[0.2em] uppercase text-muted-foreground mt-1">
+                Mitarbeiter-Portal
               </span>
             </div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">
-              epp GmbH
-            </h1>
-            <p className="text-muted-foreground whitespace-pre-line text-xs">
-            </p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
@@ -260,12 +259,6 @@ const Login = () => {
                 </a>
               </p>
               <p className="text-sm text-muted-foreground">
-                <a
-                  href="/start"
-                  className="text-primary hover:underline"
-                >
-                  Zurück zur Startseite
-                </a>
               </p>
             </div>
           </form>

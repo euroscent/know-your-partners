@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import eppLogoAsset from "@/assets/epp-logo.png.asset.json";
+import euroscentLogoAsset from "@/assets/euroscent-logo.png";
 
 const EppMark = () => (
   <a href="/start" className="flex items-center gap-3 group">
     <img
-      src={eppLogoAsset.url}
-      alt="EPP Logo"
+      src={euroscentLogoAsset}
+      alt="EuroScent Logo"
       className="w-10 h-10 object-contain transition-transform duration-500 group-hover:rotate-45"
     />
     <div className="flex flex-col leading-none">
