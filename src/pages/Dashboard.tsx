@@ -582,7 +582,7 @@ const Dashboard = () => {
       <SidebarProvider defaultOpen={true}>
         <div className="min-h-screen flex w-full">
           <AppSidebar />
-          <main className="flex-1">
+          <main className="flex-1 euroscent-app-bg">
             <PageLoader />
           </main>
         </div>
@@ -629,7 +629,7 @@ const Dashboard = () => {
       )}
       <div className="min-h-screen flex w-full">
         <AppSidebar />
-        <main className="flex-1 pb-16 md:pb-0">
+        <main className="flex-1 pb-16 md:pb-0 euroscent-app-bg">
           <header className="h-14 border-b flex items-center px-4 bg-background sticky top-0 z-10">
             <SidebarTrigger />
           </header>
