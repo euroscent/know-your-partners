@@ -1,4 +1,4 @@
-import { Home, Users, CheckSquare, Video, LogOut, Settings, FileText, AlertTriangle, MessageCircle, Euro, ChevronDown, ChevronRight, Building2, Send, QrCode, Trophy, Shield, BookOpen, Smartphone, Database, UserPlus } from "lucide-react";
+import { Home, Users, CheckSquare, Video, LogOut, Settings, FileText, AlertTriangle, MessageCircle, Euro, ChevronDown, ChevronRight, Building2, Send, QrCode, Trophy, Shield, BookOpen, Smartphone, UserPlus } from "lucide-react";
 import { useStandaloneApp } from "@/hooks/useStandaloneApp";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -57,7 +57,6 @@ const managementItems = [
   { title: "Auszahlungs-Freigaben", url: "/dashboard/admin/payouts", icon: QrCode },
   
   { title: "Security Monitor", url: "/dashboard/admin/security", icon: Shield },
-  { title: "Daten Export / Import", url: "/dashboard/admin/data-export", icon: Database },
 
 ];
 
