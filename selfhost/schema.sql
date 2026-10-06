@@ -5269,6 +5269,7 @@ INSERT INTO storage.buckets (id, name, public) VALUES ('avatars', 'avatars', tru
 INSERT INTO storage.buckets (id, name, public) VALUES ('payout-barcodes', 'payout-barcodes', true) ON CONFLICT (id) DO NOTHING;
 
 -- Speicher-Regeln
+SELECT pg_catalog.set_config('search_path', 'public, extensions', false);
 CREATE POLICY "Admins can delete kyc documents" ON storage.objects AS PERMISSIVE FOR DELETE TO authenticated USING (((bucket_id = 'kyc-uploads'::text) AND has_role(auth.uid(), 'admin'::app_role)));
 CREATE POLICY "Admins can delete all task files" ON storage.objects AS PERMISSIVE FOR DELETE TO authenticated USING (((bucket_id = 'task-files'::text) AND (EXISTS ( SELECT 1
    FROM user_roles
