@@ -93,7 +93,7 @@ export default function Install() {
               className="h-full w-full object-contain animate-[spin_8s_linear_infinite]"
             />
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">EPP App</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">EuroScent App</h1>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
             Engineering · Partnership · Possibilities
           </p>
@@ -108,7 +108,7 @@ export default function Install() {
               <CheckCircle2 className="h-6 w-6 text-green-600" />
               <div>
                 <p className="font-semibold">App ist installiert</p>
-                <p className="text-sm text-muted-foreground">Du nutzt die EPP App bereits.</p>
+                <p className="text-sm text-muted-foreground">Du nutzt die EuroScent App bereits.</p>
 
               </div>
             </CardContent>
@@ -211,7 +211,7 @@ export default function Install() {
         </Card>
       </div>
       <footer className="py-8 text-center">
-        <p className="text-white font-medium tracking-wider">epp GmbH</p>
+        <p className="text-white font-medium tracking-wider">EuroScent</p>
       </footer>
     </div>
   );

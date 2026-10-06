@@ -189,7 +189,7 @@ const Login = () => {
               </span>
             </div>
             <h1 className="text-3xl font-bold text-foreground mb-2">
-              epp GmbH
+              EuroScent
             </h1>
             <p className="text-muted-foreground whitespace-pre-line text-xs">
             </p>

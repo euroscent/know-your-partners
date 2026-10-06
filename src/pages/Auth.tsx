@@ -127,11 +127,11 @@ const Auth = () => {
           <div>
             <img src={euroscentLogoAsset.url} alt="EuroScent Logo" className="h-10 w-10 object-contain mb-8" />
             <h1 className="text-4xl font-bold text-foreground mb-2">
-              {isSignUp ? "Firmen-Registrierung" : "epp GmbH"}
+              {isSignUp ? "Firmen-Registrierung" : "EuroScent"}
             </h1>
             <p className="text-muted-foreground whitespace-pre-line">
               {isSignUp
-                ? "Registrieren Sie Ihr Unternehmen für EPP"
+                ? "Registrieren Sie Ihr Unternehmen für EuroScent"
                 : ""}
             </p>
           </div>

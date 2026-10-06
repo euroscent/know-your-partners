@@ -52,7 +52,7 @@ export const AppSplashScreen = () => {
         <div className="absolute inset-0 bg-black/20 blur-xl -z-10 rounded-full" />
       </div>
       <div className="absolute bottom-12 text-center">
-        <p className="text-white text-lg font-medium tracking-wider">epp GmbH</p>
+        <p className="text-white text-lg font-medium tracking-wider">EuroScent</p>
       </div>
     </div>
   );
