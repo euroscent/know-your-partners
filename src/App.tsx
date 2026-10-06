@@ -73,7 +73,7 @@ import Presentation from "./pages/Presentation";
 import Install from "./pages/Install";
 import SecurityMonitoring from "./pages/admin/SecurityMonitoring";
 import { MobileAppRouteGuard } from "./components/MobileAppRouteGuard";
-import { AdminPgpGate } from "./components/AdminPgpGate";
+import { AdminPinGate } from "./components/AdminPinGate";
 import { AppSplashScreen } from "./components/AppSplashScreen";
 
 const queryClient = new QueryClient();
@@ -86,7 +86,7 @@ const App = () => (
         <BouncingLogos />
         <AppSplashScreen />
         <MobileAppRouteGuard>
-        <AdminPgpGate>
+        <AdminPinGate>
         <AnimatedRoutes>
           <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
@@ -181,7 +181,7 @@ const App = () => (
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
         </AnimatedRoutes>
-        </AdminPgpGate>
+        </AdminPinGate>
         </MobileAppRouteGuard>
       </BrowserRouter>
     </TooltipProvider>

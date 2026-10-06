@@ -8,10 +8,9 @@ import { Label } from "@/components/ui/label";
 import { Lock, ShieldCheck } from "lucide-react";
 import { useToast } from "@/lib/toast-stub";
 
-const PGP_PIN = "88133788";
-const STORAGE_KEY = "pgp_unlocked";
+const STORAGE_KEY = "admin_pin_unlocked";
 
-export function isPgpUnlocked() {
+export function isAdminUnlocked() {
   try {
     return sessionStorage.getItem(STORAGE_KEY) === "1";
   } catch {
@@ -19,7 +18,7 @@ export function isPgpUnlocked() {
   }
 }
 
-export function lockPgp() {
+export function lockAdmin() {
   try {
     sessionStorage.removeItem(STORAGE_KEY);
   } catch {
@@ -27,12 +26,12 @@ export function lockPgp() {
   }
 }
 
-export function AdminPgpGate({ children }: { children: ReactNode }) {
+export function AdminPinGate({ children }: { children: ReactNode }) {
   const location = useLocation();
   const { toast } = useToast();
   const [checked, setChecked] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [unlocked, setUnlocked] = useState(isPgpUnlocked());
+  const [unlocked, setUnlocked] = useState(isAdminUnlocked());
   const [pin, setPin] = useState("");
   const [showPin, setShowPin] = useState(false);
   const [attempts, setAttempts] = useState(0);
@@ -66,7 +65,7 @@ export function AdminPgpGate({ children }: { children: ReactNode }) {
   useEffect(() => {
     const onAuth = supabase.auth.onAuthStateChange((event) => {
       if (event === "SIGNED_OUT") {
-        lockPgp();
+        lockAdmin();
         setUnlocked(false);
       }
     });
@@ -77,9 +76,10 @@ export function AdminPgpGate({ children }: { children: ReactNode }) {
 
   const needsPin = checked && isAdmin && isAdminRoute && !unlocked;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (pin === PGP_PIN) {
+    const { data: ok } = await (supabase as any).rpc("verify_admin_pin", { _pin: pin });
+    if (ok === true) {
       try {
         sessionStorage.setItem(STORAGE_KEY, "1");
       } catch {
@@ -88,15 +88,14 @@ export function AdminPgpGate({ children }: { children: ReactNode }) {
       setUnlocked(true);
       setPin("");
       toast({
-        title: "PGP entsperrt",
-        description: "Sensible Daten sind jetzt für diese Sitzung sichtbar.",
+        title: "Entsperrt",
       });
     } else {
       setAttempts((a) => a + 1);
       setPin("");
       toast({
         title: "Falscher PIN",
-        description: "Der eingegebene PGP-PIN ist ungültig.",
+        description: "Der eingegebene PIN ist ungültig.",
         variant: "destructive",
       });
     }
@@ -115,19 +114,18 @@ export function AdminPgpGate({ children }: { children: ReactNode }) {
             <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
               <ShieldCheck className="h-6 w-6 text-primary" />
             </div>
-            <DialogTitle className="text-center">PGP entsperren</DialogTitle>
+            <DialogTitle className="text-center">Admin-Bereich entsperren</DialogTitle>
             <DialogDescription className="text-center">
-              Sensible Daten im Admin-Bereich sind PGP-verschlüsselt. Bitte geben Sie den PGP-PIN
-              ein, um sie für diese Sitzung zu entsperren.
+              Bitte gib den Admin-PIN ein. Er kann unter Einstellungen → PIN geändert werden.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="pgp-pin">PGP-PIN</Label>
+              <Label htmlFor="admin-pin">PIN</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  id="pgp-pin"
+                  id="admin-pin"
                   type={showPin ? "text" : "password"}
                   inputMode="numeric"
                   autoComplete="off"

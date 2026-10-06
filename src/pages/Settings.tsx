@@ -3,6 +3,7 @@ import { PageLoader } from "@/components/PageLoader";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { AppSidebar } from "@/components/AppSidebar";
+import { AdminPinSettings } from "@/components/AdminPinSettings";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -550,7 +551,7 @@ const Settings = () => {
           <p className="text-muted-foreground">Verwalten Sie die Einstellungen Ihrer Anwendung</p>
 
           <Tabs defaultValue="contracts" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 lg:grid-cols-10">
+            <TabsList className="grid w-full grid-cols-4 lg:grid-cols-11">
               <TabsTrigger value="company" className="gap-2">
                 <Building2 className="h-4 w-4" />
                 <span className="hidden sm:inline">Unternehmen</span>
@@ -591,7 +592,15 @@ const Settings = () => {
                 <MessageSquare className="h-4 w-4" />
                 <span className="hidden sm:inline">Live Chat</span>
               </TabsTrigger>
+              <TabsTrigger value="pin" className="gap-2">
+                <ShieldCheck className="h-4 w-4" />
+                <span className="hidden sm:inline">PIN</span>
+              </TabsTrigger>
             </TabsList>
+
+            <TabsContent value="pin">
+              <AdminPinSettings />
+            </TabsContent>
 
             <TabsContent value="contracts" className="space-y-6">
               {/* Contract Templates Section */}
