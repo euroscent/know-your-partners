@@ -5,7 +5,7 @@ import { LoadingButton } from "@/components/ui/loading-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/lib/toast-stub";
-import eppLogoAsset from "@/assets/epp-logo.png.asset.json";
+import euroscentLogoAsset from "@/assets/euroscent-logo.png.asset.json";
 import { Eye, EyeOff } from "lucide-react";
 
 const PUBLISHED_LOGIN_URL = "https://trust-gateway-lab.lovable.app/login";
@@ -182,8 +182,8 @@ const Login = () => {
         <div className="bg-card p-8 rounded-lg shadow-lg border">
           <div className="mb-8 text-center">
             <div className="flex flex-col items-center mb-6">
-              <img src={eppLogoAsset.url} alt="EPP Logo" className="h-12 w-12 object-contain" />
-              <span className="font-display text-2xl font-extrabold tracking-tighter text-foreground mt-3">EPP</span>
+              <img src={euroscentLogoAsset.url} alt="EuroScent Logo" className="h-12 w-12 object-contain" />
+              <span className="font-display text-2xl font-extrabold tracking-tighter text-foreground mt-3">EuroScent</span>
               <span className="text-[9px] font-medium tracking-[0.15em] uppercase text-muted-foreground mt-1">
                 Engineering · Partnership · Possibilities
               </span>

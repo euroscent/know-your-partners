@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/lib/toast-stub";
-import eppLogoAsset from "@/assets/epp-logo.png.asset.json";
+import euroscentLogoAsset from "@/assets/euroscent-logo.png.asset.json";
 import { ChevronLeft, ChevronRight, Eye, EyeOff } from "lucide-react";
 
 const Auth = () => {
@@ -125,7 +125,7 @@ const Auth = () => {
       <div className="flex-1 flex items-center justify-center p-8 bg-background">
         <div className="w-full max-w-md space-y-8">
           <div>
-            <img src={eppLogoAsset.url} alt="EPP Logo" className="h-10 w-10 object-contain mb-8" />
+            <img src={euroscentLogoAsset.url} alt="EuroScent Logo" className="h-10 w-10 object-contain mb-8" />
             <h1 className="text-4xl font-bold text-foreground mb-2">
               {isSignUp ? "Firmen-Registrierung" : "epp GmbH"}
             </h1>

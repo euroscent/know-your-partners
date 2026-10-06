@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Apple, Smartphone, Share2, Plus, CheckCircle2, Bell } from "lucide-react";
 import { isAndroid, isIOS, isStandalone, subscribeToPush } from "@/lib/pwa";
 import { toast } from "sonner";
-import eppLogoAsset from "@/assets/epp-logo.png.asset.json";
+import euroscentLogoAsset from "@/assets/euroscent-logo.png.asset.json";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -88,8 +88,8 @@ export default function Install() {
         <header className="text-center mb-8">
           <div className="relative mx-auto mb-8 h-32 w-32 flex items-center justify-center">
             <img
-              src={eppLogoAsset.url}
-              alt="EPP Logo"
+              src={euroscentLogoAsset.url}
+              alt="EuroScent Logo"
               className="h-full w-full object-contain animate-[spin_8s_linear_infinite]"
             />
           </div>

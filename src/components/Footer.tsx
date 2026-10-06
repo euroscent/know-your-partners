@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { supabase } from "@/integrations/supabase/client";
-import eppLogoAsset from "@/assets/epp-logo.png.asset.json";
+import euroscentLogoAsset from "@/assets/euroscent-logo.png.asset.json";
 
 const Footer = () => {
   const [companyInfo, setCompanyInfo] = useState({
@@ -38,7 +38,7 @@ const Footer = () => {
         <div className="grid md:grid-cols-4 gap-8 mb-12">
           <div>
             <div className="flex items-center gap-3 mb-4">
-              <img src={eppLogoAsset.url} alt="EPP Logo" className="w-10 h-10 object-contain" />
+              <img src={euroscentLogoAsset.url} alt="EuroScent Logo" className="w-10 h-10 object-contain" />
               <span className="font-display text-xl font-extrabold tracking-tighter text-foreground">EPP</span>
             </div>
             <p className="text-xs font-medium tracking-[0.15em] uppercase text-primary mb-4">
