@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import euroscentLogoAsset from "@/assets/euroscent-logo.png.asset.json";
+import euroscentLogoAsset from "@/assets/euroscent-logo.png";
 
 const EppMark = () => (
   <a href="/start" className="flex items-center gap-3 group">

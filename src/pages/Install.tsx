@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Apple, Smartphone, Share2, Plus, CheckCircle2, Bell } from "lucide-react";
 import { isAndroid, isIOS, isStandalone, subscribeToPush } from "@/lib/pwa";
 import { toast } from "sonner";
-import euroscentLogoAsset from "@/assets/euroscent-logo.png.asset.json";
+import euroscentLogoAsset from "@/assets/euroscent-logo.png";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;

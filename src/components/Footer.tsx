@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { supabase } from "@/integrations/supabase/client";
-import euroscentLogoAsset from "@/assets/euroscent-logo.png.asset.json";
+import euroscentLogoAsset from "@/assets/euroscent-logo.png";
 
 const Footer = () => {
   const [companyInfo, setCompanyInfo] = useState({

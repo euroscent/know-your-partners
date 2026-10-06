@@ -5,7 +5,7 @@ import { LoadingButton } from "@/components/ui/loading-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/lib/toast-stub";
-import euroscentLogoAsset from "@/assets/euroscent-logo.png.asset.json";
+import euroscentLogoAsset from "@/assets/euroscent-logo.png";
 import { Eye, EyeOff } from "lucide-react";
 
 const PUBLISHED_LOGIN_URL = "https://trust-gateway-lab.lovable.app/login";

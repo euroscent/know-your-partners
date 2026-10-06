@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { isStandalone } from "@/lib/pwa";
-import euroscentLogoAsset from "@/assets/euroscent-logo.png.asset.json";
+import euroscentLogoAsset from "@/assets/euroscent-logo.png";
 import { cn } from "@/lib/utils";
 
 export const AppSplashScreen = () => {
