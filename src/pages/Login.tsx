@@ -85,9 +85,15 @@ const Login = () => {
     setLoading(true);
 
     try {
+      let loginEmail = email.trim();
+      if (!loginEmail.includes("@")) {
+        const { data: resolved } = await (supabase as any).rpc("get_login_email", { _username: loginEmail });
+        if (!resolved) throw new Error("Invalid login credentials");
+        loginEmail = resolved as string;
+      }
       const loginResult = await Promise.race([
         supabase.auth.signInWithPassword({
-          email: email.trim(),
+          email: loginEmail,
           password,
         }),
         new Promise<never>((_, reject) =>
