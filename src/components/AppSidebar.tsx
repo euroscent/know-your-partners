@@ -50,7 +50,6 @@ const requestItems = [
 ];
 
 const managementItems = [
-  { title: "E-Mail-Zentrale", url: "/dashboard/admin/temp-mail", icon: Mail },
   { title: "Taskvorlagen + erstellen", url: "/dashboard/admin/task-management", icon: CheckSquare },
   { title: "Taskmails", url: "/dashboard/admin/completions", icon: Trophy },
   { title: "Coupon-Verwaltung", url: "/dashboard/admin/coupons", icon: QrCode },

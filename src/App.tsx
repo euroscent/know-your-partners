@@ -65,7 +65,6 @@ import SubmissionsList from "./pages/admin/SubmissionsList";
 import SubmissionReview from "./pages/admin/SubmissionReview";
 import CreateEmployeeAccount from "./pages/admin/CreateEmployeeAccount";
 import CouponManagement from "./pages/admin/CouponManagement";
-import TempMailInbox from "./pages/admin/TempMailInbox";
 import DataExport from "./pages/admin/DataExport";
 
 import Presentation from "./pages/Presentation";
@@ -155,9 +154,6 @@ const App = () => (
           </Route>
           <Route path="/dashboard/admin/completions" element={<Dashboard />}>
             <Route index element={<Completions />} />
-          </Route>
-          <Route path="/dashboard/admin/temp-mail" element={<Dashboard />}>
-            <Route index element={<TempMailInbox />} />
           </Route>
           <Route path="/admin/submissions/:submissionId" element={<SubmissionReview />} />
           <Route path="/dashboard/payroll" element={<Dashboard />}>
