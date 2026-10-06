@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/lib/toast-stub";
 import euroscentLogoAsset from "@/assets/euroscent-logo.png";
 import { Eye, EyeOff } from "lucide-react";
+import { useI18n, LanguageSwitch } from "@/lib/i18n";
 
 const PUBLISHED_LOGIN_URL = "https://trust-gateway-lab.lovable.app/login";
 
@@ -24,6 +25,7 @@ const isPreviewAuthContext = () => {
 };
 
 const Login = () => {
+  const { t, lang } = useI18n();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -184,6 +186,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-8 euroscent-login-bg">
+      <div className="absolute top-4 right-4 z-20"><LanguageSwitch /></div>
       <div className="w-full max-w-md relative z-10">
         <div className="bg-card/80 backdrop-blur-md p-8 rounded-lg shadow-2xl border border-border/60">
           <div className="mb-8 text-center">
@@ -195,34 +198,34 @@ const Login = () => {
               />
               <span className="font-serif text-3xl font-bold tracking-tight text-foreground mt-4">EuroScent</span>
               <span className="text-[10px] font-medium tracking-[0.2em] uppercase text-muted-foreground mt-1">
-                Mitarbeiter-Portal
+                {lang === "en" ? "Employee portal" : "Mitarbeiter-Portal"}
               </span>
             </div>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="email">E-Mail</Label>
+              <Label htmlFor="email">{t("E-Mail oder Benutzername")}</Label>
               <Input
                 id="email"
-                type="email"
+                type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                autoComplete="email"
+                autoComplete="username"
               />
             </div>
 
             <div className="space-y-2">
               <div className="flex items-center justify-between gap-3">
-                <Label htmlFor="password">Passwort</Label>
+                <Label htmlFor="password">{t("Passwort")}</Label>
                 <button
                   type="button"
                   onClick={handleForgotPassword}
                   disabled={resetLoading}
                   className="text-sm font-medium text-primary hover:underline disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {resetLoading ? "Wird gesendet…" : "Passwort vergessen?"}
+                  {resetLoading ? "…" : t("Passwort vergessen?")}
                 </button>
               </div>
               <div className="relative">
@@ -251,22 +254,9 @@ const Login = () => {
               loading={loading}
               loadingText="Wird angemeldet..."
             >
-              Anmelden
+              {t("Anmelden")}
             </LoadingButton>
 
-            <div className="text-center space-y-3">
-              <p className="text-sm text-muted-foreground">
-                Noch kein Konto?{" "}
-                <a
-                  href="/register"
-                  className="text-primary hover:underline font-semibold"
-                >
-                  Hier registrieren
-                </a>
-              </p>
-              <p className="text-sm text-muted-foreground">
-              </p>
-            </div>
           </form>
         </div>
       </div>
