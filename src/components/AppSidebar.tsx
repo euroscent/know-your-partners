@@ -576,16 +576,6 @@ export function AppSidebar() {
               </div>
             )}
             <SidebarMenu>
-              {!isStandalone && (
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <NavLink to="/install" className={getNavCls("/install")}>
-                      <Smartphone className="h-4 w-4" />
-                      {open && <span>EuroScent {t("App installieren")}</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              )}
               <SidebarMenuItem>
                 <SidebarMenuButton onClick={handleLogout}>
                   <LogOut className="h-4 w-4" />
