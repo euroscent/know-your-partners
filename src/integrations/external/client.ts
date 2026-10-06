@@ -15,3 +15,7 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, 
     autoRefreshToken: true,
   },
 });
+
+export const EXTERNAL_SUPABASE_URL = SUPABASE_URL;
+export const EXTERNAL_SUPABASE_KEY = SUPABASE_ANON_KEY;
+export const EXTERNAL_PROJECT_ID = new URL(SUPABASE_URL).hostname.split(".")[0];

@@ -1,3 +1,4 @@
+import { EXTERNAL_SUPABASE_URL, EXTERNAL_SUPABASE_KEY, EXTERNAL_PROJECT_ID } from "@/integrations/external/client";
 import { useParams, useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -385,8 +386,8 @@ const JobDetail = () => {
       // Send confirmation email to applicant
       try {
         console.log("Sending email to:", formData.email);
-        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-        const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+        const supabaseUrl = EXTERNAL_SUPABASE_URL;
+        const supabaseKey = EXTERNAL_SUPABASE_KEY;
         
         const response = await fetch(`${supabaseUrl}/functions/v1/send-application-confirmation`, {
           method: 'POST',
