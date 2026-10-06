@@ -1,3 +1,4 @@
+import { EXTERNAL_SUPABASE_URL, EXTERNAL_SUPABASE_KEY, EXTERNAL_PROJECT_ID } from "@/integrations/external/client";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { CheckCircle, ArrowLeft } from "lucide-react";
@@ -113,8 +114,8 @@ const Application = () => {
       // Send confirmation email to applicant
       try {
         console.log("Sending email to:", formData.email);
-        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-        const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+        const supabaseUrl = EXTERNAL_SUPABASE_URL;
+        const supabaseKey = EXTERNAL_SUPABASE_KEY;
         
         const response = await fetch(`${supabaseUrl}/functions/v1/send-application-confirmation`, {
           method: 'POST',

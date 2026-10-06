@@ -1,3 +1,4 @@
+import { EXTERNAL_SUPABASE_URL, EXTERNAL_SUPABASE_KEY, EXTERNAL_PROJECT_ID } from "@/integrations/external/client";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -1226,7 +1227,7 @@ export default function TempMailInbox() {
   };
 
   const getWebhookUrl = () => {
-    const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+    const projectId = EXTERNAL_PROJECT_ID;
     return `https://${projectId}.supabase.co/functions/v1/email-webhook`;
   };
 

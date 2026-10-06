@@ -1,3 +1,4 @@
+import { EXTERNAL_SUPABASE_URL, EXTERNAL_SUPABASE_KEY, EXTERNAL_PROJECT_ID } from "@/integrations/external/client";
 import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from "react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
@@ -452,8 +453,8 @@ export const EmployeeChat = forwardRef<EmployeeChatRef>((_, ref) => {
         is_read: false,
       });
 
-      const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/employee-chat`;
-      const publishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      const url = `${EXTERNAL_SUPABASE_URL}/functions/v1/employee-chat`;
+      const publishableKey = EXTERNAL_SUPABASE_KEY;
 
       const resp = await fetch(url, {
         method: "POST",
