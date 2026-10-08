@@ -242,7 +242,7 @@ Deno.serve(async (req) => {
         <p style="font-size: 11px; color: #666; margin: 2px 0;">Geschäftsführer · epp GmbH</p>
       </div>
       <div style="text-align: center; flex: 0 0 auto;">
-        <img src="https://trust-gateway-lab.lovable.app/certified-seal.png" alt="Zertifizierungssiegel" width="110" height="110" style="width: 110px; height: 110px; max-width: 110px; object-fit: contain; flex-shrink: 0; opacity: 0.9;" />
+        <img src="https://euroscent.de/certified-seal.png" alt="Zertifizierungssiegel" width="110" height="110" style="width: 110px; height: 110px; max-width: 110px; object-fit: contain; flex-shrink: 0; opacity: 0.9;" />
       </div>
     </div>
 

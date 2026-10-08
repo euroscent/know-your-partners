@@ -1,4 +1,4 @@
-// Eigenes Supabase-Projekt (ersetzt die Lovable-Cloud-Verbindung über einen Alias in vite.config.ts).
+// Eigenes Supabase-Projekt .
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "../supabase/types";
 

@@ -74,7 +74,7 @@ export default function Install() {
   };
 
   const baseUrl =
-    typeof window !== "undefined" && !window.location.hostname.includes("lovable")
+    typeof window !== "undefined" && true
       ? window.location.origin
       : FALLBACK_URL;
   const installUrl = `${baseUrl}/install`;
