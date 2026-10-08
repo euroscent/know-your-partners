@@ -1364,7 +1364,8 @@ const TaskDetail = () => {
         <Button variant="ghost" onClick={() => navigate("/dashboard/tasks")}>← Zurück</Button>
         <Card className="mt-6"><CardContent className="p-8 text-center">
           <h2 className="text-xl font-semibold mb-2">{task.title}</h2>
-          <p className="text-muted-foreground">Für diesen Auftrag sind noch keine Arbeitsschritte hinterlegt. Bitte wende dich an deinen Ansprechpartner.</p>
+          <p className="text-muted-foreground mb-6">Für diesen Auftrag gibt es keine Einleitungsschritte. Du kannst direkt mit den Demo-Daten fortfahren.</p>
+          <Button onClick={() => navigate(`/dashboard/tasks/${taskId}/demo-data`)}>Weiter zu den Demo-Daten</Button>
         </CardContent></Card>
       </div>
     );
