@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { X, Smartphone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { isStandalone, isLovablePreviewHost, isInIframe } from "@/lib/pwa";
+import { isStandalone, isPreviewHost, isInIframe } from "@/lib/pwa";
 
 const STORAGE_KEY = "payexpert.install-banner-dismissed-at";
 const SUPPRESS_DAYS = 7;
@@ -12,7 +12,7 @@ export function InstallAppBanner() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (isStandalone() || isInIframe() || isLovablePreviewHost()) return;
+    if (isStandalone() || isInIframe() || isPreviewHost()) return;
     const dismissed = localStorage.getItem(STORAGE_KEY);
     if (dismissed) {
       const ts = Number(dismissed);

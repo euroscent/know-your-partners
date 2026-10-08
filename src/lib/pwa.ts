@@ -14,9 +14,9 @@ export function isInIframe(): boolean {
   }
 }
 
-export function isLovablePreviewHost(): boolean {
+export function isPreviewHost(): boolean {
   const h = window.location.hostname;
-  return h.includes("lovableproject.com") || h.includes("id-preview--");
+  return h.includes("id-preview--");
 }
 
 export function isStandalone(): boolean {
@@ -38,13 +38,13 @@ export function isAndroid(): boolean {
 
 /**
  * Register the service worker only in safe contexts.
- * In Lovable preview/iframe we actively unregister any leftover SW
+ * In preview/iframe we actively unregister any leftover SW
  * to avoid stale caches breaking the live preview.
  */
 export async function registerServiceWorker(): Promise<void> {
   if (typeof window === "undefined" || !("serviceWorker" in navigator)) return;
 
-  if (!import.meta.env.PROD || isInIframe() || isLovablePreviewHost()) {
+  if (!import.meta.env.PROD || isInIframe() || isPreviewHost()) {
     try {
       const regs = await navigator.serviceWorker.getRegistrations();
       await Promise.all(regs.map((r) => r.unregister()));
@@ -86,7 +86,7 @@ export async function subscribeToPush(): Promise<{
   if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
     return { ok: false, reason: "unsupported" };
   }
-  if (isInIframe() || isLovablePreviewHost()) {
+  if (isInIframe() || isPreviewHost()) {
     return { ok: false, reason: "preview" };
   }
 
