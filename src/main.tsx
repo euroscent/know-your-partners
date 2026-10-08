@@ -12,5 +12,5 @@ window.addEventListener("beforeinstallprompt", (e) => {
 
 createRoot(document.getElementById("root")!).render(<App />);
 
-// Register PWA service worker (no-op in iframe / Lovable preview)
+// Register PWA service worker
 registerServiceWorker();

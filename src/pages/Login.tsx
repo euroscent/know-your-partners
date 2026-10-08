@@ -9,7 +9,7 @@ import euroscentLogoAsset from "@/assets/euroscent-logo.png";
 import { Eye, EyeOff } from "lucide-react";
 import { useI18n, LanguageSwitch } from "@/lib/i18n";
 
-const PUBLISHED_LOGIN_URL = "https://trust-gateway-lab.lovable.app/login";
+const PUBLISHED_LOGIN_URL = "/login";
 
 const isPreviewAuthContext = () => {
   const host = window.location.hostname;
@@ -21,7 +21,7 @@ const isPreviewAuthContext = () => {
     }
   })();
 
-  return isIframe || host.endsWith(".lovableproject.com") || host.startsWith("id-preview--");
+  return isIframe || false;
 };
 
 const Login = () => {

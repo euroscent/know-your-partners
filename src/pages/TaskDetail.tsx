@@ -1358,10 +1358,23 @@ const TaskDetail = () => {
     );
   }
 
-  const currentStep = task.steps[currentStepIndex];
-  const progress = ((currentStepIndex + 1) / task.steps.length) * 100;
-  const isLastStep = currentStepIndex === task.steps.length - 1;
-  const isFirstStep = currentStepIndex === 0;
+  if (!Array.isArray(task.steps) || task.steps.length === 0) {
+    return (
+      <div className="min-h-screen bg-background p-6">
+        <Button variant="ghost" onClick={() => navigate("/dashboard/tasks")}>← Zurück</Button>
+        <Card className="mt-6"><CardContent className="p-8 text-center">
+          <h2 className="text-xl font-semibold mb-2">{task.title}</h2>
+          <p className="text-muted-foreground">Für diesen Auftrag sind noch keine Arbeitsschritte hinterlegt. Bitte wende dich an deinen Ansprechpartner.</p>
+        </CardContent></Card>
+      </div>
+    );
+  }
+
+  const safeIndex = Math.min(Math.max(currentStepIndex, 0), task.steps.length - 1);
+  const currentStep = task.steps[safeIndex];
+  const progress = ((safeIndex + 1) / task.steps.length) * 100;
+  const isLastStep = safeIndex === task.steps.length - 1;
+  const isFirstStep = safeIndex === 0;
   const currentResponse = responses[currentStep.id];
 
   // Check if task is under review
