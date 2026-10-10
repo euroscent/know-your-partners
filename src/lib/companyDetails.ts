@@ -4,7 +4,8 @@ export const COMPANY_DETAILS = {
   postal_code: "40212",
   city: "Düsseldorf",
   managing_director: "Rolf Erwin Ruhfus",
-  commercial_register: "Amtsgericht Düsseldorf, HRB 69139",
+  register_court: "Amtsgericht Düsseldorf",
+  trade_register_number: "HRB 69139",
   vat_id: "DE152885038",
   main_email: "office@euroscent.de",
 } as const;

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Send, Mail, Inbox, MailOpen, Circle, Pencil, Trash2, Check, X, Users, FileText } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/external/client";
 import { useToast } from "@/lib/toast-stub";
 import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -49,6 +49,15 @@ const ChatInbox = () => {
   const [selectedVirtualEmployeeId, setSelectedVirtualEmployeeId] = useState<string>("all");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [replyInput, setReplyInput] = useState("");
+  useEffect(() => {
+    const refresh = () => {
+      if (document.hidden) return;
+      loadConversations();
+      if (selectedUserId) loadMessages(selectedUserId, selectedVirtualEmployeeId);
+    };
+    const timer = window.setInterval(refresh, 5000);
+    return () => window.clearInterval(timer);
+  }, [selectedUserId, selectedVirtualEmployeeId]);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();

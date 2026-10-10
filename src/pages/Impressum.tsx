@@ -10,7 +10,7 @@ const Impressum = () => {
           <h1 className="text-4xl font-bold mb-8">Impressum</h1>
           
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Angaben gemäß § 5 TMG</h2>
+            <h2 className="text-2xl font-semibold mb-4">Angaben gemäß § 5 DDG</h2>
             <p className="mb-2">EuroScent GmbH</p>
             <p className="mb-2">Königsallee 89</p>
             <p className="mb-2">D-40212 Düsseldorf</p>
@@ -42,6 +42,7 @@ const Impressum = () => {
 
           <section className="mb-8">
             <h2 className="text-2xl font-semibold mb-4">Haftungsausschluss</h2>
+            <p className="mb-4">The information on this website is provided to present EuroScent and its services and to offer direct contact options. Content is reviewed with care and updated when necessary.</p>
             
             <h3 className="text-xl font-semibold mb-3 mt-6">Haftung für Inhalte</h3>
             <p className="mb-4">
