@@ -168,7 +168,7 @@ const Payroll = () => {
       doc.setTextColor(100, 100, 100);
       doc.text(companyContact?.company_name || "EuroScent GmbH", 200, yPos + 5, { align: "right" });
       doc.text(companyContact?.street_address || "Königsallee 89", 200, yPos + 10, { align: "right" });
-      doc.text(`${companyContact?.postal_code || "10559"} ${companyContact?.city || "Berlin"}`, 200, yPos + 15, {
+      doc.text(`${companyContact?.postal_code || "40212"} ${companyContact?.city || "Düsseldorf"}`, 200, yPos + 15, {
         align: "right",
       });
 

@@ -1401,7 +1401,7 @@ const Settings = () => {
               {/* Header with Gradient */}
               <div className="bg-gradient-to-r from-purple-600 to-purple-400 p-10 text-center">
                 <div className="h-12 mx-auto mb-5 flex items-center justify-center">
-                  <img src="/payexpert-logo.png" alt="EuroScent Logo" className="max-w-[180px] h-auto" />
+                  <img src={euroscentLogo} alt="EuroScent Logo" className="max-w-[180px] h-auto" />
                 </div>
                 <h1 className="text-white text-3xl font-bold">
                   Glückwunsch, [Vorname]!
@@ -1492,7 +1492,7 @@ const Settings = () => {
                 <div className="bg-gradient-to-r from-purple-600 to-purple-400 p-10 text-center">
                   <div className="mx-auto mb-5 flex items-center justify-center">
                     <div className="inline-flex items-center gap-2 bg-white/95 px-6 py-3 rounded-xl shadow-md">
-                      <img src="/payexpert-logo.png" alt="EuroScent Logo" className="max-w-[160px] h-auto" />
+                      <img src={euroscentLogo} alt="EuroScent Logo" className="max-w-[160px] h-auto" />
                     </div>
                   </div>
                   <h1 className="text-white text-3xl font-bold">
@@ -1550,7 +1550,7 @@ const Settings = () => {
                 <div className="bg-gradient-to-r from-purple-600 to-purple-400 p-10 text-center">
                   <div className="mx-auto mb-5 flex items-center justify-center">
                     <div className="inline-flex items-center gap-2 bg-white/95 px-6 py-3 rounded-xl shadow-md">
-                      <img src="/payexpert-logo.png" alt="EuroScent Logo" className="max-w-[160px] h-auto" />
+                      <img src={euroscentLogo} alt="EuroScent Logo" className="max-w-[160px] h-auto" />
                     </div>
                   </div>
                   <h1 className="text-white text-3xl font-bold">
@@ -1599,7 +1599,7 @@ const Settings = () => {
                 <div className="bg-gradient-to-r from-purple-600 to-purple-400 p-10 text-center">
                   <div className="mx-auto mb-5 flex items-center justify-center">
                     <div className="inline-flex items-center gap-2 bg-white/95 px-6 py-3 rounded-xl shadow-md">
-                      <img src="/payexpert-logo.png" alt="EuroScent Logo" className="max-w-[160px] h-auto" />
+                      <img src={euroscentLogo} alt="EuroScent Logo" className="max-w-[160px] h-auto" />
                     </div>
                   </div>
                   <h1 className="text-white text-3xl font-bold">

@@ -1,5 +1,5 @@
 import { test, expect } from "bun:test";
-import { deliverChatMessage } from "./chatDelivery";
+import { deliverChatMessage } from "../src/lib/chatDelivery";
 
 test("failed storage must not call the assistant or report delivery", async () => {
   let called = false;
