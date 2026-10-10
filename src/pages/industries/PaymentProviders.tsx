@@ -307,7 +307,7 @@ const PaymentProviders = () => {
               Bereit für sicherere Zahlungsabwicklung?
             </h2>
             <p className="text-lg text-muted-foreground">
-              Erfahren Sie, wie PayExpert Ihre Händler-Verifizierung automatisiert und Betrug in Echtzeit verhindert.
+              Erfahren Sie, wie EuroScent Ihre Händler-Verifizierung automatisiert und Betrug in Echtzeit verhindert.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Button variant="hero" size="lg" asChild>

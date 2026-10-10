@@ -147,9 +147,9 @@ const Privacy = () => {
                 Die verantwortliche Stelle für die Datenverarbeitung auf dieser Website ist:
               </p>
               <div className="bg-muted/30 p-6 rounded-lg mb-4">
-                <p className="text-foreground font-semibold">epp GmbH</p>
-                <p className="text-muted-foreground">Kürschnershof 2</p>
-                <p className="text-muted-foreground">D-90403 Nürnberg</p>
+                <p className="text-foreground font-semibold">EuroScent GmbH</p>
+                <p className="text-muted-foreground">Königsallee 89</p>
+                <p className="text-muted-foreground">D-40212 Düsseldorf</p>
                 <p className="text-muted-foreground mt-3">E-Mail: datenschutz@payexpert.de.com</p>
               </div>
               <p className="text-muted-foreground leading-relaxed mb-4">

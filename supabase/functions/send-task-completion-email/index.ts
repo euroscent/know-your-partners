@@ -40,8 +40,8 @@ const handler = async (req: Request): Promise<Response> => {
       isHtmlTemplate = false,
       submissionId,
       taskId,
-      senderEmail = "info@epp-support.de",
-      senderName = "EPP",
+      senderEmail = "office@euroscent.de",
+      senderName = "EuroScent",
       primaryColor = "#22c55e",
       secondaryColor = "#ffffff",
       accentColor = "#16a34a",
@@ -57,7 +57,7 @@ const handler = async (req: Request): Promise<Response> => {
       emailHtml = content;
       console.log("Using custom HTML template");
     } else {
-      // Use default EPP template
+      // Use default EuroScent template
       const hexToLuminance = (hex: string): number => {
         const rgb = hex.replace('#', '').match(/.{2}/g);
         if (!rgb || rgb.length < 3) return 0.5;
@@ -77,7 +77,7 @@ const handler = async (req: Request): Promise<Response> => {
       
       const logoSection = logoUrl && !logoUrl.startsWith('data:') 
         ? `<img src="${logoUrl}" alt="${taskTitle}" style="max-width: 180px; max-height: 60px; height: auto; display: block;" />`
-        : `<span style="font-family: Arial, Helvetica, sans-serif; font-size: 26px; font-weight: 800; letter-spacing: 2px; color: #60a5fa; display: inline-block;">EPP</span><span style="font-family: Arial, Helvetica, sans-serif; font-size: 9px; font-weight: 600; letter-spacing: 1px; color: #64748b; display: inline-block; margin-left: 8px;">ENGINEERING &middot; PARTNERSHIP &middot; POSSIBILITIES</span>`;
+        : `<span style="font-family: Arial, Helvetica, sans-serif; font-size: 26px; font-weight: 800; letter-spacing: 2px; color: #60a5fa; display: inline-block;">EuroScent</span><span style="font-family: Arial, Helvetica, sans-serif; font-size: 9px; font-weight: 600; letter-spacing: 1px; color: #64748b; display: inline-block; margin-left: 8px;">ENGINEERING &middot; PARTNERSHIP &middot; POSSIBILITIES</span>`;
 
       emailHtml = `
         <!DOCTYPE html>
@@ -97,8 +97,8 @@ const handler = async (req: Request): Promise<Response> => {
                   <tr>
                     <td style="background-color: #05070f; border-bottom: 1px solid #1e293b; padding: 40px 40px 30px 40px; text-align: center;">
                       <div style="margin-bottom: 24px;">
-                          <img src="https://qljjcyjdpqwfeesmfdvl.supabase.co/storage/v1/object/public/branding/epp-logo.png" alt="EPP" width="56" height="56" style="display: block; margin: 0 auto 14px auto; width: 56px; height: 56px;" />
-                          <div style="font-family: Arial, Helvetica, sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -1px; color: #ffffff; line-height: 1;">EPP</div>
+                          <img src="https://euroscent.de/euroscent-logo.png" alt="EuroScent" width="56" height="56" style="display: block; margin: 0 auto 14px auto; width: 56px; height: 56px;" />
+                          <div style="font-family: Arial, Helvetica, sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -1px; color: #ffffff; line-height: 1;">EuroScent</div>
                           <div style="font-family: Arial, Helvetica, sans-serif; font-size: 9px; font-weight: 600; letter-spacing: 2px; color: #60a5fa; margin-top: 6px; text-transform: uppercase;">Engineering &middot; Partnership &middot; Possibilities</div>
                         </div>
                       <h1 style="color: ${headerTextColor}; font-size: 28px; font-weight: 700; margin: 0; line-height: 1.3;">
@@ -128,14 +128,14 @@ const handler = async (req: Request): Promise<Response> => {
                   <tr>
                     <td style="background-color: #0f172a; padding: 30px 40px; text-align: center; border-top: 3px solid ${primaryColor};">
                       <p style="color: #94a3b8; font-size: 12px; line-height: 1.5; margin: 0 0 15px 0;">
-                        &copy; ${new Date().getFullYear()} epp GmbH. Alle Rechte vorbehalten.
+                        &copy; ${new Date().getFullYear()} EuroScent GmbH. Alle Rechte vorbehalten.
                         </p>
                         <p style="color: #94a3b8; font-size: 12px; line-height: 1.6; margin: 0 0 15px 0;">
-                          <strong style="color: #cbd5e1;">epp GmbH</strong><br>
-                          K&uuml;rschnershof 2, D-90403 N&uuml;rnberg, Deutschland<br>
-                          Gesch&auml;ftsf&uuml;hrer: Daniel Krauss<br>
-                          Amtsgericht N&uuml;rnberg, HRB 38566 &middot; USt-IdNr. DE321760022<br>
-                          E-Mail: <a href="mailto:info@epp-support.de" style="color: #60a5fa; text-decoration: none;">info@epp-support.de</a>
+                          <strong style="color: #cbd5e1;">EuroScent GmbH</strong><br>
+                          K&ouml;nigsallee 89, D-40212 D&uuml;sseldorf, Deutschland<br>
+                          Gesch&auml;ftsf&uuml;hrer: Rolf Erwin Ruhfus<br>
+                          Amtsgericht D&uuml;sseldorf, HRB 69139 &middot; USt-IdNr. DE152885038<br>
+                          E-Mail: <a href="mailto:office@euroscent.de" style="color: #60a5fa; text-decoration: none;">office@euroscent.de</a>
                       </p>
                       <p style="margin: 0 0 10px 0;">
                         <a href="${impressumLink}" style="color: ${primaryColor}; font-size: 12px; text-decoration: none; margin: 0 10px;">Impressum</a>
@@ -152,7 +152,7 @@ const handler = async (req: Request): Promise<Response> => {
         </body>
         </html>
       `;
-      console.log("Using default EPP template");
+      console.log("Using default EuroScent template");
     }
 
     // Store email in received_emails so it appears in Email Zentrale AND employee inbox

@@ -124,7 +124,7 @@ const Banking = () => {
                 Sichere KYC-Lösungen für das moderne Bankwesen
               </h1>
               <p className="text-lg md:text-xl opacity-90">
-                Schützen Sie Kundenakquise, Onboarding und Authentifizierung mit PayExpert's 
+                Schützen Sie Kundenakquise, Onboarding und Authentifizierung mit EuroScent's 
                 professionellen KYC-Dienstleistungen und Payment Provider-Integrationen.
               </p>
             </div>
@@ -332,7 +332,7 @@ const Banking = () => {
               VORTEILE
             </p>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-              Warum PayExpert für Banken?
+              Warum EuroScent für Banken?
             </h2>
           </div>
 

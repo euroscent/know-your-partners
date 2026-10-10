@@ -11,7 +11,7 @@ const EppMark = () => (
       className="w-10 h-10 object-contain transition-transform duration-500 group-hover:rotate-45"
     />
     <div className="flex flex-col leading-none">
-      <span className="font-display text-xl font-extrabold tracking-tighter text-foreground">EPP</span>
+      <span className="font-display text-xl font-extrabold tracking-tighter text-foreground">EuroScent</span>
       <span className="hidden sm:block text-[9px] font-medium tracking-[0.15em] uppercase text-muted-foreground mt-0.5">
         Engineering · Partnership · Possibilities
       </span>

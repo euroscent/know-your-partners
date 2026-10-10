@@ -791,7 +791,7 @@ export const EmployeeChat = forwardRef<EmployeeChatRef>((_, ref) => {
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <CardTitle className="text-base font-semibold">HR-Assistent</CardTitle>
+                      <CardTitle className="text-base font-semibold">ES Assistent</CardTitle>
                       <p className="text-xs text-muted-foreground">Fragen zu Gehalt, Urlaub & mehr</p>
                     </div>
                   </>
@@ -859,7 +859,7 @@ export const EmployeeChat = forwardRef<EmployeeChatRef>((_, ref) => {
                           </Avatar>
                           <p className="text-base font-medium mb-1">Hallo! 👋</p>
                           <p className="text-sm text-muted-foreground">
-                            Ich bin dein HR-Assistent.<br />
+                            Ich bin dein ES Assistent.<br />
                             Wie kann ich dir helfen?
                           </p>
                           <div className="flex flex-wrap justify-center gap-2 mt-4">
@@ -959,7 +959,7 @@ export const EmployeeChat = forwardRef<EmployeeChatRef>((_, ref) => {
                                   ? "Du"
                                   : selectedContact 
                                     ? `${selectedContact.first_name} ${selectedContact.last_name}`
-                                    : "HR-Assistent"
+                                    : "ES Assistent"
                                 }
                               </span>
                               <div

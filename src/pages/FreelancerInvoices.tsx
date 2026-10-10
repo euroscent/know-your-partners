@@ -8,7 +8,7 @@ import { Download, FileText, Euro, Clock, CheckCircle, AlertCircle, Barcode as B
 import { toast } from "@/lib/toast-stub";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import payexpertLogo from "@/assets/epp-logo-dark.png";
+import payexpertLogo from "@/assets/euroscent-logo.png";
 import { Barcode128 } from "@/components/Barcode128";
 import { QRCodeSVG } from "qrcode.react";
 
@@ -161,8 +161,8 @@ const FreelancerInvoices = () => {
       // Firmendaten rechts
       doc.setFontSize(9);
       doc.setTextColor(100, 100, 100);
-      doc.text(companyContact?.company_name || "epp GmbH", 200, yPos + 5, { align: "right" });
-      doc.text(companyContact?.street_address || "Kürschnershof 2", 200, yPos + 10, { align: "right" });
+      doc.text(companyContact?.company_name || "EuroScent GmbH", 200, yPos + 5, { align: "right" });
+      doc.text(companyContact?.street_address || "Königsallee 89", 200, yPos + 10, { align: "right" });
       doc.text(`${companyContact?.postal_code || "10559"} ${companyContact?.city || "Berlin"}`, 200, yPos + 15, { align: "right" });
 
       yPos = 55;

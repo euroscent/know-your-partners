@@ -12,10 +12,10 @@ import { useEffect, useState } from "react";
 
 const Contact = () => {
   const [contactInfo, setContactInfo] = useState({
-    main_email: "info@epp-support.de",
-    street_address: "Kürschnershof 2",
-    postal_code: "90403",
-    city: "Nürnberg"
+    main_email: "office@euroscent.de",
+    street_address: "Königsallee 89",
+    postal_code: "40212",
+    city: "Düsseldorf"
   });
 
   useEffect(() => {
@@ -31,10 +31,10 @@ const Contact = () => {
 
     if (data) {
       setContactInfo({
-        main_email: data.main_email || "info@epp-support.de",
-        street_address: data.street_address || "Kürschnershof 2",
-        postal_code: data.postal_code || "90403",
-        city: data.city || "Nürnberg"
+        main_email: data.main_email || "office@euroscent.de",
+        street_address: data.street_address || "Königsallee 89",
+        postal_code: data.postal_code || "40212",
+        city: data.city || "Düsseldorf"
       });
     }
   };
@@ -64,7 +64,7 @@ const Contact = () => {
             <div className="space-y-8">
               <div>
                 <p className="text-lg text-foreground leading-relaxed mb-6">
-                  PayExpert ist eine führende Plattform für KYC-Verifizierung und Payment Provider-Integration, 
+                  EuroScent ist eine führende Plattform für KYC-Verifizierung und Payment Provider-Integration, 
                   die sofortigen Zugang zu umfassenden Verifizierungslösungen bietet.
                 </p>
                 <p className="text-lg text-foreground leading-relaxed mb-6">
@@ -111,7 +111,7 @@ const Contact = () => {
               <div className="bg-muted/30 p-6 rounded-lg space-y-3">
                 <h3 className="font-semibold text-foreground">Kontaktinformationen</h3>
                 <div className="space-y-2 text-muted-foreground">
-                  <p><strong>epp GmbH</strong></p>
+                  <p><strong>EuroScent GmbH</strong></p>
                   <p>{contactInfo.street_address}</p>
                   <p>{contactInfo.postal_code} {contactInfo.city}</p>
                   <p className="pt-2">E-Mail: {contactInfo.main_email}</p>
@@ -187,7 +187,7 @@ const Contact = () => {
                     htmlFor="privacy" 
                     className="text-sm text-muted-foreground leading-relaxed cursor-pointer"
                   >
-                    Ich möchte Informationen von PayExpert erhalten. Wir behandeln Ihre Daten vertraulich - 
+                    Ich möchte Informationen von EuroScent erhalten. Wir behandeln Ihre Daten vertraulich - 
                     siehe unsere <a href="/privacy" className="text-primary hover:underline">Datenschutzerklärung</a>.
                   </Label>
                 </div>

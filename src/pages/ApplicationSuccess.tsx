@@ -14,7 +14,7 @@ const ApplicationSuccess = () => {
         </div>
         <h1 className="text-3xl font-bold mb-4">Bewerbung erfolgreich eingereicht!</h1>
         <p className="text-muted-foreground text-lg mb-2">
-          Vielen Dank für Ihre Bewerbung bei PayExpert.
+          Vielen Dank für Ihre Bewerbung bei EuroScent.
         </p>
         <p className="text-muted-foreground mb-8">
           Wir haben Ihre Unterlagen erhalten und werden diese sorgfältig prüfen. 

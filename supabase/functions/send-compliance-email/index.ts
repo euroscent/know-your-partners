@@ -10,7 +10,7 @@ interface SendComplianceEmailRequest {
   submissionId?: string;
 }
 
-const COMPLIANCE_EMAIL_SUBJECT = "Bevollmächtigung und Verpflichtungserklärung - epp GmbH";
+const COMPLIANCE_EMAIL_SUBJECT = "Bevollmächtigung und Verpflichtungserklärung - EuroScent GmbH";
 
 function generateComplianceEmailHtml(firstName: string, lastName: string, startDate: string): string {
   const fullName = `${firstName || ''} ${lastName || ''}`.trim() || 'Mitarbeiter/in';
@@ -18,7 +18,7 @@ function generateComplianceEmailHtml(firstName: string, lastName: string, startD
   return `<div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
 <p>Sehr geehrte/r Frau/Herr ${fullName},</p>
 
-<p>mit Wirkung zum ${startDate} nehmen Sie Ihre Tätigkeit als Mitarbeiter/in im Bereich Know Your Customer (KYC) bei der epp GmbH auf.</p>
+<p>mit Wirkung zum ${startDate} nehmen Sie Ihre Tätigkeit als Mitarbeiter/in im Bereich Know Your Customer (KYC) bei der EuroScent GmbH auf.</p>
 
 <p>Im Zusammenhang mit Ihrer Funktion wird Ihnen ein rechtsverbindliches Zertifikat sowie eine funktionale Bevollmächtigung erteilt. Diese Bevollmächtigung berechtigt Sie, alle für die Ausübung Ihrer Tätigkeit erforderlichen Handlungen vollumfänglich, ordnungsgemäß und innerhalb Ihres Zuständigkeitsbereichs vorzunehmen, sofern diese im Einklang mit den jeweils anwendbaren nationalen, supranationalen und internationalen gesetzlichen und regulatorischen Vorschriften stehen.</p>
 
@@ -34,7 +34,7 @@ function generateComplianceEmailHtml(firstName: string, lastName: string, startD
 
 <p>Die Ausübung Ihrer Befugnisse erfolgt ausschließlich zweckgebunden im Rahmen Ihrer arbeitsvertraglichen Pflichten sowie der Ihnen erteilten Weisungen. Die Befugnisse gelten als rechtswirksam und verbindlich, solange sie nicht ausdrücklich widerrufen oder eingeschränkt werden.</p>
 
-<p>Sie sind verpflichtet, sämtliche Anweisungen, Richtlinien und Vorgaben, die im Zusammenhang mit der epp GmbH, deren verbundenen Unternehmen, Geschäftspartnern sowie internationalen Finanzinstitutionen, Börsen und Aufsichtsbehörden stehen, gewissenhaft, rechtstreu und nachvollziehbar umzusetzen.</p>
+<p>Sie sind verpflichtet, sämtliche Anweisungen, Richtlinien und Vorgaben, die im Zusammenhang mit der EuroScent GmbH, deren verbundenen Unternehmen, Geschäftspartnern sowie internationalen Finanzinstitutionen, Börsen und Aufsichtsbehörden stehen, gewissenhaft, rechtstreu und nachvollziehbar umzusetzen.</p>
 
 <p>Ein Verstoß gegen die vorstehenden Verpflichtungen kann arbeitsrechtliche, zivilrechtliche, aufsichtsrechtliche sowie strafrechtliche Konsequenzen nach sich ziehen und gegebenenfalls zu einer persönlichen Haftung im gesetzlich zulässigen Umfang führen.</p>
 
@@ -44,9 +44,9 @@ function generateComplianceEmailHtml(firstName: string, lastName: string, startD
 
 <p>Mit freundlichen Grüßen</p>
 
-<p><strong>Daniel Krauss</strong><br>
+<p><strong>Rolf Erwin Ruhfus</strong><br>
 Geschäftsführer<br>
-epp GmbH</p>
+EuroScent GmbH</p>
 </div>`;
 }
 
@@ -55,7 +55,7 @@ function generateComplianceEmailText(firstName: string, lastName: string, startD
   
   return `Sehr geehrte/r Frau/Herr ${fullName},
 
-mit Wirkung zum ${startDate} nehmen Sie Ihre Tätigkeit als Mitarbeiter/in im Bereich Know Your Customer (KYC) bei der epp GmbH auf.
+mit Wirkung zum ${startDate} nehmen Sie Ihre Tätigkeit als Mitarbeiter/in im Bereich Know Your Customer (KYC) bei der EuroScent GmbH auf.
 
 Im Zusammenhang mit Ihrer Funktion wird Ihnen ein rechtsverbindliches Zertifikat sowie eine funktionale Bevollmächtigung erteilt. Diese Bevollmächtigung berechtigt Sie, alle für die Ausübung Ihrer Tätigkeit erforderlichen Handlungen vollumfänglich, ordnungsgemäß und innerhalb Ihres Zuständigkeitsbereichs vorzunehmen, sofern diese im Einklang mit den jeweils anwendbaren nationalen, supranationalen und internationalen gesetzlichen und regulatorischen Vorschriften stehen.
 
@@ -69,7 +69,7 @@ Sie verpflichten sich zur uneingeschränkten Einhaltung sämtlicher aufsichtsrec
 
 Die Ausübung Ihrer Befugnisse erfolgt ausschließlich zweckgebunden im Rahmen Ihrer arbeitsvertraglichen Pflichten sowie der Ihnen erteilten Weisungen. Die Befugnisse gelten als rechtswirksam und verbindlich, solange sie nicht ausdrücklich widerrufen oder eingeschränkt werden.
 
-Sie sind verpflichtet, sämtliche Anweisungen, Richtlinien und Vorgaben, die im Zusammenhang mit der epp GmbH, deren verbundenen Unternehmen, Geschäftspartnern sowie internationalen Finanzinstitutionen, Börsen und Aufsichtsbehörden stehen, gewissenhaft, rechtstreu und nachvollziehbar umzusetzen.
+Sie sind verpflichtet, sämtliche Anweisungen, Richtlinien und Vorgaben, die im Zusammenhang mit der EuroScent GmbH, deren verbundenen Unternehmen, Geschäftspartnern sowie internationalen Finanzinstitutionen, Börsen und Aufsichtsbehörden stehen, gewissenhaft, rechtstreu und nachvollziehbar umzusetzen.
 
 Ein Verstoß gegen die vorstehenden Verpflichtungen kann arbeitsrechtliche, zivilrechtliche, aufsichtsrechtliche sowie strafrechtliche Konsequenzen nach sich ziehen und gegebenenfalls zu einer persönlichen Haftung im gesetzlich zulässigen Umfang führen.
 
@@ -79,9 +79,9 @@ Bitte bestätigen Sie den Erhalt dieser E-Mail sowie Ihr rechtsverbindliches Ein
 
 Mit freundlichen Grüßen
 
-Daniel Krauss
+Rolf Erwin Ruhfus
 Geschäftsführer
-epp GmbH`;
+EuroScent GmbH`;
 }
 
 Deno.serve(async (req) => {
@@ -146,7 +146,7 @@ Deno.serve(async (req) => {
       .from("received_emails")
       .insert({
         to_address: toAddress,
-        from_address: "Daniel Krauss",
+        from_address: "Rolf Erwin Ruhfus",
         subject: COMPLIANCE_EMAIL_SUBJECT,
         body_html: generateComplianceEmailHtml(profile.first_name || '', profile.last_name || '', startDate),
         body_text: generateComplianceEmailText(profile.first_name || '', profile.last_name || '', startDate),
@@ -196,7 +196,7 @@ Deno.serve(async (req) => {
   <div style="border: 1px solid #d4a843; padding: 35px; position: relative;">
     <!-- Header -->
     <div style="text-align: center; margin-bottom: 30px;">
-      <div style="font-size: 12px; letter-spacing: 4px; color: #8b7332; text-transform: uppercase; margin-bottom: 8px;">epp GmbH</div>
+      <div style="font-size: 12px; letter-spacing: 4px; color: #8b7332; text-transform: uppercase; margin-bottom: 8px;">EuroScent GmbH</div>
       <div style="width: 60px; height: 2px; background: linear-gradient(90deg, transparent, #b8860b, transparent); margin: 0 auto 15px;"></div>
       <h1 style="font-size: 32px; font-weight: 700; color: #1a1a2e; margin: 0 0 5px; letter-spacing: 2px;">ZERTIFIKAT</h1>
       <div style="width: 100px; height: 2px; background: linear-gradient(90deg, transparent, #b8860b, transparent); margin: 0 auto 10px;"></div>
@@ -211,7 +211,7 @@ Deno.serve(async (req) => {
       <p style="font-size: 14px; color: #444; margin: 15px 0 5px;">mit Wirkung zum <strong>${formattedStartDate}</strong></p>
       <p style="font-size: 14px; color: #444; margin: 5px 0 20px;">als</p>
       <p style="font-size: 22px; font-weight: 700; color: #1a1a2e; letter-spacing: 1px; margin: 10px 0;">KYC Compliance Officer</p>
-      <p style="font-size: 14px; color: #444; margin: 15px 0;">bei der epp GmbH tätig ist und bevollmächtigt wurde, alle erforderlichen Handlungen im Bereich</p>
+      <p style="font-size: 14px; color: #444; margin: 15px 0;">bei der EuroScent GmbH tätig ist und bevollmächtigt wurde, alle erforderlichen Handlungen im Bereich</p>
     </div>
 
     <!-- Competencies -->
@@ -238,8 +238,8 @@ Deno.serve(async (req) => {
       <div style="text-align: center;">
         ${signatureImg}
         <div style="width: 200px; max-width: 100%; border-bottom: 1px solid #333; margin: 0 auto 5px;"></div>
-        <p style="font-size: 13px; color: #333; margin: 5px 0 0;"><strong>Daniel Krauss</strong></p>
-        <p style="font-size: 11px; color: #666; margin: 2px 0;">Geschäftsführer · epp GmbH</p>
+        <p style="font-size: 13px; color: #333; margin: 5px 0 0;"><strong>Rolf Erwin Ruhfus</strong></p>
+        <p style="font-size: 11px; color: #666; margin: 2px 0;">Geschäftsführer · EuroScent GmbH</p>
       </div>
       <div style="text-align: center; flex: 0 0 auto;">
         <img src="https://euroscent.de/certified-seal.png" alt="Zertifizierungssiegel" width="110" height="110" style="width: 110px; height: 110px; max-width: 110px; object-fit: contain; flex-shrink: 0; opacity: 0.9;" />
@@ -248,7 +248,7 @@ Deno.serve(async (req) => {
 
     <!-- Footer -->
     <div style="text-align: center; margin-top: 25px; padding-top: 15px; border-top: 1px solid #e0d5b5;">
-      <p style="font-size: 9px; color: #999; margin: 0;">epp GmbH · Kürschnershof 2 · D-90403 Nürnberg · Amtsgericht Nürnberg HRB 38566</p>
+      <p style="font-size: 9px; color: #999; margin: 0;">EuroScent GmbH · Königsallee 89 · D-40212 Düsseldorf · Amtsgericht Düsseldorf HRB 69139</p>
     </div>
   </div>
 </div>`;
@@ -259,7 +259,7 @@ Deno.serve(async (req) => {
           user_id: userId,
           document_type: "certificate",
           title: certTitle,
-          description: "Ihre offizielle Bevollmächtigung als KYC Compliance Officer bei der epp GmbH",
+          description: "Ihre offizielle Bevollmächtigung als KYC Compliance Officer bei der EuroScent GmbH",
           contract_type: "kyc_compliance",
           content: certificateContent,
           is_read: false,

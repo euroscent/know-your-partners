@@ -62,7 +62,7 @@ const SolanaRibbon = () => {
     uniform float uTime;
     
     void main() {
-      // PayExpert colors: purple/violet shades
+      // EuroScent colors: purple/violet shades
       vec3 purple1 = vec3(0.545, 0.361, 0.965);  // #8B5CF6 - primary
       vec3 purple2 = vec3(0.659, 0.525, 0.988);  // #A886FC - lighter
       vec3 purple3 = vec3(0.475, 0.306, 0.910);  // #794EE8 - darker

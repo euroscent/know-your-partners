@@ -453,7 +453,7 @@ const ChatInbox = () => {
   };
 
   const getVirtualEmployeeName = (id: string | null | undefined) => {
-    if (!id) return "HR-Assistent";
+    if (!id) return "ES Assistent";
     const ve = virtualEmployees.find(v => v.id === id);
     return ve ? `${ve.first_name} ${ve.last_name}` : "Unbekannt";
   };
@@ -646,7 +646,7 @@ const ChatInbox = () => {
                                 {msg.role === "admin" 
                                   ? getVirtualEmployeeName(msg.virtual_employee_id)
                                   : msg.role === "assistant" 
-                                  ? "HR-Assistent (Bot)"
+                                  ? "ES Assistent (Bot)"
                                   : selectedConversation.user_name}
                               </span>
                               {/* Show virtual employee badge for both user and admin messages */}
@@ -667,7 +667,7 @@ const ChatInbox = () => {
                                   onClick={() => setSelectedVirtualEmployeeId("hr")}
                                 >
                                   <Users className="h-2.5 w-2.5" />
-                                  an HR-Assistent
+                                  an ES Assistent
                                 </Badge>
                               )}
                               {!msg.virtual_employee_id && msg.role === "admin" && (

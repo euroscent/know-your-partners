@@ -40,10 +40,10 @@ self.addEventListener("push", (event) => {
   try {
     payload = event.data.json();
   } catch {
-    payload = { title: "EPP", body: event.data.text() };
+    payload = { title: "EuroScent", body: event.data.text() };
   }
 
-  const title = payload.title || "EPP App";
+  const title = payload.title || "EuroScent App";
   const options: NotificationOptions = {
     body: payload.body || "",
     icon: payload.icon || "/epp-app-icon-v3-192.png",

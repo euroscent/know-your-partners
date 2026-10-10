@@ -45,8 +45,8 @@ const handler = async (req: Request): Promise<Response> => {
     // Use custom template or fallback to default
     const emailSubject = subject || `Ihr POSTIDENT Coupon - ${couponCode}`;
     const fromEmail = senderEmail 
-      ? `${senderName || 'epp GmbH'} <${senderEmail}>`
-      : "epp GmbH <info@payexpert.space>";
+      ? `${senderName || 'EuroScent GmbH'} <${senderEmail}>`
+      : "EuroScent GmbH <office@euroscent.de>";
 
     // Default HTML template if no custom content provided
     const defaultHtml = `
@@ -92,15 +92,15 @@ const handler = async (req: Request): Promise<Response> => {
               </p>
               <p style="font-size: 16px; color: #333333; margin-top: 20px;">
                 Mit freundlichen Grüßen,<br>
-                <strong>Ihr PayExpert Team</strong>
+                <strong>Ihr EuroScent Team</strong>
               </p>
             </td>
           </tr>
           <tr>
             <td style="background-color: #1a1a2e; padding: 30px 40px; text-align: center;">
               <p style="color: #888888; font-size: 12px; margin: 0;">
-                epp GmbH | Kürschnershof 2 | 90403 Nürnberg<br>
-                E-Mail: info@payexpert.space | Tel: +49 30 12345678
+                EuroScent GmbH | Königsallee 89 | 40212 Düsseldorf<br>
+                E-Mail: office@euroscent.de | Tel: +49 30 12345678
               </p>
             </td>
           </tr>
