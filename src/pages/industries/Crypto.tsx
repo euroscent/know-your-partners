@@ -87,7 +87,7 @@ const Crypto = () => {
               </h1>
               <p className="text-lg md:text-xl opacity-90">
                 Erfüllen Sie regulatorische Anforderungen und schützen Sie Ihre Krypto-Börse 
-                mit professionellen KYC-Lösungen und Payment Provider-Integrationen von PayExpert.
+                mit professionellen KYC-Lösungen und Payment Provider-Integrationen von EuroScent.
               </p>
             </div>
             <div className="relative">
@@ -312,7 +312,7 @@ const Crypto = () => {
             </h2>
             <p className="text-lg text-muted-foreground">
               Die EU Markets in Crypto-Assets (MiCA) Verordnung fordert strenge KYC/AML-Compliance. 
-              PayExpert hilft Ihnen, alle Anforderungen zu erfüllen.
+              EuroScent hilft Ihnen, alle Anforderungen zu erfüllen.
             </p>
           </div>
 
@@ -396,7 +396,7 @@ const Crypto = () => {
               VORTEILE
             </p>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-              Warum PayExpert für Krypto-Plattformen?
+              Warum EuroScent für Krypto-Plattformen?
             </h2>
           </div>
 

@@ -147,7 +147,7 @@ Deno.serve(async (req) => {
 
     // Admin is offline - send automatic response
     const defaultResponse =
-      "Ich konnte leider keine passende Antwort auf deine Frage finden. Ein Mitglied unseres HR-Teams wird sich so schnell wie möglich bei dir melden.";
+      "Ich bin der ES Assistent. Deine Nachricht wurde an unser Team weitergeleitet. Ein Admin wird sich so schnell wie möglich bei dir melden.";
 
     return new Response(
       JSON.stringify({

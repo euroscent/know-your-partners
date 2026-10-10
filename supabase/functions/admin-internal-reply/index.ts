@@ -163,7 +163,7 @@ serve(async (req) => {
 
     // Insert message so employee can see it in their task inbox.
     // IMPORTANT: from_address must be the task mailbox (Outlook/custom), not "Admin (intern)".
-    const fromAddress = `EPP <${mailboxFrom}>`;
+    const fromAddress = `EuroScent <${mailboxFrom}>`;
 
     const htmlSafe = body.body_text
       .replaceAll("&", "&amp;")

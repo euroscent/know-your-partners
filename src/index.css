@@ -158,7 +158,7 @@
     @apply block text-base;
   }
 
-  /* EPP technical grid overlay */
+  /* EuroScent technical grid overlay */
   .epp-grid-bg {
     background-image:
       linear-gradient(hsl(203 30% 15%) 1px, transparent 1px),

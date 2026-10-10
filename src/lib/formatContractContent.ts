@@ -188,7 +188,7 @@ export function replaceContractPlaceholders(
 export function generateContractHeader(logoUrl: string): string {
   return `
     <div class="contract-header" style="text-align: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid #e5e7eb;">
-      <img src="${logoUrl}" alt="epp GmbH Logo" style="max-height: 56px; margin-bottom: 0.5rem;" />
+      <img src="${logoUrl}" alt="EuroScent GmbH Logo" style="max-height: 56px; margin-bottom: 0.5rem;" />
     </div>
   `;
 }
@@ -202,7 +202,7 @@ export function generateContractPartiesBlock(
   company: CompanyInfo,
   employee: { firstName?: string; lastName?: string; street?: string; postalCode?: string; city?: string; country?: string }
 ): string {
-  const companyName = company.name || "epp GmbH";
+  const companyName = company.name || "EuroScent GmbH";
   const companyStreet = company.street || "";
   const companyPostal = company.postalCode || "";
   const companyCity = company.city || "";

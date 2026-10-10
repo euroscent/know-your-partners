@@ -164,12 +164,12 @@ const ReviewTab = ({ onUpdate }: ReviewTabProps) => {
 
     const template = dbTemplates?.[0];
 
-    const defaultContent = `<p>Hallo ${submission.profiles.first_name},</p><p>herzlichen Glückwunsch! Sie haben den Auftrag <strong>"${submission.tasks?.title}"</strong> erfolgreich abgeschlossen.</p><p>Vielen Dank für Ihre hervorragende Arbeit.</p><p>Die Vergütung wird in Kürze auf Ihr Konto überwiesen.</p><p>Mit freundlichen Grüßen,<br/><strong>Das EPP HR-Team</strong></p>`;
+    const defaultContent = `<p>Hallo ${submission.profiles.first_name},</p><p>herzlichen Glückwunsch! Sie haben den Auftrag <strong>"${submission.tasks?.title}"</strong> erfolgreich abgeschlossen.</p><p>Vielen Dank für Ihre hervorragende Arbeit.</p><p>Die Vergütung wird in Kürze auf Ihr Konto überwiesen.</p><p>Mit freundlichen Grüßen,<br/><strong>Das EuroScent HR-Team</strong></p>`;
 
     let subject = template?.subject || `Auftrag "${submission.tasks?.title}" erfolgreich abgeschlossen`;
     let content = template?.content || defaultContent;
-    const senderEmail = template?.sender_email || "info@epp-support.de";
-    const senderName = template?.sender_name || "EPP";
+    const senderEmail = template?.sender_email || "office@euroscent.de";
+    const senderName = template?.sender_name || "EuroScent";
 
     // Replace placeholders
     const firstName = submission.profiles.first_name || "";

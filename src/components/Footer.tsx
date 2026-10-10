@@ -5,10 +5,10 @@ import euroscentLogoAsset from "@/assets/euroscent-logo.png";
 
 const Footer = () => {
   const [companyInfo, setCompanyInfo] = useState({
-    company_name: "epp GmbH",
-    street_address: "Kürschnershof 2",
-    city: "Nürnberg",
-    postal_code: "90403",
+    company_name: "EuroScent GmbH",
+    street_address: "Königsallee 89",
+    city: "Düsseldorf",
+    postal_code: "40212",
   });
 
   useEffect(() => {
@@ -21,10 +21,10 @@ const Footer = () => {
 
       if (data) {
         setCompanyInfo({
-          company_name: data.company_name || "epp GmbH",
-          street_address: data.street_address || "Kürschnershof 2",
-          city: data.city || "Nürnberg",
-          postal_code: data.postal_code || "90403",
+          company_name: data.company_name || "EuroScent GmbH",
+          street_address: data.street_address || "Königsallee 89",
+          city: data.city || "Düsseldorf",
+          postal_code: data.postal_code || "40212",
         });
       }
     };
@@ -39,7 +39,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center gap-3 mb-4">
               <img src={euroscentLogoAsset} alt="EuroScent Logo" className="w-10 h-10 object-contain" />
-              <span className="font-display text-xl font-extrabold tracking-tighter text-foreground">EPP</span>
+              <span className="font-display text-xl font-extrabold tracking-tighter text-foreground">EuroScent</span>
             </div>
             <p className="text-xs font-medium tracking-[0.15em] uppercase text-primary mb-4">
               Engineering · Partnership · Possibilities
@@ -51,8 +51,8 @@ const Footer = () => {
               <p className="font-semibold text-foreground">{companyInfo.company_name}</p>
               <p>{companyInfo.street_address}</p>
               <p>D-{companyInfo.postal_code} {companyInfo.city}</p>
-              <p className="pt-2">Amtsgericht Nürnberg</p>
-              <p>HRB 38566</p>
+              <p className="pt-2">Amtsgericht Düsseldorf</p>
+              <p>HRB 69139</p>
             </div>
           </div>
 
@@ -87,8 +87,8 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-border pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
-          <p>© 2026 epp GmbH. Alle Rechte vorbehalten.</p>
-          <p className="font-display text-xs tracking-widest uppercase">EPP · Engineering. Partnership. Possibilities.</p>
+          <p>© 2026 EuroScent GmbH. Alle Rechte vorbehalten.</p>
+          <p className="font-display text-xs tracking-widest uppercase">EuroScent · Engineering. Partnership. Possibilities.</p>
         </div>
       </div>
     </footer>

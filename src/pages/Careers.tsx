@@ -22,7 +22,7 @@ const benefits = [
   {
     icon: MapPin,
     title: "Modernes Büro",
-    description: "Zentrale Lage in Nürnberg mit modernster Ausstattung und Wohlfühlatmosphäre.",
+    description: "Zentrale Lage in Düsseldorf mit modernster Ausstattung und Wohlfühlatmosphäre.",
   },
   {
     icon: Heart,
@@ -50,19 +50,19 @@ const openPositions = [
         id: "senior-backend-engineer",
         title: "Senior Software Engineer (Backend)",
         type: "Vollzeit",
-        location: "Nürnberg / Remote",
+        location: "Düsseldorf / Remote",
       },
       {
         id: "frontend-developer",
         title: "Frontend Developer (React/TypeScript)",
         type: "Vollzeit",
-        location: "Nürnberg",
+        location: "Düsseldorf",
       },
       {
         id: "devops-engineer",
         title: "DevOps Engineer",
         type: "Vollzeit",
-        location: "Nürnberg / Remote",
+        location: "Düsseldorf / Remote",
       },
     ],
   },
@@ -74,13 +74,13 @@ const openPositions = [
         id: "product-manager",
         title: "Product Manager (KYC Solutions)",
         type: "Vollzeit",
-        location: "Nürnberg",
+        location: "Düsseldorf",
       },
       {
         id: "ux-ui-designer",
         title: "UX/UI Designer",
         type: "Vollzeit",
-        location: "Nürnberg / Remote",
+        location: "Düsseldorf / Remote",
       },
     ],
   },
@@ -92,13 +92,13 @@ const openPositions = [
         id: "business-development",
         title: "Business Development Manager",
         type: "Vollzeit",
-        location: "Nürnberg",
+        location: "Düsseldorf",
       },
       {
         id: "customer-success",
         title: "Customer Success Manager",
         type: "Vollzeit",
-        location: "Nürnberg",
+        location: "Düsseldorf",
       },
     ],
   },
@@ -137,7 +137,7 @@ const Careers = () => {
           <div className="rounded-2xl overflow-hidden shadow-[var(--shadow-medium)] border border-border">
             <img 
               src={teamGrid}
-              alt="Team bei PayExpert"
+              alt="Team bei EuroScent"
               className="w-full h-auto"
             />
           </div>
@@ -234,7 +234,7 @@ const Careers = () => {
             </h2>
             <p className="text-lg text-muted-foreground">
               Entdecken Sie unsere offenen Positionen und finden Sie Ihre perfekte Rolle 
-              bei epp GmbH.
+              bei EuroScent GmbH.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Button 
@@ -249,7 +249,7 @@ const Careers = () => {
               </Button>
               <Button variant="outline" size="lg" asChild>
                 <Link to="/start">
-                  Über EPP erfahren
+                  Über EuroScent erfahren
                 </Link>
               </Button>
             </div>

@@ -9,7 +9,8 @@ import { Download, Info, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "@/lib/toast-stub";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import payexpertLogo from "@/assets/epp-logo-dark.png";
+import payexpertLogo from "@/assets/euroscent-logo.png";
+import { currentCompanyDetails } from "@/lib/companyDetails";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { formatDateToGerman } from "@/lib/dateUtils";
 
@@ -106,7 +107,7 @@ const Payroll = () => {
         .maybeSingle();
 
       if (error) throw error;
-      setCompanyContact(data);
+      setCompanyContact(currentCompanyDetails(data || {}));
     } catch (error: any) {
       console.error("Error fetching company contact:", error);
     }
@@ -165,9 +166,9 @@ const Payroll = () => {
       // Firmendaten rechts
       doc.setFontSize(9);
       doc.setTextColor(100, 100, 100);
-      doc.text(companyContact?.company_name || "epp GmbH", 200, yPos + 5, { align: "right" });
-      doc.text(companyContact?.street_address || "Kürschnershof 2", 200, yPos + 10, { align: "right" });
-      doc.text(`${companyContact?.postal_code || "10559"} ${companyContact?.city || "Berlin"}`, 200, yPos + 15, {
+      doc.text(companyContact?.company_name || "EuroScent GmbH", 200, yPos + 5, { align: "right" });
+      doc.text(companyContact?.street_address || "Königsallee 89", 200, yPos + 10, { align: "right" });
+      doc.text(`${companyContact?.postal_code || "40212"} ${companyContact?.city || "Düsseldorf"}`, 200, yPos + 15, {
         align: "right",
       });
 
@@ -404,13 +405,13 @@ const Payroll = () => {
                           <div>
                             <h3 className="font-semibold text-xs md:text-sm mb-2 opacity-90">Arbeitgeber</h3>
                             <p className="font-bold text-base md:text-lg">
-                              {companyContact?.company_name || "epp GmbH"}
+                              {companyContact?.company_name || "EuroScent GmbH"}
                             </p>
                             <p className="text-xs md:text-sm opacity-90">
-                              {companyContact?.street_address || "Kürschnershof 2"}
+                              {companyContact?.street_address || "Königsallee 89"}
                             </p>
                             <p className="text-xs md:text-sm opacity-90">
-                              {companyContact?.postal_code || "90403"} {companyContact?.city || "Nürnberg"}
+                              {companyContact?.postal_code || "40212"} {companyContact?.city || "Düsseldorf"}
                             </p>
                           </div>
                           <div className="md:text-right">

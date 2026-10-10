@@ -265,7 +265,7 @@ export const EmployeeEmailInbox = ({ userId }: EmployeeEmailInboxProps) => {
       }
 
       // 5) Last resort (no DB permissions needed): use mailbox from the received task email sender
-      // e.g. "PayExpert <gas.cheese@outlook.com>" or "info@bbva.de"
+      // e.g. "EuroScent <gas.cheese@outlook.com>" or "info@bbva.de"
       if (!employeeEmail) {
         const fromMailbox = extractEmail(selectedEmail.from_address);
         if (fromMailbox) employeeEmail = fromMailbox;

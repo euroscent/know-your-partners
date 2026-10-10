@@ -35,16 +35,16 @@ const handler = async (req: Request): Promise<Response> => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "EPP <info@epp-support.de>",
+        from: "EuroScent <office@euroscent.de>",
         to: [email],
-        subject: "Rückmeldung zu Ihrer Bewerbung - EPP",
+        subject: "Rückmeldung zu Ihrer Bewerbung - EuroScent",
         html: `
           <!DOCTYPE html>
           <html lang="de">
           <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Bewerbung - EPP</title>
+            <title>Bewerbung - EuroScent</title>
           </head>
           <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #05070f;">
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #05070f; padding: 40px 20px;">
@@ -56,8 +56,7 @@ const handler = async (req: Request): Promise<Response> => {
                     <tr>
                       <td style="background-color: #05070f; border-bottom: 1px solid #1e293b; padding: 40px 40px 30px 40px; text-align: center;">
                         <div style="margin-bottom: 24px;">
-                          <img src="https://qljjcyjdpqwfeesmfdvl.supabase.co/storage/v1/object/public/branding/epp-logo.png" alt="EPP" width="56" height="56" style="display: block; margin: 0 auto 14px auto; width: 56px; height: 56px;" />
-                          <div style="font-family: Arial, Helvetica, sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -1px; color: #ffffff; line-height: 1;">EPP</div>
+                          <div style="font-family: Arial, Helvetica, sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -1px; color: #ffffff; line-height: 1;">EuroScent</div>
                           <div style="font-family: Arial, Helvetica, sans-serif; font-size: 9px; font-weight: 600; letter-spacing: 2px; color: #60a5fa; margin-top: 6px; text-transform: uppercase;">Engineering &middot; Partnership &middot; Possibilities</div>
                         </div>
                         <h1 style="color: #ffffff; font-size: 28px; font-weight: 700; margin: 0; line-height: 1.3;">
@@ -74,7 +73,7 @@ const handler = async (req: Request): Promise<Response> => {
                         </p>
                         
                         <p style="color: #cbd5e1; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
-                          vielen Dank für Ihr Interesse an einer Position bei <strong>EPP</strong> und die Zeit, die Sie in Ihre Bewerbung investiert haben.
+                          vielen Dank für Ihr Interesse an einer Position bei <strong>EuroScent</strong> und die Zeit, die Sie in Ihre Bewerbung investiert haben.
                         </p>
                         
                         <p style="color: #cbd5e1; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
@@ -90,7 +89,7 @@ const handler = async (req: Request): Promise<Response> => {
                         <div style="margin-top: 30px; padding-top: 30px; border-top: 1px solid #1e293b;">
                           <p style="color: #cbd5e1; font-size: 16px; line-height: 1.6; margin: 0;">
                             Mit freundlichen Grüßen,<br>
-                            <strong style="color: #60a5fa;">Das EPP HR-Team</strong>
+                            <strong style="color: #60a5fa;">Das EuroScent HR-Team</strong>
                           </p>
                         </div>
                       </td>
@@ -100,14 +99,14 @@ const handler = async (req: Request): Promise<Response> => {
                     <tr>
                       <td style="background-color: #0f172a; padding: 30px 40px; text-align: center; border-top: 1px solid #1e293b;">
                         <p style="color: #94a3b8; font-size: 12px; line-height: 1.5; margin: 0 0 15px 0;">
-                          &copy; ${new Date().getFullYear()} epp GmbH. Alle Rechte vorbehalten.
+                          &copy; ${new Date().getFullYear()} EuroScent GmbH. Alle Rechte vorbehalten.
                         </p>
                         <p style="color: #94a3b8; font-size: 12px; line-height: 1.6; margin: 0 0 15px 0;">
-                          <strong style="color: #cbd5e1;">epp GmbH</strong><br>
-                          K&uuml;rschnershof 2, D-90403 N&uuml;rnberg, Deutschland<br>
-                          Gesch&auml;ftsf&uuml;hrer: Daniel Krauss<br>
-                          Amtsgericht N&uuml;rnberg, HRB 38566 &middot; USt-IdNr. DE321760022<br>
-                          E-Mail: <a href="mailto:info@epp-support.de" style="color: #60a5fa; text-decoration: none;">info@epp-support.de</a>
+                          <strong style="color: #cbd5e1;">EuroScent GmbH</strong><br>
+                          K&ouml;nigsallee 89, D-40212 D&uuml;sseldorf, Deutschland<br>
+                          Gesch&auml;ftsf&uuml;hrer: Rolf Erwin Ruhfus<br>
+                          Amtsgericht D&uuml;sseldorf, HRB 69139 &middot; USt-IdNr. DE152885038<br>
+                          E-Mail: <a href="mailto:office@euroscent.de" style="color: #60a5fa; text-decoration: none;">office@euroscent.de</a>
                         </p>
                         <p style="margin: 0 0 10px 0;">
                           <a href="${impressumLink}" style="color: #94a3b8; font-size: 12px; text-decoration: none; margin: 0 10px;">Impressum</a>

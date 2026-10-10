@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import euroscentLogo from "@/assets/euroscent-logo.png";
+import { currentCompanyDetails } from "@/lib/companyDetails";
 import { PageLoader } from "@/components/PageLoader";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -385,7 +387,7 @@ const Settings = () => {
       .maybeSingle();
 
     if (data) {
-      setContactInfo(data);
+      setContactInfo(currentCompanyDetails(data));
     }
   };
 
@@ -1391,7 +1393,7 @@ const Settings = () => {
           </div>
           <div className="bg-muted/50 p-3 rounded-lg space-y-1">
             <p className="text-sm font-medium">Von:</p>
-            <p className="text-sm">PayExpert &lt;onboarding@resend.dev&gt;</p>
+            <p className="text-sm">EuroScent &lt;onboarding@resend.dev&gt;</p>
           </div>
           <Separator />
           <div className="bg-gray-100 p-6 rounded-lg">
@@ -1399,7 +1401,7 @@ const Settings = () => {
               {/* Header with Gradient */}
               <div className="bg-gradient-to-r from-purple-600 to-purple-400 p-10 text-center">
                 <div className="h-12 mx-auto mb-5 flex items-center justify-center">
-                  <img src="/payexpert-logo.png" alt="PayExpert Logo" className="max-w-[180px] h-auto" />
+                  <img src={euroscentLogo} alt="EuroScent Logo" className="max-w-[180px] h-auto" />
                 </div>
                 <h1 className="text-white text-3xl font-bold">
                   Glückwunsch, [Vorname]!
@@ -1415,7 +1417,7 @@ const Settings = () => {
                 </div>
                 
                 <p className="text-gray-700 mb-5 leading-relaxed">
-                  Wir freuen uns, Ihnen mitteilen zu können, dass Ihre Bewerbung bei <strong>PayExpert</strong> erfolgreich war!
+                  Wir freuen uns, Ihnen mitteilen zu können, dass Ihre Bewerbung bei <strong>EuroScent</strong> erfolgreich war!
                 </p>
                 
                 <p className="text-gray-700 mb-8 leading-relaxed">
@@ -1436,7 +1438,7 @@ const Settings = () => {
                   
                   <p className="text-gray-700 mt-5">
                     Mit freundlichen Grüßen,<br />
-                    <strong className="text-purple-600">Das PayExpert Team</strong>
+                    <strong className="text-purple-600">Das EuroScent Team</strong>
                   </p>
                 </div>
               </div>
@@ -1444,7 +1446,7 @@ const Settings = () => {
               {/* Footer */}
               <div className="bg-gray-50 px-10 py-8 text-center border-t border-gray-200">
                 <p className="text-gray-600 text-xs mb-3">
-                  © 2025 PayExpert. Alle Rechte vorbehalten.
+                  © 2025 EuroScent. Alle Rechte vorbehalten.
                 </p>
                 <p className="mb-2">
                   <a href="/impressum" className="text-gray-600 text-xs hover:underline mx-2">Impressum</a>
@@ -1478,11 +1480,11 @@ const Settings = () => {
           <TabsContent value="confirmation" className="space-y-4">
             <div className="bg-muted/50 p-3 rounded-lg space-y-1">
               <p className="text-sm font-medium">Betreff:</p>
-              <p className="text-sm">Bewerbungseingang bestätigt - PayExpert</p>
+              <p className="text-sm">Bewerbungseingang bestätigt - EuroScent</p>
             </div>
             <div className="bg-muted/50 p-3 rounded-lg space-y-1">
               <p className="text-sm font-medium">Von:</p>
-              <p className="text-sm">PayExpert &lt;info@payexpert.it.com&gt;</p>
+              <p className="text-sm">EuroScent &lt;office@euroscent.de&gt;</p>
             </div>
             <Separator />
             <div className="bg-gray-100 p-6 rounded-lg">
@@ -1490,7 +1492,7 @@ const Settings = () => {
                 <div className="bg-gradient-to-r from-purple-600 to-purple-400 p-10 text-center">
                   <div className="mx-auto mb-5 flex items-center justify-center">
                     <div className="inline-flex items-center gap-2 bg-white/95 px-6 py-3 rounded-xl shadow-md">
-                      <img src="/payexpert-logo.png" alt="PayExpert Logo" className="max-w-[160px] h-auto" />
+                      <img src={euroscentLogo} alt="EuroScent Logo" className="max-w-[160px] h-auto" />
                     </div>
                   </div>
                   <h1 className="text-white text-3xl font-bold">
@@ -1510,7 +1512,7 @@ const Settings = () => {
                   </p>
                   
                   <p className="text-gray-700 text-base leading-relaxed mb-5">
-                    wir haben Ihre Bewerbung bei <strong>PayExpert</strong> erfolgreich erhalten.
+                    wir haben Ihre Bewerbung bei <strong>EuroScent</strong> erfolgreich erhalten.
                   </p>
                   
                   <div className="bg-gray-50 rounded-lg p-5 my-8">
@@ -1526,7 +1528,7 @@ const Settings = () => {
                 </div>
                 
                 <div className="bg-gray-50 p-8 text-center border-t border-gray-200">
-                  <p className="text-gray-500 text-xs">© 2025 PayExpert. Alle Rechte vorbehalten.</p>
+                  <p className="text-gray-500 text-xs">© 2025 EuroScent. Alle Rechte vorbehalten.</p>
                 </div>
               </div>
             </div>
@@ -1540,7 +1542,7 @@ const Settings = () => {
             </div>
             <div className="bg-muted/50 p-3 rounded-lg space-y-1">
               <p className="text-sm font-medium">Von:</p>
-              <p className="text-sm">PayExpert &lt;info@payexpert.it.com&gt;</p>
+              <p className="text-sm">EuroScent &lt;office@euroscent.de&gt;</p>
             </div>
             <Separator />
             <div className="bg-gray-100 p-6 rounded-lg">
@@ -1548,7 +1550,7 @@ const Settings = () => {
                 <div className="bg-gradient-to-r from-purple-600 to-purple-400 p-10 text-center">
                   <div className="mx-auto mb-5 flex items-center justify-center">
                     <div className="inline-flex items-center gap-2 bg-white/95 px-6 py-3 rounded-xl shadow-md">
-                      <img src="/payexpert-logo.png" alt="PayExpert Logo" className="max-w-[160px] h-auto" />
+                      <img src={euroscentLogo} alt="EuroScent Logo" className="max-w-[160px] h-auto" />
                     </div>
                   </div>
                   <h1 className="text-white text-3xl font-bold">
@@ -1564,7 +1566,7 @@ const Settings = () => {
                   </div>
                   
                   <p className="text-gray-700 text-base leading-relaxed mb-5">
-                    Ihre Bewerbung bei <strong>PayExpert</strong> war erfolgreich!
+                    Ihre Bewerbung bei <strong>EuroScent</strong> war erfolgreich!
                   </p>
 
                   <div className="text-center py-5">
@@ -1575,7 +1577,7 @@ const Settings = () => {
                 </div>
                 
                 <div className="bg-gray-50 p-8 text-center border-t border-gray-200">
-                  <p className="text-gray-500 text-xs">© 2025 PayExpert. Alle Rechte vorbehalten.</p>
+                  <p className="text-gray-500 text-xs">© 2025 EuroScent. Alle Rechte vorbehalten.</p>
                 </div>
               </div>
             </div>
@@ -1585,11 +1587,11 @@ const Settings = () => {
           <TabsContent value="rejection" className="space-y-4">
             <div className="bg-muted/50 p-3 rounded-lg space-y-1">
               <p className="text-sm font-medium">Betreff:</p>
-              <p className="text-sm">Rückmeldung zu Ihrer Bewerbung - PayExpert</p>
+              <p className="text-sm">Rückmeldung zu Ihrer Bewerbung - EuroScent</p>
             </div>
             <div className="bg-muted/50 p-3 rounded-lg space-y-1">
               <p className="text-sm font-medium">Von:</p>
-              <p className="text-sm">PayExpert &lt;info@payexpert.it.com&gt;</p>
+              <p className="text-sm">EuroScent &lt;office@euroscent.de&gt;</p>
             </div>
             <Separator />
             <div className="bg-gray-100 p-6 rounded-lg">
@@ -1597,7 +1599,7 @@ const Settings = () => {
                 <div className="bg-gradient-to-r from-purple-600 to-purple-400 p-10 text-center">
                   <div className="mx-auto mb-5 flex items-center justify-center">
                     <div className="inline-flex items-center gap-2 bg-white/95 px-6 py-3 rounded-xl shadow-md">
-                      <img src="/payexpert-logo.png" alt="PayExpert Logo" className="max-w-[160px] h-auto" />
+                      <img src={euroscentLogo} alt="EuroScent Logo" className="max-w-[160px] h-auto" />
                     </div>
                   </div>
                   <h1 className="text-white text-3xl font-bold">
@@ -1611,7 +1613,7 @@ const Settings = () => {
                   </p>
                   
                   <p className="text-gray-700 text-base leading-relaxed mb-5">
-                    vielen Dank für Ihr Interesse an einer Position bei <strong>PayExpert</strong>.
+                    vielen Dank für Ihr Interesse an einer Position bei <strong>EuroScent</strong>.
                   </p>
                   
                   <p className="text-gray-700 text-base leading-relaxed mb-5">
@@ -1626,7 +1628,7 @@ const Settings = () => {
                 </div>
                 
                 <div className="bg-gray-50 p-8 text-center border-t border-gray-200">
-                  <p className="text-gray-500 text-xs">© 2025 PayExpert. Alle Rechte vorbehalten.</p>
+                  <p className="text-gray-500 text-xs">© 2025 EuroScent. Alle Rechte vorbehalten.</p>
                 </div>
               </div>
             </div>

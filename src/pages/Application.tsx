@@ -164,7 +164,7 @@ const Application = () => {
                   Bewerbung erfolgreich eingereicht!
                 </h2>
                 <p className="text-muted-foreground">
-                  Vielen Dank für Ihre Bewerbung bei PayExpert. Wir haben Ihre Unterlagen erhalten und werden diese sorgfältig prüfen.
+                  Vielen Dank für Ihre Bewerbung bei EuroScent. Wir haben Ihre Unterlagen erhalten und werden diese sorgfältig prüfen.
                 </p>
                 <p className="text-muted-foreground text-sm">
                   Sie erhalten in Kürze eine Bestätigungs-E-Mail an Ihre angegebene E-Mail-Adresse.

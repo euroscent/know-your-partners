@@ -79,7 +79,7 @@ const Hero = () => {
           </h1>
 
           <p className="text-lg lg:text-xl text-muted-foreground mb-10 leading-relaxed max-w-2xl">
-            <span className="text-foreground font-semibold">EPP</span> liefert präzisions-engineered
+            <span className="text-foreground font-semibold">EuroScent</span> liefert präzisions-engineered
             B2B-KYC- und Payment-Infrastruktur für die technischen Anforderungen moderner Finanzdienstleister.
             Wir verbinden rigoroses Engineering mit nahtlosen Merchant-Prozessen.
           </p>

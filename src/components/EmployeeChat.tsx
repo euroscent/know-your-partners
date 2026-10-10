@@ -1,10 +1,10 @@
-import { EXTERNAL_SUPABASE_URL, EXTERNAL_SUPABASE_KEY, EXTERNAL_PROJECT_ID } from "@/integrations/external/client";
+import { deliverChatMessage } from "@/lib/chatDelivery";
 import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from "react";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
 import { MessageCircle, X, Send, Loader2, Users, Building2, ChevronRight, ChevronLeft, Info } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/external/client";
 import { useToast } from "@/lib/toast-stub";
 import { ScrollArea } from "./ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -117,7 +117,7 @@ export const EmployeeChat = forwardRef<EmployeeChatRef>((_, ref) => {
           (payload) => {
             const newMessage = payload.new as any;
             if (newMessage.role === 'admin' && newMessage.user_id === userId) {
-              setMessages((prev) => [
+              setMessages((prev) => prev.some((msg) => msg.id === newMessage.id) ? prev : [
                 ...prev,
                 { role: 'assistant', content: newMessage.message, id: newMessage.id, created_at: newMessage.created_at },
               ]);
@@ -169,9 +169,9 @@ export const EmployeeChat = forwardRef<EmployeeChatRef>((_, ref) => {
           (payload) => {
             const newMessage = payload.new as any;
             if (newMessage.role === 'admin' && !newMessage.virtual_employee_id) {
-              setMessages((prev) => [
+              setMessages((prev) => prev.some((msg) => msg.id === newMessage.id) ? prev : [
                 ...prev,
-                { role: 'assistant', content: newMessage.message, created_at: newMessage.created_at },
+                { role: 'assistant', content: newMessage.message, id: newMessage.id, created_at: newMessage.created_at },
               ]);
 
               // Immediately mark the incoming HR message as read (user is currently viewing HR chat)
@@ -198,6 +198,23 @@ export const EmployeeChat = forwardRef<EmployeeChatRef>((_, ref) => {
       };
     }
   }, [isOpen, userId, isHRAssistant, playNotificationSound, showNotification]);
+
+  // Self-hosted databases may not have Realtime enabled yet.
+  useEffect(() => {
+    if (!isOpen || !userId) return;
+    let active = true;
+    const refresh = async () => {
+      if (document.hidden || isLoading) return;
+      let query = supabase.from("chat_messages").select("*").eq("user_id", userId)
+        .lte("created_at", new Date().toISOString()).order("created_at", { ascending: true });
+      query = selectedContact ? query.eq("virtual_employee_id", selectedContact.id) : query.is("virtual_employee_id", null);
+      const { data, error } = await query;
+      if (!active || error || !data) return;
+      setMessages(data.map((msg) => ({ id: msg.id, role: msg.role === "admin" ? "assistant" : msg.role as Message["role"], content: msg.message, created_at: msg.created_at })));
+    };
+    const timer = window.setInterval(refresh, 5000);
+    return () => { active = false; window.clearInterval(timer); };
+  }, [isOpen, userId, selectedContact, isLoading]);
 
   // Global realtime listener for notifications when chat is closed
   useEffect(() => {
@@ -443,56 +460,32 @@ export const EmployeeChat = forwardRef<EmployeeChatRef>((_, ref) => {
 
   // HR Assistant - uses edge function
   const sendToHRAssistant = async (userMessage: string) => {
+    if (!userId) throw new Error("Bitte melde dich erneut an.");
     setIsLoading(true);
     try {
-      // Save user message
-      await supabase.from("chat_messages").insert({
-        user_id: userId,
-        message: userMessage,
-        role: "user",
-        is_read: false,
-      });
-
-      const url = `${EXTERNAL_SUPABASE_URL}/functions/v1/employee-chat`;
-      const publishableKey = EXTERNAL_SUPABASE_KEY;
-
-      const resp = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          apikey: publishableKey,
-          Authorization: `Bearer ${publishableKey}`,
-        },
-        body: JSON.stringify({ message: userMessage, userId }),
-      });
-
-      if (!resp.ok) {
-        const t = await resp.text().catch(() => "");
-        throw new Error(t || `Request failed (${resp.status})`);
-      }
-
-      const data = await resp.json();
-      
-      // Only show and save response if admin is offline and there's an answer
-      if (data.answer) {
-        setMessages((prev) => [...prev, { role: "assistant", content: data.answer }]);
-
-        await supabase.from("chat_messages").insert({
+      const result = await deliverChatMessage(
+        async () => await supabase.from("chat_messages").insert({ user_id: userId, message: userMessage, role: "user", is_read: false }),
+        async () => await supabase.functions.invoke("employee-chat", { body: { message: userMessage, userId } }),
+      );
+      if (result.answer) {
+        const { data: savedAnswer, error } = await supabase.from("chat_messages").insert({
           user_id: userId,
-          message: data.answer,
+          message: result.answer,
           role: "assistant",
           is_read: true,
-        });
+        }).select().single();
+        if (!error && savedAnswer) {
+          setMessages((prev) => [...prev, { id: savedAnswer.id, role: "assistant", content: savedAnswer.message, created_at: savedAnswer.created_at }]);
+        }
+      }
+      if (result.replyError) {
+        toast({ title: "Nachricht an den Admin gesendet; automatische Antwort derzeit nicht verfügbar." });
       }
       // If admin is online (data.adminOnline = true), no automatic message is shown
       // The user's message is saved, admin will respond manually
     } catch (error) {
       console.error("Chat error:", error);
-      toast({
-        title: "Fehler",
-        description: "Nachricht konnte nicht gesendet werden",
-        variant: "destructive",
-      });
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -517,28 +510,30 @@ export const EmployeeChat = forwardRef<EmployeeChatRef>((_, ref) => {
         description: `${selectedContact?.first_name} wird sich bei dir melden.`,
       });
     } catch (error) {
-      toast({
-        title: "Fehler",
-        description: "Nachricht konnte nicht gesendet werden",
-        variant: "destructive",
-      });
+      throw error;
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isLoading || !userId) return;
 
     const userMessage: Message = { role: "user", content: input.trim() };
     setMessages((prev) => [...prev, userMessage]);
     const messageText = input.trim();
     setInput("");
 
-    if (isHRAssistant) {
-      await sendToHRAssistant(messageText);
-    } else if (selectedContact) {
-      await sendToContact(messageText, selectedContact.id);
+    try {
+      if (isHRAssistant) {
+        await sendToHRAssistant(messageText);
+      } else if (selectedContact) {
+        await sendToContact(messageText, selectedContact.id);
+      }
+    } catch (error) {
+      setMessages((prev) => prev.filter((msg) => msg !== userMessage));
+      setInput(messageText);
+      toast({ title: error instanceof Error ? error.message : "Nachricht konnte nicht gesendet werden", variant: "destructive" });
     }
   };
 
@@ -787,11 +782,11 @@ export const EmployeeChat = forwardRef<EmployeeChatRef>((_, ref) => {
                   <>
                     <Avatar className="h-10 w-10 ring-2 ring-primary/20">
                       <AvatarFallback className="text-sm font-semibold bg-primary text-primary-foreground">
-                        HR
+                        ES
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <CardTitle className="text-base font-semibold">HR-Assistent</CardTitle>
+                      <CardTitle className="text-base font-semibold">ES Assistent</CardTitle>
                       <p className="text-xs text-muted-foreground">Fragen zu Gehalt, Urlaub & mehr</p>
                     </div>
                   </>
@@ -854,12 +849,12 @@ export const EmployeeChat = forwardRef<EmployeeChatRef>((_, ref) => {
                         <>
                           <Avatar className="h-20 w-20 mx-auto mb-4 ring-4 ring-primary/20">
                             <AvatarFallback className="text-2xl font-bold bg-primary text-primary-foreground">
-                              HR
+                              ES
                             </AvatarFallback>
                           </Avatar>
                           <p className="text-base font-medium mb-1">Hallo! 👋</p>
                           <p className="text-sm text-muted-foreground">
-                            Ich bin dein HR-Assistent.<br />
+                            Ich bin dein ES Assistent.<br />
                             Wie kann ich dir helfen?
                           </p>
                           <div className="flex flex-wrap justify-center gap-2 mt-4">
@@ -946,7 +941,7 @@ export const EmployeeChat = forwardRef<EmployeeChatRef>((_, ref) => {
                                   <AvatarFallback className="text-[8px] bg-primary/10 text-primary">
                                     {selectedContact 
                                       ? `${selectedContact.first_name[0]}${selectedContact.last_name[0]}`
-                                      : "HR"
+                                      : "ES"
                                     }
                                   </AvatarFallback>
                                 </>
@@ -959,7 +954,7 @@ export const EmployeeChat = forwardRef<EmployeeChatRef>((_, ref) => {
                                   ? "Du"
                                   : selectedContact 
                                     ? `${selectedContact.first_name} ${selectedContact.last_name}`
-                                    : "HR-Assistent"
+                                    : "ES Assistent"
                                 }
                               </span>
                               <div
@@ -1011,7 +1006,8 @@ export const EmployeeChat = forwardRef<EmployeeChatRef>((_, ref) => {
                 <Button 
                   onClick={handleSend} 
                   size="icon" 
-                  disabled={isLoading || !input.trim()}
+                  disabled={isLoading || !input.trim() || !userId}
+                  aria-label="Nachricht senden"
                   className="rounded-full h-10 w-10 shrink-0"
                 >
                   <Send className="h-4 w-4" />

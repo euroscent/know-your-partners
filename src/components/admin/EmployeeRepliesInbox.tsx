@@ -120,7 +120,7 @@ export function EmployeeRepliesInbox({ onUnreadCountChange }: EmployeeRepliesInb
     const from = email.from_address.toLowerCase();
     // Admin internal marker
     if (from.includes('admin (intern)')) return true;
-    // ONLY PayExpert system emails count as admin
+    // ONLY EuroScent system emails count as admin
     if (from.includes('payexpert')) return true;
     // Internal forwards (without employee name in angle brackets)
     if (from.includes('(intern)') && !from.includes('<')) return true;
@@ -184,7 +184,7 @@ export function EmployeeRepliesInbox({ onUnreadCountChange }: EmployeeRepliesInb
       const { data: complianceEmails, error: complianceError } = await supabase
         .from("received_emails")
         .select("id, from_address, to_address, subject, body_text, body_html, is_read, received_at, submission_id, task_id, headers")
-        .or("from_address.ilike.%payexpert-hr.com%,from_address.ilike.%Daniel Krauss%")
+        .or("from_address.ilike.%payexpert-hr.com%,from_address.ilike.%Rolf Erwin Ruhfus%")
         .order("received_at", { ascending: false })
         .limit(500);
 

@@ -110,8 +110,8 @@ const CompletionsTab = ({ onUpdate, showTemplates = false }: CompletionsTabProps
   
   const [templateSubject, setTemplateSubject] = useState("");
   const [templateContent, setTemplateContent] = useState("");
-  const [templateSenderEmail, setTemplateSenderEmail] = useState("info@epp-support.de");
-  const [templateSenderName, setTemplateSenderName] = useState("EPP");
+  const [templateSenderEmail, setTemplateSenderEmail] = useState("office@euroscent.de");
+  const [templateSenderName, setTemplateSenderName] = useState("EuroScent");
   const [contentMode, setContentMode] = useState<'visual' | 'html'>('visual');
   
   const [sending, setSending] = useState(false);
@@ -309,15 +309,15 @@ const CompletionsTab = ({ onUpdate, showTemplates = false }: CompletionsTabProps
     const firstName = submission.profiles.first_name || "Mitarbeiter";
     const taskTitle = submission.tasks?.title || "Auftrag";
     
-    return `<p>Hallo ${firstName},</p><p>herzlichen Glückwunsch! Sie haben den Auftrag <strong>"${taskTitle}"</strong> erfolgreich abgeschlossen.</p><p>Vielen Dank für Ihre hervorragende Arbeit. Ihr Engagement wird sehr geschätzt.</p><p>Die Vergütung wird in Kürze auf Ihr Konto überwiesen.</p><p>Mit freundlichen Grüßen,<br/><strong>Das EPP HR-Team</strong></p>`;
+    return `<p>Hallo ${firstName},</p><p>herzlichen Glückwunsch! Sie haben den Auftrag <strong>"${taskTitle}"</strong> erfolgreich abgeschlossen.</p><p>Vielen Dank für Ihre hervorragende Arbeit. Ihr Engagement wird sehr geschätzt.</p><p>Die Vergütung wird in Kürze auf Ihr Konto überwiesen.</p><p>Mit freundlichen Grüßen,<br/><strong>Das EuroScent HR-Team</strong></p>`;
   };
 
   const getDefaultOpeningContent = (taskTitle: string) => {
-    return `<p>Hallo {vorname},</p><p>Ihr Auftrag <strong>"{auftrag}"</strong> wurde erfolgreich eröffnet.</p><p>Sie können nun mit der Bearbeitung beginnen. Bei Fragen stehen wir Ihnen gerne zur Verfügung.</p><p>Mit freundlichen Grüßen,<br/><strong>Das EPP HR-Team</strong></p>`;
+    return `<p>Hallo {vorname},</p><p>Ihr Auftrag <strong>"{auftrag}"</strong> wurde erfolgreich eröffnet.</p><p>Sie können nun mit der Bearbeitung beginnen. Bei Fragen stehen wir Ihnen gerne zur Verfügung.</p><p>Mit freundlichen Grüßen,<br/><strong>Das EuroScent HR-Team</strong></p>`;
   };
 
   const getDefaultCompletionContent = (taskTitle: string) => {
-    return `<p>Hallo {vorname},</p><p>herzlichen Glückwunsch! Sie haben den Auftrag <strong>"{auftrag}"</strong> erfolgreich abgeschlossen.</p><p>Vielen Dank für Ihre hervorragende Arbeit. Ihr Engagement wird sehr geschätzt.</p><p>Die Vergütung wird in Kürze auf Ihr Konto überwiesen.</p><p>Mit freundlichen Grüßen,<br/><strong>Das EPP HR-Team</strong></p>`;
+    return `<p>Hallo {vorname},</p><p>herzlichen Glückwunsch! Sie haben den Auftrag <strong>"{auftrag}"</strong> erfolgreich abgeschlossen.</p><p>Vielen Dank für Ihre hervorragende Arbeit. Ihr Engagement wird sehr geschätzt.</p><p>Die Vergütung wird in Kürze auf Ihr Konto überwiesen.</p><p>Mit freundlichen Grüßen,<br/><strong>Das EuroScent HR-Team</strong></p>`;
   };
 
   const handleOpenEmailDialog = async (submission: CompletedSubmission) => {
@@ -413,14 +413,14 @@ const CompletionsTab = ({ onUpdate, showTemplates = false }: CompletionsTabProps
       setActiveCompletionTemplate(template);
       setTemplateSubject(template.subject);
       setTemplateContent(template.content);
-      setTemplateSenderEmail(template.sender_email || "info@epp-support.de");
-      setTemplateSenderName(template.sender_name || "EPP");
+      setTemplateSenderEmail(template.sender_email || "office@euroscent.de");
+      setTemplateSenderName(template.sender_name || "EuroScent");
       setContentMode(isComplexEmailHtml(template.content) ? 'html' : 'visual');
     } else {
       setTemplateSubject(`Auftrag "${submission.tasks?.title}" erfolgreich abgeschlossen`);
       setTemplateContent(getDefaultEmailContent(submission));
-      setTemplateSenderEmail("info@epp-support.de");
-      setTemplateSenderName("EPP");
+      setTemplateSenderEmail("office@euroscent.de");
+      setTemplateSenderName("EuroScent");
       setContentMode('visual');
     }
   };
@@ -434,8 +434,8 @@ const CompletionsTab = ({ onUpdate, showTemplates = false }: CompletionsTabProps
     if (template) {
       setTemplateSubject(template.subject);
       setTemplateContent(template.content);
-      setTemplateSenderEmail(template.sender_email || "info@epp-support.de");
-      setTemplateSenderName(template.sender_name || "EPP");
+      setTemplateSenderEmail(template.sender_email || "office@euroscent.de");
+      setTemplateSenderName(template.sender_name || "EuroScent");
       setContentMode(isComplexEmailHtml(template.content) ? 'html' : 'visual');
     } else {
       if (emailType === 'opening') {
@@ -445,8 +445,8 @@ const CompletionsTab = ({ onUpdate, showTemplates = false }: CompletionsTabProps
         setTemplateSubject(`Auftrag "${taskTitle}" erfolgreich abgeschlossen`);
         setTemplateContent(getDefaultCompletionContent(taskTitle));
       }
-      setTemplateSenderEmail("info@epp-support.de");
-      setTemplateSenderName("EPP");
+      setTemplateSenderEmail("office@euroscent.de");
+      setTemplateSenderName("EuroScent");
       setContentMode('visual');
     }
   };
@@ -1084,7 +1084,7 @@ const CompletionsTab = ({ onUpdate, showTemplates = false }: CompletionsTabProps
                       value={templateSenderName}
                       onChange={(e) => setTemplateSenderName(e.target.value)}
                       className="mt-1"
-                      placeholder="EPP"
+                      placeholder="EuroScent"
                     />
                   </div>
                   <div>
@@ -1093,7 +1093,7 @@ const CompletionsTab = ({ onUpdate, showTemplates = false }: CompletionsTabProps
                       value={templateSenderEmail}
                       onChange={(e) => setTemplateSenderEmail(e.target.value)}
                       className="mt-1"
-                      placeholder="info@epp-support.de"
+                      placeholder="office@euroscent.de"
                     />
                   </div>
                 </div>

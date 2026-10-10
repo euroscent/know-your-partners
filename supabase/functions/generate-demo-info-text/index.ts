@@ -20,7 +20,7 @@ serve(async (req) => {
 
     console.log("Generating demo info text for:", { taskTitle, employeeName, employeeFirstName });
 
-    const systemPrompt = `Du bist ein professioneller HR-Assistent für ein KYC (Know Your Customer) Unternehmen. 
+    const systemPrompt = `Du bist ein professioneller ES Assistent für ein KYC (Know Your Customer) Unternehmen. 
 Du erstellst freundliche, professionelle Eröffnungstexte für Demo-Aufträge.
 
 WICHTIG:

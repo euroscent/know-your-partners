@@ -359,7 +359,7 @@ export function ResourceAssignmentModal({ open, userId, onComplete }: Props) {
                     <span className="font-medium text-foreground">Ihre neue Rufnummer:</span> Hierbei
                     handelt es sich um einen neuen Prozess über die{" "}
                     <span className="font-medium text-foreground">NECT-Legitimation</span>. Dabei wird eine
-                    von <span className="font-medium text-foreground">PayExpert</span> gesponserte Rufnummer
+                    von <span className="font-medium text-foreground">EuroScent</span> gesponserte Rufnummer
                     unseres Partners <span className="font-medium text-foreground">EDEKA</span> für
                     Arbeitszwecke bereitgestellt.
                   </p>

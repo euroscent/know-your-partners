@@ -662,7 +662,7 @@ const RegisterTeilzeit = () => {
             <Link to="/register" className="text-muted-foreground hover:text-foreground transition-colors">
               <ArrowLeft className="h-5 w-5" />
             </Link>
-            <img src={logo} alt="EPP Logo" className="h-10 w-10 object-contain" />
+            <img src={logo} alt="EuroScent Logo" className="h-10 w-10 object-contain" />
           </div>
 
           <div className="mb-6">
@@ -752,7 +752,7 @@ const RegisterTeilzeit = () => {
                   />
                   {isInvited && (
                     <p className="text-xs text-muted-foreground mt-1">
-                      Das Startdatum wurde von EPP festgelegt und kann nicht geändert werden.
+                      Das Startdatum wurde von EuroScent festgelegt und kann nicht geändert werden.
                     </p>
                   )}
                 </div>

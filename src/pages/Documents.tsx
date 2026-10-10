@@ -1,4 +1,5 @@
-import eppLogo from "@/assets/epp-logo-dark.png";
+import eppLogo from "@/assets/euroscent-logo.png";
+import { currentCompanyDetails } from "@/lib/companyDetails";
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
@@ -167,7 +168,7 @@ const Documents = () => {
         .maybeSingle();
 
       if (data) {
-        setCompanyContact(data);
+        setCompanyContact(currentCompanyDetails(data));
       }
     } catch (error) {
       console.error("Error loading company contact:", error);
@@ -229,7 +230,7 @@ const Documents = () => {
 
        const contractContent = `Arbeitsvertrag – ${getContractTypeLabel(contractTypeMeta)}\n\n` +
         `Vertrag zwischen\n\n` +
-        `Unternehmen\n${companyContact?.company_name || "Unite Financial Services Global GmbH"}\n` +
+        `Unternehmen\n${companyContact?.company_name || "EuroScent GmbH"}\n` +
         `${companyContact?.street_address || "Grimmaischer Steinweg 8"}\n` +
         `${companyContact?.postal_code || "04103"} ${companyContact?.city || "Leipzig"}\n` +
         `${companyContact?.country || "Deutschland"}\n\n` +
@@ -516,7 +517,7 @@ const Documents = () => {
         </head>
         <body>
           <div class="logo-header">
-            <img src="${logoDataUrl}" alt="PayExpert Logo" />
+            <img src="${logoDataUrl}" alt="EuroScent Logo" />
           </div>
           
           <h1>${doc.title}</h1>
@@ -558,7 +559,7 @@ const Documents = () => {
                 <div class="signature-line">
                   ${companySignature ? `<img src="${companySignature}" alt="Unterschrift" />` : ''}
                 </div>
-                <p style="margin: 5px 0 0 0;">Geschäftsführer: Daniel Krauss</p>
+                <p style="margin: 5px 0 0 0;">Geschäftsführer: Rolf Erwin Ruhfus</p>
               </div>
               
               <div class="signature">
@@ -573,19 +574,19 @@ const Documents = () => {
           <div class="footer">
             <div class="footer-content">
               <div class="footer-section">
-                <strong>epp GmbH</strong><br>
+                <strong>EuroScent GmbH</strong><br>
                 Professionelle KYC-Lösungen für verschiedene Branchen
               </div>
               <div class="footer-section">
-                Kürschnershof 2<br>
-                D-90403 Nürnberg
+                Königsallee 89<br>
+                D-40212 Düsseldorf
               </div>
               <div class="footer-section">
-                Amtsgericht Nürnberg<br>
-                HRB 38566
+                Amtsgericht Düsseldorf<br>
+                HRB 69139
               </div>
               <div class="footer-section">
-                Umsatzsteuer-ID: DE321760022
+                Umsatzsteuer-ID: DE152885038
               </div>
             </div>
           </div>
@@ -825,7 +826,7 @@ const Documents = () => {
                           <p className="text-sm text-muted-foreground">
                             Von: {isAdmin 
                               ? ([doc.profiles?.first_name, doc.profiles?.last_name].filter(Boolean).join(" ") || "Mitarbeiter")
-                              : (companySignerName || "Daniel Krauss")
+                              : (companySignerName || "Rolf Erwin Ruhfus")
                             }
                           </p>
                           <div className="flex items-center gap-2 flex-wrap">

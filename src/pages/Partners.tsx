@@ -24,7 +24,7 @@ const Partners = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                Werden Sie Teil des PayExpert Partner-Programms
+                Werden Sie Teil des EuroScent Partner-Programms
               </h1>
               <p className="text-lg md:text-xl opacity-90">
                 Gemeinsam gestalten wir die Zukunft der KYC-Verifizierung. 
@@ -53,10 +53,10 @@ const Partners = () => {
               VORTEILE
             </p>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-              Warum mit PayExpert zusammenarbeiten?
+              Warum mit EuroScent zusammenarbeiten?
             </h2>
             <p className="text-lg text-muted-foreground">
-              PayExpert ist führend in der KYC-Verifizierung und Payment Provider-Integration. 
+              EuroScent ist führend in der KYC-Verifizierung und Payment Provider-Integration. 
               Unsere Partner profitieren von erstklassiger Technologie, umfassender Unterstützung 
               und einem wachsenden Netzwerk.
             </p>
@@ -103,7 +103,7 @@ const Partners = () => {
                 </div>
                 <div>
                   <p className="text-foreground italic mb-4">
-                    "Die Partnerschaft mit PayExpert war ein echter Gewinn! Die professionelle 
+                    "Die Partnerschaft mit EuroScent war ein echter Gewinn! Die professionelle 
                     Integration ihrer KYC-Lösungen und die hervorragende technische Unterstützung 
                     haben unsere Compliance-Prozesse deutlich verbessert. Mehr Sicherheit und 
                     Effizienz – ein echtes Plus für unser Geschäft."
@@ -123,7 +123,7 @@ const Partners = () => {
                 </div>
                 <div>
                   <p className="text-foreground italic mb-4">
-                    "Das direkte Feedback durch die PayExpert KYC-Integration ist nicht nur eine 
+                    "Das direkte Feedback durch die EuroScent KYC-Integration ist nicht nur eine 
                     Bestätigung unserer Compliance-Bemühungen, sondern auch ein wertvoller Ansporn, 
                     jeden Tag die höchsten Sicherheitsstandards zu gewährleisten."
                   </p>
@@ -142,7 +142,7 @@ const Partners = () => {
                 </div>
                 <div>
                   <p className="text-foreground italic mb-4">
-                    "Durch PayExpert konnte unsere Firma effektiv authentische Kundenverifizierung 
+                    "Durch EuroScent konnte unsere Firma effektiv authentische Kundenverifizierung 
                     durchführen. Dies schafft noch mehr Vertrauen bei unseren Kunden und gibt 
                     wertvolle Einblicke in die Compliance-Performance."
                   </p>
@@ -162,7 +162,7 @@ const Partners = () => {
                 <div>
                   <p className="text-foreground italic mb-4">
                     "Die einfache Handhabung und die nachvollziehbaren Verifizierungsverfahren von 
-                    PayExpert haben es uns erleichtert, das Vertrauen unserer Kunden zu gewinnen 
+                    EuroScent haben es uns erleichtert, das Vertrauen unserer Kunden zu gewinnen 
                     und zu erhalten. Ein unverzichtbares Tool für jedes wachsende FinTech!"
                   </p>
                   <div className="text-sm text-muted-foreground">
@@ -181,7 +181,7 @@ const Partners = () => {
                 <div>
                   <p className="text-foreground italic mb-4">
                     "Als Payment Provider schätzen wir den Wert schneller und sicherer 
-                    KYC-Verifizierung sehr. Dank PayExpert können wir unsere Verpflichtung zur 
+                    KYC-Verifizierung sehr. Dank EuroScent können wir unsere Verpflichtung zur 
                     Compliance und Kundensicherheit unterstreichen. So optimieren wir unsere 
                     Prozesse kontinuierlich."
                   </p>
@@ -200,7 +200,7 @@ const Partners = () => {
                 </div>
                 <div>
                   <p className="text-foreground italic mb-4">
-                    "Seit wir PayExpert nutzen, hat sich unsere Position als vertrauenswürdiger 
+                    "Seit wir EuroScent nutzen, hat sich unsere Position als vertrauenswürdiger 
                     Finanzdienstleister deutlich gefestigt. Die Möglichkeit, maßgeschneiderte 
                     KYC-Lösungen zu erhalten, war ein echter Gamechanger. Einfach super!"
                   </p>
@@ -258,7 +258,7 @@ const Partners = () => {
                 Reseller-Partner
               </h3>
               <p className="text-muted-foreground mb-6">
-                Erweitern Sie Ihr Lösungsportfolio und vertreiben Sie PayExpert-Produkte 
+                Erweitern Sie Ihr Lösungsportfolio und vertreiben Sie EuroScent-Produkte 
                 ohne komplexe Integration.
               </p>
               <ul className="space-y-2 text-sm text-muted-foreground">

@@ -1,4 +1,5 @@
-import eppLogo from "@/assets/epp-logo-dark.png";
+import eppLogo from "@/assets/euroscent-logo.png";
+import { currentCompanyDetails } from "@/lib/companyDetails";
 import { useState, useEffect } from "react";
 import { PageLoader } from "@/components/PageLoader";
 import { supabase } from "@/integrations/supabase/client";
@@ -195,7 +196,7 @@ const AdminPayroll = () => {
       setPayrollEntries(payrollData || []);
       setFreelancerInvoices(freelancerData || []);
       setEmployees(employeesData || []);
-      setCompanyContact(companyData);
+      setCompanyContact(currentCompanyDetails(companyData || {}));
     } catch (error: any) {
       console.error("Error fetching data:", error);
       toast.error("Fehler beim Laden der Daten");

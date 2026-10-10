@@ -907,12 +907,12 @@ const Register = () => {
     <div className="min-h-screen flex items-center justify-center p-8 bg-background">
       <div className="w-full max-w-3xl">
         <div className="text-center mb-8">
-          <img src={logo} alt="EPP Logo" className="h-10 w-10 object-contain mb-6 mx-auto" />
+          <img src={logo} alt="EuroScent Logo" className="h-10 w-10 object-contain mb-6 mx-auto" />
           <h1 className="text-4xl font-bold text-foreground mb-2">
             Mitarbeiter-Registrierung
           </h1>
           <p className="text-muted-foreground mb-3">
-            Erstellen Sie Ihr Mitarbeiterkonto für EPP
+            Erstellen Sie Ihr Mitarbeiterkonto für EuroScent
           </p>
           <div className="mt-4 p-3 bg-muted/50 rounded-lg text-sm inline-block">
             <strong>Sie sind Unternehmen?</strong> Nutzen Sie die{" "}

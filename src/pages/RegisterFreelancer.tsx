@@ -687,13 +687,13 @@ const RegisterFreelancer = () => {
       <div className="w-full max-w-3xl">
         <div className="text-center mb-8">
           <Link to="/register" className="inline-block">
-            <img src={logo} alt="EPP Logo" className="h-10 w-10 object-contain mb-6 mx-auto" />
+            <img src={logo} alt="EuroScent Logo" className="h-10 w-10 object-contain mb-6 mx-auto" />
           </Link>
           <h1 className="text-4xl font-bold text-foreground mb-2">
             Freelancer-Registrierung
           </h1>
           <p className="text-muted-foreground mb-3">
-            Erstellen Sie Ihr Freelancer-Konto für EPP
+            Erstellen Sie Ihr Freelancer-Konto für EuroScent
           </p>
         </div>
 
@@ -906,7 +906,7 @@ const RegisterFreelancer = () => {
                 />
                 {isInvited && (
                   <p className="text-xs text-muted-foreground">
-                    Das Startdatum wurde von EPP festgelegt und kann nicht geändert werden.
+                    Das Startdatum wurde von EuroScent festgelegt und kann nicht geändert werden.
                   </p>
                 )}
               </div>
