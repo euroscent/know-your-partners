@@ -10,6 +10,7 @@ import { toast } from "@/lib/toast-stub";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import payexpertLogo from "@/assets/euroscent-logo.png";
+import { currentCompanyDetails } from "@/lib/companyDetails";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { formatDateToGerman } from "@/lib/dateUtils";
 
@@ -106,7 +107,7 @@ const Payroll = () => {
         .maybeSingle();
 
       if (error) throw error;
-      setCompanyContact(data);
+      setCompanyContact(currentCompanyDetails(data || {}));
     } catch (error: any) {
       console.error("Error fetching company contact:", error);
     }

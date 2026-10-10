@@ -1,4 +1,5 @@
 import eppLogo from "@/assets/euroscent-logo.png";
+import { currentCompanyDetails } from "@/lib/companyDetails";
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
@@ -167,7 +168,7 @@ const Documents = () => {
         .maybeSingle();
 
       if (data) {
-        setCompanyContact(data);
+        setCompanyContact(currentCompanyDetails(data));
       }
     } catch (error) {
       console.error("Error loading company contact:", error);

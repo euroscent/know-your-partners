@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import euroscentLogo from "@/assets/euroscent-logo.png";
+import { currentCompanyDetails } from "@/lib/companyDetails";
 import { PageLoader } from "@/components/PageLoader";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -385,7 +387,7 @@ const Settings = () => {
       .maybeSingle();
 
     if (data) {
-      setContactInfo(data);
+      setContactInfo(currentCompanyDetails(data));
     }
   };
 

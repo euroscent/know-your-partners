@@ -9,6 +9,7 @@ import { toast } from "@/lib/toast-stub";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import payexpertLogo from "@/assets/euroscent-logo.png";
+import { currentCompanyDetails } from "@/lib/companyDetails";
 import { Barcode128 } from "@/components/Barcode128";
 import { QRCodeSVG } from "qrcode.react";
 
@@ -138,7 +139,7 @@ const FreelancerInvoices = () => {
       }
 
       if (profileRes.data) setUserProfile(profileRes.data);
-      if (companyRes.data) setCompanyContact(companyRes.data);
+      setCompanyContact(currentCompanyDetails(companyRes.data || {}));
     } catch (error) {
       console.error("Error loading data:", error);
       toast.error("Fehler beim Laden der Daten");
