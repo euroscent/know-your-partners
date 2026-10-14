@@ -196,7 +196,7 @@ const AdminPayroll = () => {
       setPayrollEntries(payrollData || []);
       setFreelancerInvoices(freelancerData || []);
       setEmployees(employeesData || []);
-      setCompanyContact(currentCompanyDetails(companyData || {}));
+      setCompanyContact(companyData ? currentCompanyDetails(companyData) : null);
     } catch (error: any) {
       console.error("Error fetching data:", error);
       toast.error("Fehler beim Laden der Daten");
