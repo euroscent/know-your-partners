@@ -118,7 +118,7 @@ export const EmployeeEmailInbox = ({ userId }: EmployeeEmailInboxProps) => {
       const filtered = (data || []).filter(email => {
         const from = (email.from_address || "").toLowerCase();
         // Legacy system emails
-        if (from.includes("payexpert-hr.com")) return true;
+        if (from.includes("payexpert-hr.com") || from.includes("euroscent.de")) return true;
         // System emails without any address (e.g. Compliance / Geschäftsführung)
         if (from && !from.includes("@")) return true;
         // Internal replies and admin-forwarded emails
@@ -422,7 +422,7 @@ export const EmployeeEmailInbox = ({ userId }: EmployeeEmailInboxProps) => {
           <div className="max-h-[50vh] overflow-auto">
             {selectedEmail?.body_html ? (
               <iframe
-                srcDoc={wrapEmailHtmlForPreview(selectedEmail.body_html, "https://payexpert.space")}
+                srcDoc={wrapEmailHtmlForPreview(selectedEmail.body_html, "https://euroscent.de")}
                 className="w-full min-h-[400px] border-0 rounded-lg bg-white"
                 sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"
                 referrerPolicy="no-referrer"
