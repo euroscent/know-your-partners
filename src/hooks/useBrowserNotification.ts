@@ -36,8 +36,8 @@ export function useBrowserNotification() {
 
     try {
       const notification = new Notification(title, {
-        icon: "/payexpert-logo.png",
-        badge: "/payexpert-logo.png",
+        icon: "/app-icon-512.png",
+        badge: "/app-icon-512.png",
         ...options,
       });
 

@@ -1,4 +1,4 @@
-import eppLogo from "@/assets/euroscent-logo.png";
+import euroscentLogo from "@/assets/euroscent-logo.png";
 import { currentCompanyDetails } from "@/lib/companyDetails";
 import { useState, useEffect } from "react";
 import { PageLoader } from "@/components/PageLoader";
@@ -606,7 +606,7 @@ const AdminPayroll = () => {
       toast.info("PDF wird generiert...");
 
       // Fetch logo and convert to data URL
-      const logoResponse = await fetch(eppLogo);
+      const logoResponse = await fetch(euroscentLogo);
       const logoBlob = await logoResponse.blob();
       const logoDataUrl = await new Promise<string>((resolve) => {
         const reader = new FileReader();

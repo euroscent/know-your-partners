@@ -329,7 +329,7 @@ const VirtualEmployees = () => {
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="max.mustermann@payexpert.de"
+                  placeholder="max.mustermann@euroscent.de"
                 />
               </div>
               <div className="space-y-2">

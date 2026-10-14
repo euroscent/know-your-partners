@@ -4,7 +4,7 @@ import { X, Smartphone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { isStandalone, isPreviewHost, isInIframe } from "@/lib/pwa";
 
-const STORAGE_KEY = "payexpert.install-banner-dismissed-at";
+const STORAGE_KEY = "euroscent.install-banner-dismissed-at";
 const SUPPRESS_DAYS = 7;
 
 export function InstallAppBanner() {

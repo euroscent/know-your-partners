@@ -1,4 +1,4 @@
-import eppLogo from "@/assets/euroscent-logo.png";
+import euroscentLogo from "@/assets/euroscent-logo.png";
 import { currentCompanyDetails } from "@/lib/companyDetails";
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -334,7 +334,7 @@ const Documents = () => {
     let logoDataUrl = '';
     try {
       // Use company logo from database if available, otherwise fallback to local
-      const logoSource = companyContact?.logo_url || eppLogo;
+      const logoSource = companyContact?.logo_url || euroscentLogo;
       const res = await fetch(logoSource);
       if (res.ok) {
         const blob = await res.blob();

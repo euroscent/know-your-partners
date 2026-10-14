@@ -11,6 +11,6 @@ export const COMPANY_DETAILS = {
 } as const;
 
 /** Retire imported legacy identity without overwriting unrelated company settings. */
-export function currentCompanyDetails<T extends Record<string, unknown>>(data: T) {
+export function currentCompanyDetails<T extends object>(data: T) {
   return { ...data, ...COMPANY_DETAILS };
 }

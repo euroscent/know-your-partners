@@ -9,7 +9,7 @@ import { Download, Info, ChevronLeft, ChevronRight } from "lucide-react";
 import { toast } from "@/lib/toast-stub";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import payexpertLogo from "@/assets/euroscent-logo.png";
+import euroscentLogo from "@/assets/euroscent-logo.png";
 import { currentCompanyDetails } from "@/lib/companyDetails";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { formatDateToGerman } from "@/lib/dateUtils";
@@ -156,7 +156,7 @@ const Payroll = () => {
 
     // Logo laden und einfügen mit korrekten Proportionen
     const img = new Image();
-    img.src = payexpertLogo;
+    img.src = euroscentLogo;
     img.onload = () => {
       // Berechne das richtige Seitenverhältnis
       const logoWidth = 50;

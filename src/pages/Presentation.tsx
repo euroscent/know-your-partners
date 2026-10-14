@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import payexpertLogo from "@/assets/payexpert-logo.png";
+import euroscentLogo from "@/assets/euroscent-logo.png";
 
 // ================================================================
 // REAL UI MOCKUP COMPONENTS
@@ -173,14 +173,14 @@ function MockTaskEmail() {
     <div className="max-w-md mx-auto rounded-xl overflow-hidden shadow-xl border bg-white text-left">
       <div className="bg-slate-100 px-4 py-2 border-b flex items-center gap-2 text-xs text-slate-500">
         <Mail className="h-3 w-3" />
-        <span className="font-medium text-slate-700">noreply@payexpert.de</span>
+        <span className="font-medium text-slate-700">office@euroscent.de</span>
         <span className="ml-auto">Heute, 14:23</span>
       </div>
       <div className="p-5">
         <div className="flex items-center gap-3 mb-4">
-          <img src={payexpertLogo} alt="Logo" className="h-8 w-8" />
+          <img src={euroscentLogo} alt="Logo" className="h-8 w-8" />
           <div>
-            <p className="font-bold text-sm text-slate-900">PAYEXPERT</p>
+            <p className="font-bold text-sm text-slate-900">EUROSCENT</p>
             <p className="text-[10px] text-slate-500">Neuer Auftrag zugewiesen</p>
           </div>
         </div>
@@ -213,7 +213,7 @@ function MockTaskEmail() {
         </Button>
       </div>
       <div className="bg-slate-50 px-5 py-3 border-t text-[10px] text-slate-400 text-center">
-        © 2025 PAYEXPERT · Diese E-Mail wurde automatisch generiert.
+        © 2025 EUROSCENT · Diese E-Mail wurde automatisch generiert.
       </div>
     </div>
   );
@@ -224,14 +224,14 @@ function MockCompletionEmail() {
     <div className="max-w-md mx-auto rounded-xl overflow-hidden shadow-xl border bg-white text-left">
       <div className="bg-slate-100 px-4 py-2 border-b flex items-center gap-2 text-xs text-slate-500">
         <Mail className="h-3 w-3" />
-        <span className="font-medium text-slate-700">noreply@payexpert.de</span>
+        <span className="font-medium text-slate-700">office@euroscent.de</span>
         <span className="ml-auto">Heute, 18:45</span>
       </div>
       <div className="p-5">
         <div className="flex items-center gap-3 mb-4">
-          <img src={payexpertLogo} alt="Logo" className="h-8 w-8" />
+          <img src={euroscentLogo} alt="Logo" className="h-8 w-8" />
           <div>
-            <p className="font-bold text-sm text-slate-900">PAYEXPERT</p>
+            <p className="font-bold text-sm text-slate-900">EUROSCENT</p>
             <p className="text-[10px] text-slate-500">Auftragsbestätigung</p>
           </div>
         </div>
@@ -270,7 +270,7 @@ function MockCompletionEmail() {
         </div>
       </div>
       <div className="bg-slate-50 px-5 py-3 border-t text-[10px] text-slate-400 text-center">
-        © 2025 PAYEXPERT · Diese E-Mail wurde automatisch generiert.
+        © 2025 EUROSCENT · Diese E-Mail wurde automatisch generiert.
       </div>
     </div>
   );
@@ -326,7 +326,7 @@ const slides: Slide[] = [
   {
     id: "title",
     category: "Einführung",
-    title: "PAYEXPERT",
+    title: "EUROSCENT",
     subtitle: "KYC & Compliance Management Platform",
     description: "Die All-in-One Lösung für digitales Onboarding, Task-Management und Mitarbeiterverwaltung.",
     icon: Rocket,
@@ -519,7 +519,7 @@ const slides: Slide[] = [
     id: "closing",
     category: "Zusammenfassung",
     title: "Ihre Vorteile",
-    subtitle: "Warum PAYEXPERT?",
+    subtitle: "Warum EUROSCENT?",
     icon: BarChart3,
     gradient: "from-primary via-primary/80 to-primary/60",
     layout: "features",
@@ -697,7 +697,7 @@ export default function Presentation() {
     <div className="min-h-screen bg-background flex flex-col">
       <div className="flex items-center justify-between px-6 py-3 border-b bg-card">
         <div className="flex items-center gap-3">
-          <img src={payexpertLogo} alt="Logo" className="h-8 w-8" />
+          <img src={euroscentLogo} alt="Logo" className="h-8 w-8" />
           <span className="font-bold text-lg">Projekt-Vorstellung</span>
         </div>
         <div className="flex items-center gap-2">

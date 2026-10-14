@@ -29,7 +29,7 @@ app.use("*", async (c, next) => {
 });
 
 const mcpServer = new McpServer({
-  name: "payexpert-admin",
+  name: "euroscent-admin",
   version: "1.0.0",
 });
 
