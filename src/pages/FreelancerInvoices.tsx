@@ -8,7 +8,7 @@ import { Download, FileText, Euro, Clock, CheckCircle, AlertCircle, Barcode as B
 import { toast } from "@/lib/toast-stub";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import payexpertLogo from "@/assets/euroscent-logo.png";
+import euroscentLogo from "@/assets/euroscent-logo.png";
 import { currentCompanyDetails } from "@/lib/companyDetails";
 import { Barcode128 } from "@/components/Barcode128";
 import { QRCodeSVG } from "qrcode.react";
@@ -153,7 +153,7 @@ const FreelancerInvoices = () => {
     let yPos = 20;
 
     const img = new Image();
-    img.src = payexpertLogo;
+    img.src = euroscentLogo;
     img.onload = () => {
       const logoWidth = 50;
       const logoHeight = (img.height / img.width) * logoWidth;

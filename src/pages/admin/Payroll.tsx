@@ -1,4 +1,4 @@
-import eppLogo from "@/assets/euroscent-logo.png";
+import euroscentLogo from "@/assets/euroscent-logo.png";
 import { currentCompanyDetails } from "@/lib/companyDetails";
 import { useState, useEffect } from "react";
 import { PageLoader } from "@/components/PageLoader";
@@ -196,7 +196,7 @@ const AdminPayroll = () => {
       setPayrollEntries(payrollData || []);
       setFreelancerInvoices(freelancerData || []);
       setEmployees(employeesData || []);
-      setCompanyContact(currentCompanyDetails(companyData || {}));
+      setCompanyContact(companyData ? currentCompanyDetails(companyData) : null);
     } catch (error: any) {
       console.error("Error fetching data:", error);
       toast.error("Fehler beim Laden der Daten");
@@ -606,7 +606,7 @@ const AdminPayroll = () => {
       toast.info("PDF wird generiert...");
 
       // Fetch logo and convert to data URL
-      const logoResponse = await fetch(eppLogo);
+      const logoResponse = await fetch(euroscentLogo);
       const logoBlob = await logoResponse.blob();
       const logoDataUrl = await new Promise<string>((resolve) => {
         const reader = new FileReader();

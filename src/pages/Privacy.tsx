@@ -150,7 +150,7 @@ const Privacy = () => {
                 <p className="text-foreground font-semibold">EuroScent GmbH</p>
                 <p className="text-muted-foreground">Königsallee 89</p>
                 <p className="text-muted-foreground">D-40212 Düsseldorf</p>
-                <p className="text-muted-foreground mt-3">E-Mail: datenschutz@payexpert.de.com</p>
+                <p className="text-muted-foreground mt-3">E-Mail: office@euroscent.de</p>
               </div>
               <p className="text-muted-foreground leading-relaxed mb-4">
                 Verantwortliche Stelle ist die natürliche oder juristische Person, die allein oder gemeinsam mit 

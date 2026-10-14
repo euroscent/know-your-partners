@@ -1,4 +1,4 @@
-# EPP auf eigenem Supabase + VPS betreiben
+# EuroScent auf eigenem Supabase + VPS betreiben
 
 ## 1. Datenbank einrichten
 1. Supabase öffnen → **SQL Editor** → New query.

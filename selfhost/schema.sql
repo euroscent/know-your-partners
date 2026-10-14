@@ -1,4 +1,4 @@
--- EPP Datenbank-Schema für eigenes Supabase. Einmalig im SQL Editor ausführen.
+-- EuroScent Datenbank-Schema für eigenes Supabase. Einmalig im SQL Editor ausführen.
 CREATE EXTENSION IF NOT EXISTS pgcrypto; CREATE EXTENSION IF NOT EXISTS "uuid-ossp"; CREATE EXTENSION IF NOT EXISTS pg_net; CREATE EXTENSION IF NOT EXISTS pg_cron;
 --
 -- PostgreSQL database dump
@@ -1419,8 +1419,8 @@ CREATE TABLE public.task_completion_templates (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     created_by uuid,
-    sender_email text DEFAULT 'info@payexpert-hr.com'::text,
-    sender_name text DEFAULT 'PayExpert'::text
+    sender_email text DEFAULT 'office@euroscent.de'::text,
+    sender_name text DEFAULT 'EuroScent'::text
 );
 
 

@@ -27,4 +27,9 @@ BEGIN
   END IF;
 END $$;
 
+-- Alte Absenderangaben in gespeicherten Mailvorlagen auf EuroScent umstellen.
+UPDATE public.task_email_templates
+SET sender_email = 'office@euroscent.de', sender_name = 'EuroScent', updated_at = now()
+WHERE sender_email LIKE '%payexpert%' OR sender_name LIKE '%PayExpert%';
+
 COMMIT;

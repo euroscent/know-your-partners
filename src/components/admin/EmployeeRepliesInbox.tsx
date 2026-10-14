@@ -121,7 +121,7 @@ export function EmployeeRepliesInbox({ onUnreadCountChange }: EmployeeRepliesInb
     // Admin internal marker
     if (from.includes('admin (intern)')) return true;
     // ONLY EuroScent system emails count as admin
-    if (from.includes('payexpert')) return true;
+    if (from.includes('payexpert') || from.includes('euroscent')) return true;
     // Internal forwards (without employee name in angle brackets)
     if (from.includes('(intern)') && !from.includes('<')) return true;
     // External emails (no "(intern)" marker) are NOT employee replies - they are
@@ -184,7 +184,7 @@ export function EmployeeRepliesInbox({ onUnreadCountChange }: EmployeeRepliesInb
       const { data: complianceEmails, error: complianceError } = await supabase
         .from("received_emails")
         .select("id, from_address, to_address, subject, body_text, body_html, is_read, received_at, submission_id, task_id, headers")
-        .or("from_address.ilike.%payexpert-hr.com%,from_address.ilike.%Rolf Erwin Ruhfus%")
+        .or("from_address.ilike.%payexpert-hr.com%,from_address.ilike.%euroscent.de%,from_address.ilike.%Rolf Erwin Ruhfus%")
         .order("received_at", { ascending: false })
         .limit(500);
 
@@ -385,6 +385,7 @@ export function EmployeeRepliesInbox({ onUnreadCountChange }: EmployeeRepliesInb
     return thread.messages.some(m => 
       m.headers?.compliance_email === true ||
       m.from_address.toLowerCase().includes('payexpert-hr.com') ||
+      m.from_address.toLowerCase().includes('euroscent.de') ||
       m.from_address.trim().toLowerCase() === 'daniel krauss'
     );
   };

@@ -184,7 +184,7 @@ export const EmployeeChat = forwardRef<EmployeeChatRef>((_, ref) => {
               
               // Play sound and show notification
               playNotificationSound();
-              showNotification('Neue Nachricht vom HR-Team', {
+              showNotification('Neue Nachricht vom ES Assistent', {
                 body: newMessage.message.substring(0, 100),
                 tag: `hr-chat-${newMessage.id}`,
               });
@@ -279,7 +279,7 @@ export const EmployeeChat = forwardRef<EmployeeChatRef>((_, ref) => {
                   tag: `notification-${newMessage.id}`,
                 });
               } else {
-                showNotification('Neue Nachricht vom HR-Team', {
+                showNotification('Neue Nachricht vom ES Assistent', {
                   body: newMessage.message.substring(0, 100),
                   tag: `notification-${newMessage.id}`,
                 });
