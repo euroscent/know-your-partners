@@ -937,6 +937,18 @@ const Employees = () => {
       contractContent = contractContent.replace(/\{\{unterzeichner_name\}\}/g, signatureData?.signer_name || '');
       contractContent = contractContent.replace(/\{\{unterzeichner_titel\}\}/g, signatureData?.signer_title || '');
 
+      // Standard-Platzhalter ({{vorname}}, {{startdatum}}, {{gehalt}}, {{company_signature}} ...)
+      contractContent = replaceContractPlaceholders(contractContent, {
+        startDate: new Date().toLocaleDateString('de-DE'),
+        salary: '2.200',
+        firstName: employee.first_name || '',
+        lastName: employee.last_name || '',
+        street: employee.street || '',
+        postalCode: employee.postal_code || '',
+        city: employee.city || '',
+        companySignature: signatureData?.signature_data || '',
+      });
+
       // Create contract document
       const { error: contractError } = await supabase
         .from('employee_documents')
