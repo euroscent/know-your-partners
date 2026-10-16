@@ -228,7 +228,30 @@ const Documents = () => {
 
        const chosenSignature = signatureMeta || profile?.signature_data || lastSigned?.signature_data || null;
 
-       const contractContent = `Arbeitsvertrag – ${getContractTypeLabel(contractTypeMeta)}\n\n` +
+      // EuroScent-Vertragsvorlage verwenden, falls vorhanden
+      let contractContent: string;
+      const { data: templateData } = await supabase
+        .from("contract_templates")
+        .select("content")
+        .ilike("category", contractTypeMeta)
+        .eq("is_active", true)
+        .order("updated_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (templateData?.content) {
+        contractContent = replaceContractPlaceholders(templateData.content, {
+          startDate,
+          salary: monthlySalary,
+          firstName: firstName || '',
+          lastName: lastName || '',
+          street: profile?.street || '',
+          postalCode: profile?.postal_code || '',
+          city: profile?.city || '',
+          companySignature: companySignature || '',
+        }).replace(/\{\{[^}]*\}\}/g, "");
+      } else {
+       contractContent = `Arbeitsvertrag – ${getContractTypeLabel(contractTypeMeta)}\n\n` +
         `Vertrag zwischen\n\n` +
         `Unternehmen\n${companyContact?.company_name || "EuroScent GmbH"}\n` +
         `${companyContact?.street_address || "Grimmaischer Steinweg 8"}\n` +
@@ -239,6 +262,7 @@ const Documents = () => {
         `${profile?.postal_code || ""} ${profile?.city || ""}\n\n` +
         `Vergütung\nMonatliches Gehalt: ${monthlySalary} €\n\n` +
         `Datum: ${new Date().toLocaleDateString('de-DE')}\nStartdatum: ${startDate}`;
+      }
 
       const { error: docError } = await supabase
         .from('employee_documents')
