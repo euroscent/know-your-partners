@@ -23,6 +23,7 @@ import { toast } from "@/lib/toast-stub";
 import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import { formatDateToGerman } from "@/lib/dateUtils";
+import { replaceContractPlaceholders } from "@/lib/formatContractContent";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -908,8 +909,10 @@ const Employees = () => {
       const { data: templateData } = await supabase
         .from("contract_templates")
         .select("content")
-        .eq("category", contractCategory)
+        .ilike("category", contractCategory)
         .eq("is_active", true)
+        .order("updated_at", { ascending: false })
+        .limit(1)
         .maybeSingle();
 
       if (!templateData) {
