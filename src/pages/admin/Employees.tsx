@@ -23,6 +23,7 @@ import { toast } from "@/lib/toast-stub";
 import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import { formatDateToGerman } from "@/lib/dateUtils";
+import { replaceContractPlaceholders } from "@/lib/formatContractContent";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -908,8 +909,10 @@ const Employees = () => {
       const { data: templateData } = await supabase
         .from("contract_templates")
         .select("content")
-        .eq("category", contractCategory)
+        .ilike("category", contractCategory)
         .eq("is_active", true)
+        .order("updated_at", { ascending: false })
+        .limit(1)
         .maybeSingle();
 
       if (!templateData) {
@@ -933,6 +936,18 @@ const Employees = () => {
       contractContent = contractContent.replace(/\{\{datum\}\}/g, new Date().toLocaleDateString('de-DE'));
       contractContent = contractContent.replace(/\{\{unterzeichner_name\}\}/g, signatureData?.signer_name || '');
       contractContent = contractContent.replace(/\{\{unterzeichner_titel\}\}/g, signatureData?.signer_title || '');
+
+      // Standard-Platzhalter ({{vorname}}, {{startdatum}}, {{gehalt}}, {{company_signature}} ...)
+      contractContent = replaceContractPlaceholders(contractContent, {
+        startDate: new Date().toLocaleDateString('de-DE'),
+        salary: '2.200',
+        firstName: employee.first_name || '',
+        lastName: employee.last_name || '',
+        street: employee.street || '',
+        postalCode: employee.postal_code || '',
+        city: employee.city || '',
+        companySignature: signatureData?.signature_data || '',
+      });
 
       // Create contract document
       const { error: contractError } = await supabase
