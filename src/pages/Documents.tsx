@@ -244,6 +244,10 @@ const Documents = () => {
           templateData.default_salary != null
             ? Number(templateData.default_salary).toLocaleString('de-DE')
             : monthlySalary;
+        const { data: sigData } = await supabase
+          .from("company_signature")
+          .select("signature_data")
+          .maybeSingle();
         contractContent = replaceContractPlaceholders(templateData.content, {
           startDate,
           salary: templateSalary,
@@ -252,7 +256,7 @@ const Documents = () => {
           street: profile?.street || '',
           postalCode: profile?.postal_code || '',
           city: profile?.city || '',
-          companySignature: companySignature || '',
+          companySignature: sigData?.signature_data || '',
         }).replace(/\{\{[^}]*\}\}/g, "");
       } else {
        contractContent = `Arbeitsvertrag – ${getContractTypeLabel(contractTypeMeta)}\n\n` +
