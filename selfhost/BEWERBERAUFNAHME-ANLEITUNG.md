@@ -9,6 +9,8 @@ Die App nutzt weiterhin dein eigenes Backend. Die neuen Seiten sind vorbereitet,
 Öffne **SQL Editor → New query**. Öffne `bewerberaufnahme.sql`, kopiere den gesamten Inhalt, füge ihn ein und klicke **Run**. Das Skript ist ein Update für deine bereits vorhandene EuroScent-Datenbank, kein Ersatz für das komplette Grundschema.
 
 ## 3. Eine neue Serverfunktion anlegen
+Falls **applicant-api** bereits bereitgestellt ist, die bestehende Funktion öffnen, ihren Inhalt durch die aktuelle Datei ersetzen und erneut **Deploy** klicken. Die Aktualisierung behebt die Kontobereinigung bei fehlgeschlagener Annahme und verhindert eine gemeinsame Fünf-Bewerbungen-Grenze bei fehlender IP-Weitergabe. Das SQL muss dafür nicht erneut ausgeführt werden.
+
 Öffne **Edge Functions → Create a new function**.
 - Name: **applicant-api**
 - Kopiere den gesamten Inhalt von `functions/applicant-api/index.ts` in den Editor.
