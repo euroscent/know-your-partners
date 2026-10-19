@@ -7,6 +7,7 @@ Die App nutzt weiterhin dein eigenes Backend. Die neuen Seiten sind vorbereitet,
 
 ## 2. SQL ausführen
 Öffne **SQL Editor → New query**. Öffne `bewerberaufnahme.sql`, kopiere den gesamten Inhalt, füge ihn ein und klicke **Run**. Das Skript ist ein Update für deine bereits vorhandene EuroScent-Datenbank, kein Ersatz für das komplette Grundschema.
+Für selbst gewählte Zugangsdaten anschließend `bewerber-zugang.sql` vollständig in einer neuen Abfrage ausführen. Danach **applicant-api** durch die aktuelle Datei ersetzen und erneut **Deploy** klicken. Die Website erst danach veröffentlichen: Die neue Anmeldung per Benutzername benötigt diesen Dienst.
 
 ## 3. Eine neue Serverfunktion anlegen
 Falls **applicant-api** bereits bereitgestellt ist, die bestehende Funktion öffnen, ihren Inhalt durch die aktuelle Datei ersetzen und erneut **Deploy** klicken. Die Aktualisierung behebt die Kontobereinigung bei fehlgeschlagener Annahme und verhindert eine gemeinsame Fünf-Bewerbungen-Grenze bei fehlender IP-Weitergabe. Das SQL muss dafür nicht erneut ausgeführt werden.
@@ -21,6 +22,7 @@ Falls **applicant-api** bereits bereitgestellt ist, die bestehende Funktion öff
 Unter **Edge Functions → Secrets** einen neuen Eintrag setzen:
 - Name: **APPLICANT_ALLOWED_ORIGINS**
 - Wert: Die vollständige Adresse deiner Website, ohne abschließenden Schrägstrich. Mehrere Adressen mit Komma trennen, beispielsweise veröffentlichte Website und Vorschau. Keine Zugangsschlüssel in diesen Wert schreiben.
+- Für deine Mitarbeiter-Website muss **https://mitarbeiter.euroscent.de** enthalten sein; vorhandene Adressen beibehalten.
 
 Unter **Authentication → URL Configuration**:
 - **Site URL**: deine veröffentlichte Website.
@@ -32,8 +34,8 @@ Zugangsmails verwenden die eingebauten Auth-Mails deines eigenen Backends. Prüf
 1. Bewerber öffnet **Bei EuroScent bewerben** auf der Anmeldeseite und schickt das Formular ab.
 2. Admin öffnet **Neue Bewerber**, prüft die Daten und führt das Telefoninterview.
 3. **Bewerbung annehmen**: aktive Vertragsvorlage, Startdatum und Vergütung auswählen. Die Vergütungsperiode entspricht dem Text der Vorlage; sie wird nicht automatisch in einen Monatsbetrag umgerechnet.
-4. Das Konto wird erstellt oder mit einem bestehenden Konto gleicher E-Mail verbunden. Der Vertrag wird als feste Fassung gespeichert. Wiederholte Annahme erstellt keinen zweiten Vertrag.
-5. Bewerber legt über die Zugangsmail sein Passwort fest und öffnet **Mitarbeiteraufnahme**.
+4. Neue Bewerber wählen Benutzername und Passwort schon im Formular. Das Konto bleibt zunächst für Anmeldung und Passwort-Wiederherstellung gesperrt. Bei Annahme wird der Vertrag als feste Fassung gespeichert und der Login freigegeben. Wiederholte Annahme erstellt keinen zweiten Vertrag. Ein vorhandenes Konto wird nicht durch eine öffentliche Bewerbung überschrieben.
+5. Bewerber meldet sich mit den gewählten Zugangsdaten an und öffnet **Mitarbeiteraufnahme**. Alte Bewerbungen ohne eigene Zugangsdaten behalten den Zugangsmail-Ablauf. Die Annahme bestätigt bei neuen Bewerberkonten auch deren E-Mail im Auth-Dienst; eine separate E-Mail-Bestätigung ist für diese Konten nicht nötig. Passwörter werden ausschließlich im Auth-Dienst verarbeitet, nicht in Bewerbungen oder Profilen gespeichert.
 6. Vertrag lesen, am Bildschirm unterschreiben und Zustimmung bestätigen.
 7. Kontoinhaber, IBAN und BIC eingeben. Die Bankdaten werden erst nach Unterschrift akzeptiert.
 8. Vorder- und Rückseite des Ausweises hochladen und zur Prüfung einreichen.
