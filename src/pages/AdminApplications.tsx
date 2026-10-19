@@ -71,8 +71,7 @@ const AdminApplications = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [acceptDialogOpen, setAcceptDialogOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
-  const [acceptOption, setAcceptOption] = useState<string>("");
-  const [startDate, setStartDate] = useState<string>("");
+    const [startDate, setStartDate] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [detailApplication, setDetailApplication] = useState<Application | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -113,7 +112,8 @@ const AdminApplications = () => {
       .order("created_at", { ascending: false });
 
     if (error) {
-      toast.error("Fehler beim Laden der Bewerbungen");
+      setNotice(tr("Bewerbungen konnten nicht geladen werden. Bitte erneut versuchen.", "Could not load applications. Please try again."));
+      setLoading(false);
       return;
     }
 
@@ -180,7 +180,7 @@ const AdminApplications = () => {
 
   const openAcceptDialog = (application: Application) => {
     setSelectedApplication(application);
-    setAcceptOption(""); setTemplateId(""); setSalary(""); setNotice("");
+    setTemplateId(""); setSalary(""); setNotice("");
     supabase.from("contract_templates").select("id,name,category,version,default_salary").eq("is_active",true).order("name").then(({data,error}) => { if(error) setNotice(tr("Vorlagen konnten nicht geladen werden.","Could not load templates.")); setTemplates(data || []); });
     // Setze Standard-Startdatum auf den 1. des nächsten Monats
     const today = new Date();
@@ -284,157 +284,15 @@ const AdminApplications = () => {
     }
   };
 
-  const handleConvertToFreelancer = async (application: Application) => {
-    if (!confirm(`${application.first_name} ${application.last_name} als Freelancer übernehmen?\n\n• Mitarbeiterkonto wird angelegt\n• Freelancer-Vertrag wird erstellt\n• Freie Outlook-E-Mail wird zugewiesen`)) {
-      return;
-    }
-
-    try {
-      toast.info("Mitarbeiter wird angelegt...");
-
-      // 0) Check if a profile with this email already exists
-      const { data: existingProfile } = await supabase
-        .from("profiles")
-        .select("id, first_name, last_name")
-        .ilike("email", application.email)
-        .maybeSingle();
-
-      let newUserId: string;
-
-      if (existingProfile?.id) {
-        const existingName = `${existingProfile.first_name || ""} ${existingProfile.last_name || ""}`.trim();
-        const proceed = confirm(
-          `Diese E-Mail (${application.email}) ist bereits registriert${existingName ? ` als „${existingName}"` : ""}.\n\nBestehendes Konto als Freelancer übernehmen und mit den Bewerber-Daten aktualisieren?`
-        );
-        if (!proceed) return;
-        newUserId = existingProfile.id;
-        await supabase
-          .from("profiles")
-          .update({
-            first_name: application.first_name,
-            last_name: application.last_name,
-            employment_type: "freelancer",
-          })
-          .eq("id", newUserId);
-      } else {
-        // 1) Create employee via edge function (employment_type = freelancer)
-        const { data: createData, error: createError } = await supabase.functions.invoke("create-employee", {
-          body: {
-            email: application.email,
-            first_name: application.first_name,
-            last_name: application.last_name,
-            employment_type: "freelancer",
-            verified: false,
-          },
-        });
-
-        if (createError || !createData?.user_id) {
-          throw new Error(createData?.error || createError?.message || "Mitarbeiter konnte nicht angelegt werden");
-        }
-        newUserId = createData.user_id as string;
-      }
-
-      // 2) Update profile with phone + birth_date from application
-      const profileUpdate: Record<string, any> = {
-        phone: application.phone,
-      };
-      if (application.birth_date) profileUpdate.birth_date = application.birth_date;
-
-      const { error: profileError } = await supabase
-        .from("profiles")
-        .update(profileUpdate)
-        .eq("id", newUserId);
-
-      if (profileError) console.warn("Profil-Update Fehler:", profileError);
-
-      // 3) Create freelancer contract from template
-      try {
-        const [{ data: companyData }, { data: signatureData }, { data: templateData }] = await Promise.all([
-          supabase.from("company_contact").select("*").maybeSingle(),
-          supabase.from("company_signature").select("*").maybeSingle(),
-          supabase.from("contract_templates").select("content").ilike("category", "freelancer").eq("is_active", true).maybeSingle(),
-        ]);
-
-        if (templateData?.content) {
-          let contractContent = templateData.content;
-          contractContent = contractContent.replace(/\{\{mitarbeiter_vorname\}\}/g, application.first_name || "");
-          contractContent = contractContent.replace(/\{\{mitarbeiter_nachname\}\}/g, application.last_name || "");
-          contractContent = contractContent.replace(/\{\{mitarbeiter_geburtsdatum\}\}/g, application.birth_date ? formatDateToGerman(application.birth_date) : "");
-          contractContent = contractContent.replace(/\{\{unternehmen_name\}\}/g, companyData?.company_name || "");
-          contractContent = contractContent.replace(/\{\{unternehmen_strasse\}\}/g, companyData?.street_address || "");
-          contractContent = contractContent.replace(/\{\{unternehmen_plz\}\}/g, companyData?.postal_code || "");
-          contractContent = contractContent.replace(/\{\{unternehmen_stadt\}\}/g, companyData?.city || "");
-          contractContent = contractContent.replace(/\{\{datum\}\}/g, new Date().toLocaleDateString("de-DE"));
-          contractContent = contractContent.replace(/\{\{unterzeichner_name\}\}/g, signatureData?.signer_name || "");
-          contractContent = contractContent.replace(/\{\{unterzeichner_titel\}\}/g, signatureData?.signer_title || "");
-
-          const { error: contractError } = await supabase
-            .from("employee_documents")
-            .insert({
-              user_id: newUserId,
-              document_type: "contract",
-              title: `Freelancer-Vertrag - ${application.first_name} ${application.last_name}`,
-              description: `Freelancer-Vertrag für ${application.first_name} ${application.last_name}`,
-              contract_type: "freelancer",
-              start_date: new Date().toISOString().split("T")[0],
-              signature_data: "",
-              content: contractContent,
-            });
-
-          if (contractError) console.warn("Vertrag-Fehler:", contractError);
-        } else {
-          toast.warning("Keine aktive Freelancer-Vorlage gefunden – Vertrag nicht erstellt.");
-        }
-      } catch (e) {
-        console.warn("Vertrag konnte nicht erstellt werden:", e);
-      }
-
-      // 4) Assign next available Outlook email
-      const { data: freeAccount } = await supabase
-        .from("email_accounts")
-        .select("id, email_address")
-        .eq("status", "available")
-        .ilike("provider", "%outlook%")
-        .is("assigned_to", null)
-        .order("created_at", { ascending: true })
-        .limit(1)
-        .maybeSingle();
-
-      let assignedEmail: string | null = null;
-      if (freeAccount?.id) {
-        const { error: assignError } = await supabase
-          .from("email_accounts")
-          .update({ assigned_to: newUserId, status: "assigned" })
-          .eq("id", freeAccount.id);
-        if (assignError) {
-          console.warn("E-Mail-Zuweisung Fehler:", assignError);
-        } else {
-          assignedEmail = freeAccount.email_address;
-        }
-      }
-
-      // 5) Update application status to approved
-      await supabase
-        .from("applications")
-        .update({ status: "approved", employment_type: "freelancer" })
-        .eq("id", application.id);
-
-      toast.success(
-        `${application.first_name} ${application.last_name} als Freelancer übernommen` +
-          (assignedEmail ? ` · Outlook: ${assignedEmail}` : " · Keine freie Outlook-E-Mail verfügbar")
-      );
-      fetchApplications();
-    } catch (error: any) {
-      console.error("Convert to freelancer error:", error);
-      toast.error(error.message || "Fehler beim Übernehmen als Freelancer");
-    }
+  const handleConvertToFreelancer = (application: Application) => {
+    openAcceptDialog(application);
   };
 
   const downloadResume = async (resumePath: string, firstName: string, lastName: string) => {
     try {
 
       const { data, error } = await supabase.storage
-        .from('applications')
+        .from(resumePath.startsWith('applications/') ? 'verification-documents' : 'applications')
         .download(resumePath);
 
       if (error) throw error;
@@ -719,11 +577,11 @@ const AdminApplications = () => {
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                            className="text-primary hover:text-primary"
                             onClick={() => handleConvertToFreelancer(app)}
                           >
                             <UserPlus className="h-4 w-4 mr-1" />
-                            Als Freelancer übernehmen
+                            {tr("Freelancer-Vertrag auswählen", "Select freelancer contract")}
                           </Button>
                         )}
                         {app.status === "pending" && (
@@ -886,7 +744,7 @@ const AdminApplications = () => {
                       variant="outline"
                       size="sm"
                       className="gap-2"
-                      onClick={() => downloadResume(detailApplication.resume_path!, detailApplication.first_name, detailApplication.last_name)}
+                      onClick={() => { if (detailApplication.resume_path) downloadResume(detailApplication.resume_path, detailApplication.first_name, detailApplication.last_name); }}
                     >
                       <Download className="h-4 w-4" />
                       Herunterladen
