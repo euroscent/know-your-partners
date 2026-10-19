@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Wartezeit bei Bewerbungen von fehlender Schutzprüfung unterscheiden und testen
+- [x] Wartezeit bei Bewerbungen von fehlender Schutzprüfung getrennt; 27 Tests bestanden, eigenes Backend benötigt Betreiber-Deploy und neue Antwort
 
 - [x] Irreführende Konfliktmeldung bei neuen Bewerberkonten korrigiert; 23 Tests bestanden, tatsächlicher Dienstfehler benötigt neue Antwort nach Betreiber-Deploy
 
