@@ -10,6 +10,8 @@ const applicationSchema = z.object({
   employment_type: z.enum(['minijob','teilzeit','vollzeit','freelancer']), message: z.string().max(3000).default(''),
   website: z.string().max(0).optional(),
   resume: z.string().max(7000000).regex(/^data:application\/pdf;base64,[A-Za-z0-9+/=]+$/).optional(),
+  username: z.string().trim().toLowerCase().regex(/^[a-z0-9][a-z0-9._-]{2,31}$/),
+  password: z.string().min(12).max(128),
 });
 const acceptSchema = z.object({ application_id: z.string().uuid(), template_id: z.string().uuid(),
   start_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/), salary: z.number().min(0).max(1000000),
@@ -24,10 +26,21 @@ Deno.serve(async req => {
   try {
     if (Number(req.headers.get('content-length') || '0') > 7500000) return respond({ error:'File too large' },413);
     const body = await req.json();
+    if (body.action === 'login') {
+      if (typeof body.username !== 'string' || typeof body.password !== 'string' || body.username.length > 32 || body.password.length > 128) return respond({error:'Invalid login credentials'},400);
+      const {data:profile,error:lookupError}=await admin.from('profiles').select('id,email').eq('username',body.username.trim().toLowerCase()).maybeSingle();
+      if(lookupError || !profile) return respond({error:'Invalid login credentials'},401);
+      const {data:account,error:accountError}=await admin.from('applicant_accounts').select('accepted_at').eq('user_id',profile.id).maybeSingle();
+      if(accountError || (account && !account.accepted_at)) return respond({error:'Invalid login credentials'},401);
+      const client=createClient(Deno.env.get('SUPABASE_URL') || '',Deno.env.get('SUPABASE_ANON_KEY') || '',{auth:{persistSession:false}});
+      const {data,error}=await client.auth.signInWithPassword({email:profile.email,password:body.password});
+      if(error || !data.session) return respond({error:'Invalid login credentials'},401);
+      return respond({session:data.session});
+    }
     if (body.action === 'submit') {
       const parsed = applicationSchema.safeParse(body.application);
       if (!parsed.success) return respond({ error: 'Bitte alle Pflichtfelder prüfen / Check required fields' },400);
-      const { resume, website, ...application } = parsed.data;
+      const { resume, website, username, password, ...application } = parsed.data;
       const date = new Date(application.birth_date + 'T00:00:00Z');
       if (Number.isNaN(date.getTime()) || date.toISOString().slice(0,10)!==application.birth_date || date >= new Date()) return respond({ error:'Invalid birth date' },400);
       const ip = req.headers.get('cf-connecting-ip');
@@ -52,9 +65,26 @@ Deno.serve(async req => {
         const { error } = await admin.storage.from('verification-documents').upload(path,bytes,{ contentType:'application/pdf' });
         if (error) throw error;
       }
-      const { error } = await admin.from('applications').insert({ ...application,email:application.email.toLowerCase(),status:'pending',resume_path:path });
-      if (error) {
-        if (path) await admin.storage.from('verification-documents').remove([path]);
+      let createdId: string | undefined;
+      let applicationId: string | undefined;
+      try {
+        const {data:taken,error:lookupError}=await admin.from('profiles').select('id').eq('username',username).maybeSingle();
+        if(lookupError) throw lookupError;
+        if(taken) return respond({error:'Benutzername nicht verfügbar / Username unavailable'},409);
+        const {data:created,error:createError}=await admin.auth.admin.createUser({email:application.email.toLowerCase(),password,email_confirm:false,ban_duration:'876000h',user_metadata:{first_name:application.first_name,last_name:application.last_name}});
+        if(createError || !created.user) return respond({error:'Konto nicht verfügbar. Andere E-Mail oder Benutzernamen verwenden / Account unavailable; use another email or username'},409);
+        createdId=created.user.id;
+        const {error:profileError}=await admin.from('profiles').upsert({id:createdId,email:application.email.toLowerCase(),username});
+        if(profileError) throw profileError;
+        const {data:saved,error:saveError}=await admin.from('applications').insert({...application,email:application.email.toLowerCase(),status:'pending',resume_path:path}).select('id').single();
+        if(saveError || !saved) throw saveError || new Error('Application not saved');
+        applicationId=saved.id;
+        const {error:linkError}=await admin.from('applicant_accounts').insert({user_id:createdId,application_id:applicationId});
+        if(linkError) throw linkError;
+      } catch(error) {
+        if(applicationId) await admin.from('applications').delete().eq('id',applicationId);
+        if(createdId) await admin.auth.admin.deleteUser(createdId);
+        if(path) await admin.storage.from('verification-documents').remove([path]);
         throw error;
       }
       return respond({ success:true });
@@ -69,6 +99,16 @@ Deno.serve(async req => {
     const parsed = acceptSchema.safeParse(body);
     if (!parsed.success) return respond({ error:'Invalid acceptance values' },400);
     const input = parsed.data;
+    const unlockChosenAccount = async () => {
+      const {data:account,error}=await admin.from('applicant_accounts').select('user_id').eq('application_id',input.application_id).maybeSingle();
+      if(error) throw error;
+      if(!account) return false;
+      const {error:unlockError}=await admin.auth.admin.updateUserById(account.user_id,{ban_duration:'none',email_confirm:true});
+      if(unlockError) throw unlockError;
+      const {error:markError}=await admin.from('applicant_accounts').update({accepted_at:new Date().toISOString()}).eq('user_id',account.user_id);
+      if(markError) throw markError;
+      return true;
+    };
     // Redirects are configured by the owner, never accepted from untrusted input.
     const allowedOrigins = (Deno.env.get('APPLICANT_ALLOWED_ORIGINS') || '').split(',').map(s=>s.trim()).filter(Boolean);
     if (!allowedOrigins.includes(new URL(input.origin).origin)) return respond({ error:'Diese Website muss zuerst in APPLICANT_ALLOWED_ORIGINS eingetragen werden.' },400);
@@ -78,6 +118,7 @@ Deno.serve(async req => {
     if (!template) return respond({ error:'Active contract template required' },400);
     const { data:existing } = await admin.from('applicant_workflows').select('user_id').eq('application_id',input.application_id).maybeSingle();
     if (existing) {
+      if(await unlockChosenAccount()) return respond({success:true,already_accepted:true});
       const authClient = createClient(Deno.env.get('SUPABASE_URL') || '',Deno.env.get('SUPABASE_ANON_KEY') || '',{auth:{persistSession:false}});
       const {error:mailError}=await authClient.auth.resetPasswordForEmail(application.email,{redirectTo:new URL('/reset-password',input.origin).href});
       return respond({success:true,already_accepted:true,email_sent:!mailError,warning:mailError ? 'Vertrag bereitgestellt. Zugangsmail konnte nicht gesendet werden; Passwortlink erneut senden.' : null});
@@ -112,7 +153,8 @@ Deno.serve(async req => {
       }
       throw error;
     }
-    // Auth sends its own single-use recovery email; no private key or token is returned.
+    if(await unlockChosenAccount()) return respond({success:true});
+    // Legacy applications still use the existing recovery-email flow.
     const authClient = createClient(Deno.env.get('SUPABASE_URL') || '',Deno.env.get('SUPABASE_ANON_KEY') || '',{auth:{persistSession:false}});
     const { error:mailError } = await authClient.auth.resetPasswordForEmail(application.email,{redirectTo:new URL('/reset-password',input.origin).href});
     return respond({ success:true,email_sent:!mailError,warning:mailError ? 'Vertrag bereitgestellt. Zugangsmail konnte nicht gesendet werden; Passwortlink erneut senden.' : null });
