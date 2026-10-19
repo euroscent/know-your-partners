@@ -15,7 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileText, Download, Calendar, Mail, Inbox, MailOpen, Trash2, Eye, Circle } from "lucide-react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
-import { formatContractContent } from "@/lib/formatContractContent";
+import { formatContractContent, replaceContractPlaceholders } from "@/lib/formatContractContent";
 import { EmployeeEmailInbox } from "@/components/EmployeeEmailInbox";
 
 interface Document {
