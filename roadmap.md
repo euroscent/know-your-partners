@@ -7,7 +7,10 @@
 - [x] Automatische Aktivierung und Statusübersicht ergänzen
 - [x] Aufgabenzuweisung lokal gegen Aufnahmefreigaben prüfen; bestehende Statusverfolgung erhalten
 - [x] Lokale Tests und manuelle Einrichtung für eigenen Backend-Betrieb bereitstellen
-- [ ] Vollständigen Praxistest nach gemeldeter SQL-/Funktionsbereitstellung durchführen und gefundene Fehler beheben — angemeldeter Zugang zum eigenen Backend noch zu prüfen
+- [x] Öffentliche Bewerbung, bereitgestellten Bewerbungsdienst und Schutz ohne Anmeldung live prüfen
+- [x] Freelancer-Aufnahme, Lebenslauf-Download und fehlgeschlagene Kontoanlage korrigieren; 14 lokale Tests bestanden
+- [ ] Vollständigen angemeldeten Praxistest bis Aktivierung durchführen — eigenes Backend erlaubt hier keine verwalteten Mitarbeiter-/Adminsitzungen; Mailzustellung und Ausweis-Upload bleiben ungeprüft
+- [ ] Aktualisierte applicant-api im eigenen Backend bereitstellen — muss vom Betreiber im Browser erneut veröffentlicht werden
 
 - [x] Passwort-Wiederherstellung im Login ergänzen
 - [x] Öffentliche Reset-Seite einbinden
