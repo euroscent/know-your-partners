@@ -52,13 +52,21 @@ Deno.serve(async req => {
         const digest = await crypto.subtle.digest('SHA-256',new TextEncoder().encode(ip));
         const key = Array.from(new Uint8Array(digest)).map(x=>x.toString(16).padStart(2,'0')).join('');
         const { data: allowed, error: limitError } = await admin.rpc('applicant_submission_allowed',{ _key:key });
-        if (limitError || !allowed) return respond({ error:'Bitte später erneut versuchen / Please try again later' },429);
+        if (limitError) {
+          console.error('Applicant personal limit check failed');
+          return respond({error:'Die Schutzprüfung für Bewerbungen ist nicht eingerichtet oder nicht erreichbar. Der Betreiber muss bewerberaufnahme.sql prüfen / Application protection is unavailable; the owner must check bewerberaufnahme.sql',code:'submission_limit_check_failed'},500);
+        }
+        if (allowed !== true) return respond({ error:'Zu viele Bewerbungsversuche. Bitte bis zu einer Stunde warten und nicht erneut absenden / Too many application attempts; wait up to one hour before submitting again',code:'submission_rate_limited' },429);
       }
       // A shared ceiling prevents rotated/spoofed client headers from bypassing all limits.
       const globalDigest = await crypto.subtle.digest('SHA-256',new TextEncoder().encode('applicant-global-limit'));
       const globalKey = Array.from(new Uint8Array(globalDigest)).map(x=>x.toString(16).padStart(2,'0')).join('');
       const {data:globalAllowed,error:globalError}=await admin.rpc('applicant_global_submission_allowed',{_key:globalKey});
-      if(globalError || !globalAllowed) return respond({error:'Bitte später erneut versuchen / Please try again later'},429);
+      if(globalError) {
+        console.error('Applicant global limit check failed');
+        return respond({error:'Die Schutzprüfung für Bewerbungen ist nicht eingerichtet oder nicht erreichbar. Der Betreiber muss bewerberaufnahme.sql prüfen / Application protection is unavailable; the owner must check bewerberaufnahme.sql',code:'global_submission_limit_check_failed'},500);
+      }
+      if(globalAllowed !== true) return respond({error:'Der Bewerbungsdienst hat seine stündliche Schutzgrenze erreicht. Bitte bis zu einer Stunde warten / The application service reached its hourly protection limit; wait up to one hour',code:'global_submission_rate_limited'},429);
       let path: string | null = null;
       if (resume) {
         const bytes = Uint8Array.from(atob(resume.split(',')[1]), c=>c.charCodeAt(0));

@@ -22,7 +22,7 @@ async function harness(failure?: string, existing = false, chosen = false, accep
       resetPasswordForEmail: async () => { calls.push("mail"); return {}; },
       signInWithPassword: async () => { calls.push('signin'); return {data:{session:{access_token:'test',refresh_token:'test'}}}; },
     },
-    rpc: async (name: string) => { calls.push(name); return { data: true, error: failure === name ? new Error("failed") : null }; },
+    rpc: async (name: string) => { calls.push(name); return { data: failure === `denied:${name}` ? false : true, error: failure === name ? new Error("failed") : null }; },
     from: (table: string) => {
       let operation = "select";
       let userId = "";
@@ -62,8 +62,8 @@ async function harness(failure?: string, existing = false, chosen = false, accep
     serve: (fn: typeof handler) => { handler = fn; },
   });
   if (!handler) throw new Error("Handler not registered");
-  const invoke = (body: unknown) => handler(new Request("http://localhost/api", {
-    method: "POST", headers: { Authorization: "Bearer test", "Content-Type": "application/json" }, body: JSON.stringify(body),
+  const invoke = (body: unknown, headers: Record<string,string> = {}) => handler(new Request("http://localhost/api", {
+    method: "POST", headers: { Authorization: "Bearer test", "Content-Type": "application/json", ...headers }, body: JSON.stringify(body),
   }));
   return { calls, invoke, createdUsers, insertedApplications };
 }
@@ -151,4 +151,20 @@ test('unrecognized Auth failure remains a service failure without exposing raw e
 test('Auth rate limit remains retryable rather than duplicate conflict', async () => {
   const {invoke}=await harness(undefined,false,false,false,{code:'over_request_rate_limit',status:429});
   expect((await invoke(submission)).status).toBe(429);
+});
+
+test.each(['applicant_submission_allowed','applicant_global_submission_allowed'])('broken protection RPC %s is not presented as a temporary rate limit', async name => {
+  const {invoke,calls}=await harness(name);
+  const response=await invoke(submission,{'cf-connecting-ip':'192.0.2.1'});
+  expect(response.status).toBe(500);
+  expect((await response.json()).code).toBe(name==='applicant_submission_allowed'?'submission_limit_check_failed':'global_submission_limit_check_failed');
+  expect(calls).not.toContain('create');
+});
+
+test.each(['applicant_submission_allowed','applicant_global_submission_allowed'])('exhausted quota %s blocks account creation with retryable status', async name => {
+  const {invoke,calls}=await harness(`denied:${name}`);
+  const response=await invoke(submission,{'cf-connecting-ip':'192.0.2.1'});
+  expect(response.status).toBe(429);
+  expect((await response.json()).code).toBe(name==='applicant_submission_allowed'?'submission_rate_limited':'global_submission_rate_limited');
+  expect(calls).not.toContain('create');
 });
