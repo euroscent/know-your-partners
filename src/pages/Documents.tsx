@@ -18,7 +18,7 @@ import { de } from "date-fns/locale";
 import { formatContractContent, replaceContractPlaceholders } from "@/lib/formatContractContent";
 import { EmployeeEmailInbox } from "@/components/EmployeeEmailInbox";
 import { ApplicantProgress } from "@/components/ApplicantProgress";
-import { loadApplicantWorkflows } from "@/lib/applicantWorkflow";
+import { ApplicantWorkflow, loadApplicantWorkflows } from "@/lib/applicantWorkflow";
 
 interface Document {
   id: string;
@@ -44,6 +44,8 @@ interface Document {
 }
 
 const Documents = () => {
+  const [workflowContracts,setWorkflowContracts] = useState<Record<string,ApplicantWorkflow>>({});
+  useEffect(() => { loadApplicantWorkflows().then(rows => setWorkflowContracts(Object.fromEntries(rows.map(w=>[w.contract_id,w])))).catch(()=>{}); }, []);
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
@@ -592,14 +594,14 @@ const Documents = () => {
             <div class="signature-row">
               <div class="signature">
                 <div class="signature-line">
-                  ${companySignature ? `<img src="${companySignature}" alt="Unterschrift" />` : ''}
+                  ${(workflowContracts[doc.id] ? workflowContracts[doc.id].company_signature : companySignature) ? `<img src="${workflowContracts[doc.id]?.company_signature || companySignature}" alt="Unterschrift" />` : ''}
                 </div>
                 <p style="margin: 5px 0 0 0;">Geschäftsführer: Rolf Erwin Ruhfus</p>
               </div>
               
               <div class="signature">
                 <div class="signature-line">
-                  ${doc.signature_data || (doc as any).profiles?.signature_data ? `<img src="${doc.signature_data || (doc as any).profiles?.signature_data}" alt="Unterschrift" />` : ''}
+                  ${doc.signature_data ? `<img src="${doc.signature_data}" alt="Unterschrift" />` : ''}
                 </div>
                 <p style="margin: 5px 0 0 0;">${doc.profiles?.first_name || ''} ${doc.profiles?.last_name || ''}</p>
               </div>
@@ -998,10 +1000,10 @@ const Documents = () => {
                       <div className="grid grid-cols-2 gap-6">
                         <div>
                           <p className="text-sm text-muted-foreground mb-2">Arbeitgeber</p>
-                          {companySignature ? (
+                          {(workflowContracts[selectedDocument.id] ? workflowContracts[selectedDocument.id].company_signature : companySignature) ? (
                             <div className="w-full h-32 border-b-2 border-foreground/20 bg-white p-2 rounded flex items-center justify-center">
                               <img 
-                                src={companySignature} 
+                                src={workflowContracts[selectedDocument.id]?.company_signature || companySignature}
                                 alt="Unterschrift Arbeitgeber" 
                                 className="max-h-full max-w-full object-contain"
                               />

@@ -196,6 +196,7 @@ BEGIN
    OR NEW.contract_type IS DISTINCT FROM OLD.contract_type OR NEW.start_date IS DISTINCT FROM OLD.start_date THEN RAISE EXCEPTION 'Accepted contract is immutable'; END IF;
   IF NEW.signature_data IS DISTINCT FROM OLD.signature_data AND current_user IN ('authenticated','anon','authenticator') THEN RAISE EXCEPTION 'Use contract signing'; END IF;
  END IF;
+ IF TG_OP='DELETE' THEN RETURN OLD; END IF;
  RETURN NEW;
 END $$;
 DROP TRIGGER IF EXISTS protect_applicant_document ON public.employee_documents;
@@ -266,4 +267,8 @@ DROP POLICY IF EXISTS applicant_resume_guard ON storage.objects;
 CREATE POLICY applicant_resume_guard ON storage.objects AS RESTRICTIVE FOR ALL TO authenticated
 USING(name NOT LIKE 'applications/%' OR (bucket_id='verification-documents' AND public.has_role(auth.uid(),'admin')))
 WITH CHECK(name NOT LIKE 'applications/%' OR (bucket_id='verification-documents' AND public.has_role(auth.uid(),'admin')));
+DROP POLICY IF EXISTS applicant_files_anon_guard ON storage.objects;
+CREATE POLICY applicant_files_anon_guard ON storage.objects AS RESTRICTIVE FOR ALL TO anon
+USING (name NOT LIKE '%/applicant/%' AND NOT (bucket_id='verification-documents' AND name LIKE 'applications/%'))
+WITH CHECK (name NOT LIKE '%/applicant/%' AND NOT (bucket_id='verification-documents' AND name LIKE 'applications/%'));
 COMMIT;

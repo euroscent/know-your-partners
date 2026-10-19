@@ -52,6 +52,9 @@ interface Application {
   resume_path: string | null;
   employment_type: string | null;
   meeting_requested_at: string | null;
+  street?: string | null;
+  postal_code?: string | null;
+  city?: string | null;
 }
 
 const AdminApplications = () => {
@@ -205,7 +208,7 @@ const AdminApplications = () => {
     try {
       const { error } = await supabase
         .from("applications")
-        .update({ status: "rejected" })
+        .update({ status: "rejected", reviewed_at: new Date().toISOString(), reviewed_by: (await supabase.auth.getUser()).data.user?.id })
         .eq("id", id);
 
       if (error) throw error;
@@ -732,7 +735,7 @@ const AdminApplications = () => {
                               onClick={() => openAcceptDialog(app)}
                             >
                               <Check className="h-4 w-4 mr-1" />
-                              Akzeptieren
+                              {tr("Bewerbung annehmen", "Accept application")}
                             </Button>
                             <Button
                               size="sm"
@@ -822,13 +825,14 @@ const AdminApplications = () => {
       }}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Bewerbungsdetails</DialogTitle>
+            <DialogTitle>{tr("Bewerbungsdetails", "Application details")}</DialogTitle>
             <DialogDescription>
               {detailApplication?.first_name} {detailApplication?.last_name}
             </DialogDescription>
           </DialogHeader>
           {detailApplication && (
             <div className="space-y-4">
+              <p className="text-sm">{tr("Adresse", "Address")}: {detailApplication.street} {detailApplication.postal_code} {detailApplication.city}</p>
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <div>
                   <p className="text-muted-foreground">Name</p>
