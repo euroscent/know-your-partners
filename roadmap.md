@@ -1,9 +1,9 @@
 # Roadmap
 
-- [ ] Postfach und Livechat-Assistent samt Menü und Seiten entfernen
+- [x] Postfach und Livechat-Assistent aus Menü und Seiten entfernt; Dokumente bleiben zugänglich
 
-- [ ] Benutzername und eigenes Passwort im Bewerbungsformular ergänzen
-- [ ] Bewerberlogin bis Admin-Annahme sicher sperren; Anleitung für eigenes Backend und Tests bereitstellen
+- [x] Benutzername und eigenes Passwort im Bewerbungsformular ergänzt
+- [x] Bewerberlogin bis Admin-Annahme gesperrt; 17 lokale Tests und Formularanzeige geprüft; Anleitung bereitgestellt
 
 - [x] Verdeckte Fehler bei der Bewerberannahme aus der Antwort auslesen; Dienst öffentlich erreichbar
 - [x] Konkrete Annahmeursache bestätigt: mitarbeiter.euroscent.de fehlt in APPLICANT_ALLOWED_ORIGINS
@@ -26,5 +26,5 @@
 - [x] Anmeldung und Reset-Ablauf prüfen
 - [x] Firmendaten und alte Marken in Dokumenten aktualisieren
 - [x] ES Assistent: Nachrichtenablauf, Benachrichtigungen und geschützte Lesestatus-Rechte ergänzen
-- [ ] Mitarbeiter-/Admin-Chat live prüfen — wartet auf Ausführung des Chat-SQL im eigenen Backend und angemeldete Tests
+- [x] Chat-Praxistest entfällt: Postfach und Livechat wurden auf Wunsch entfernt
 - [x] Änderungen lokal prüfen und benötigte Dateien bereitstellen
