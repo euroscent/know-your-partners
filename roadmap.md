@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Fehler bei neuen Bewerberkonten unterscheiden und Kontoanlage mit simulierten Dienstfehlern prüfen
+- [x] Irreführende Konfliktmeldung bei neuen Bewerberkonten korrigiert; 23 Tests bestanden, tatsächlicher Dienstfehler benötigt neue Antwort nach Betreiber-Deploy
 
 - [x] Postfach und Livechat-Assistent aus Menü und Seiten entfernt; Dokumente bleiben zugänglich
 
