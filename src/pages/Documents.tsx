@@ -15,7 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileText, Download, Calendar, Mail, Inbox, MailOpen, Trash2, Eye, Circle } from "lucide-react";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
-import { formatContractContent } from "@/lib/formatContractContent";
+import { formatContractContent, replaceContractPlaceholders } from "@/lib/formatContractContent";
 import { EmployeeEmailInbox } from "@/components/EmployeeEmailInbox";
 
 interface Document {
@@ -232,7 +232,7 @@ const Documents = () => {
       let contractContent: string;
       const { data: templateData } = await supabase
         .from("contract_templates")
-        .select("content")
+        .select("content, default_salary")
         .ilike("category", contractTypeMeta)
         .eq("is_active", true)
         .order("updated_at", { ascending: false })
@@ -240,15 +240,23 @@ const Documents = () => {
         .maybeSingle();
 
       if (templateData?.content) {
+        const templateSalary =
+          templateData.default_salary != null
+            ? Number(templateData.default_salary).toLocaleString('de-DE')
+            : monthlySalary;
+        const { data: sigData } = await supabase
+          .from("company_signature")
+          .select("signature_data")
+          .maybeSingle();
         contractContent = replaceContractPlaceholders(templateData.content, {
           startDate,
-          salary: monthlySalary,
+          salary: templateSalary,
           firstName: firstName || '',
           lastName: lastName || '',
           street: profile?.street || '',
           postalCode: profile?.postal_code || '',
           city: profile?.city || '',
-          companySignature: companySignature || '',
+          companySignature: sigData?.signature_data || '',
         }).replace(/\{\{[^}]*\}\}/g, "");
       } else {
        contractContent = `Arbeitsvertrag – ${getContractTypeLabel(contractTypeMeta)}\n\n` +
