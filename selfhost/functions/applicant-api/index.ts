@@ -30,11 +30,15 @@ Deno.serve(async req => {
       const { resume, website, ...application } = parsed.data;
       const date = new Date(application.birth_date + 'T00:00:00Z');
       if (Number.isNaN(date.getTime()) || date.toISOString().slice(0,10)!==application.birth_date || date >= new Date()) return respond({ error:'Invalid birth date' },400);
-      const ip = req.headers.get('cf-connecting-ip') || 'unknown';
-      const digest = await crypto.subtle.digest('SHA-256',new TextEncoder().encode(ip));
-      const key = Array.from(new Uint8Array(digest)).map(x=>x.toString(16).padStart(2,'0')).join('');
-      const { data: allowed, error: limitError } = await admin.rpc('applicant_submission_allowed',{ _key:key });
-      if (limitError || !allowed) return respond({ error:'Bitte später erneut versuchen / Please try again later' },429);
+      const ip = req.headers.get('cf-connecting-ip');
+      // Do not impose a shared five-person limit when ingress omits the client IP.
+      // The global ceiling below remains enforced regardless of this header.
+      if (ip) {
+        const digest = await crypto.subtle.digest('SHA-256',new TextEncoder().encode(ip));
+        const key = Array.from(new Uint8Array(digest)).map(x=>x.toString(16).padStart(2,'0')).join('');
+        const { data: allowed, error: limitError } = await admin.rpc('applicant_submission_allowed',{ _key:key });
+        if (limitError || !allowed) return respond({ error:'Bitte später erneut versuchen / Please try again later' },429);
+      }
       // A shared ceiling prevents rotated/spoofed client headers from bypassing all limits.
       const globalDigest = await crypto.subtle.digest('SHA-256',new TextEncoder().encode('applicant-global-limit'));
       const globalKey = Array.from(new Uint8Array(globalDigest)).map(x=>x.toString(16).padStart(2,'0')).join('');
@@ -81,6 +85,7 @@ Deno.serve(async req => {
     const { data:profile } = await admin.from('profiles').select('id').ilike('email',application.email).maybeSingle();
     let targetId = profile?.id;
     let accountCreated = false;
+    try {
     if (!targetId) {
       // Random inaccessible password, never returned or persisted outside Auth.
       const { data,error } = await admin.auth.admin.createUser({ email:application.email,
@@ -88,15 +93,23 @@ Deno.serve(async req => {
         user_metadata:{ first_name:application.first_name,last_name:application.last_name,contract_type:application.employment_type } });
       if (error || !data.user) throw error || new Error('Account creation failed');
       targetId=data.user.id; accountCreated=true;
+    }
+      const {data:targetAdmin,error:targetRoleError}=await admin.from('user_roles').select('role').eq('user_id',targetId).eq('role','admin').maybeSingle();
+      if (targetRoleError) throw targetRoleError;
+      if (targetAdmin) throw new Error('Admin account cannot become applicant');
       const { error:profileError } = await admin.from('profiles').upsert({ id:targetId,email:application.email },{ onConflict:'id',ignoreDuplicates:true });
       if (profileError) throw profileError;
       const { error:roleError } = await admin.from('user_roles').upsert({ user_id:targetId,role:'employee' },{ onConflict:'user_id,role',ignoreDuplicates:true });
       if (roleError) throw roleError;
-    }
     const { error } = await admin.rpc('applicant_finalize_acceptance',{ _application:input.application_id,_user:targetId,
       _template:input.template_id,_start:input.start_date,_salary:input.salary,_admin:user.id });
-    if (error) {
-      if (accountCreated) await admin.auth.admin.deleteUser(targetId);
+    if (error) throw error;
+    } catch (error) {
+      if (accountCreated && targetId) {
+        // Never delete an account if another acceptance has already linked it.
+        const {data:linked,error:linkError}=await admin.from('applicant_workflows').select('user_id').eq('user_id',targetId).maybeSingle();
+        if (!linked && !linkError) await admin.auth.admin.deleteUser(targetId);
+      }
       throw error;
     }
     // Auth sends its own single-use recovery email; no private key or token is returned.
