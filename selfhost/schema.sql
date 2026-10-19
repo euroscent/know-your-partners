@@ -5485,3 +5485,9 @@ REVOKE ALL ON FUNCTION public.verify_admin_pin(text) FROM public, anon;
 REVOKE ALL ON FUNCTION public.change_admin_pin(text, text) FROM public, anon;
 GRANT EXECUTE ON FUNCTION public.verify_admin_pin(text) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.change_admin_pin(text, text) TO authenticated;
+
+--
+-- Name: contract_templates Authenticated can view active contract templates; Type: POLICY; Schema: public; Owner: -
+--
+
+CREATE POLICY "Authenticated can view active contract templates" ON public.contract_templates FOR SELECT TO authenticated USING (is_active = true);
