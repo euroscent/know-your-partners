@@ -523,10 +523,6 @@ const AdminApplications = () => {
                             ? tr("Angenommen", "Accepted")
                             : "Abgelehnt"}
                         </Badge>
-                        {app.status === "approved" && <Button variant="link" size="sm" onClick={async () => {
-                          const {error} = await supabase.auth.resetPasswordForEmail(app.email,{redirectTo:window.location.origin + '/reset-password'});
-                          setNotice(error ? tr('Passwortlink konnte nicht gesendet werden.','Could not send password link.') : tr('Passwortlink angefordert.','Password link requested.'));
-                        }}>{tr('Passwortlink senden','Send password link')}</Button>}
                       </div>
                     </TableCell>
                     <TableCell>
