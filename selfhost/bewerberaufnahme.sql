@@ -48,6 +48,19 @@ BEGIN
 END $$;
 REVOKE ALL ON FUNCTION public.applicant_submission_allowed(text) FROM PUBLIC,anon,authenticated;
 GRANT EXECUTE ON FUNCTION public.applicant_submission_allowed(text) TO service_role;
+CREATE OR REPLACE FUNCTION public.applicant_global_submission_allowed(_key text) RETURNS boolean
+LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+DECLARE total integer;
+BEGIN
+ IF auth.role() IS DISTINCT FROM 'service_role' OR _key IS NULL OR _key !~ '^[a-f0-9]{64}$' THEN RAISE EXCEPTION 'Service required'; END IF;
+ INSERT INTO public.applicant_submission_limits(key,attempts) VALUES(_key,1)
+ ON CONFLICT(key) DO UPDATE SET attempts=CASE WHEN applicant_submission_limits.window_start < now()-interval '1 hour' THEN 1 ELSE applicant_submission_limits.attempts+1 END,
+ window_start=CASE WHEN applicant_submission_limits.window_start < now()-interval '1 hour' THEN now() ELSE applicant_submission_limits.window_start END
+ RETURNING attempts INTO total;
+ RETURN total <= 100;
+END $$;
+REVOKE ALL ON FUNCTION public.applicant_global_submission_allowed(text) FROM PUBLIC,anon,authenticated;
+GRANT EXECUTE ON FUNCTION public.applicant_global_submission_allowed(text) TO service_role;
 DROP POLICY IF EXISTS private_applications_guard ON public.applications;
 CREATE POLICY private_applications_guard ON public.applications AS RESTRICTIVE FOR SELECT TO anon USING(false);
 DROP POLICY IF EXISTS private_application_insert_guard ON public.applications;
@@ -56,6 +69,7 @@ CREATE POLICY private_application_insert_guard ON public.applications AS RESTRIC
 CREATE OR REPLACE FUNCTION public.applicant_is_active(_user uuid) RETURNS boolean
 LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
 SELECT NOT EXISTS (SELECT 1 FROM public.applicant_workflows WHERE user_id = _user AND NOT active);
+-- No workflow means a legacy employee, not an accepted new applicant; preserve their existing access.
 $$;
 REVOKE ALL ON FUNCTION public.applicant_is_active(uuid) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.applicant_is_active(uuid) TO authenticated, service_role;
@@ -196,6 +210,7 @@ BEGIN
    OR NEW.contract_type IS DISTINCT FROM OLD.contract_type OR NEW.start_date IS DISTINCT FROM OLD.start_date THEN RAISE EXCEPTION 'Accepted contract is immutable'; END IF;
   IF NEW.signature_data IS DISTINCT FROM OLD.signature_data AND current_user IN ('authenticated','anon','authenticator') THEN RAISE EXCEPTION 'Use contract signing'; END IF;
  END IF;
+ IF TG_OP='DELETE' THEN RETURN OLD; END IF;
  RETURN NEW;
 END $$;
 DROP TRIGGER IF EXISTS protect_applicant_document ON public.employee_documents;
@@ -266,4 +281,8 @@ DROP POLICY IF EXISTS applicant_resume_guard ON storage.objects;
 CREATE POLICY applicant_resume_guard ON storage.objects AS RESTRICTIVE FOR ALL TO authenticated
 USING(name NOT LIKE 'applications/%' OR (bucket_id='verification-documents' AND public.has_role(auth.uid(),'admin')))
 WITH CHECK(name NOT LIKE 'applications/%' OR (bucket_id='verification-documents' AND public.has_role(auth.uid(),'admin')));
+DROP POLICY IF EXISTS applicant_files_anon_guard ON storage.objects;
+CREATE POLICY applicant_files_anon_guard ON storage.objects AS RESTRICTIVE FOR ALL TO anon
+USING (name NOT LIKE '%/applicant/%' AND NOT (bucket_id='verification-documents' AND name LIKE 'applications/%'))
+WITH CHECK (name NOT LIKE '%/applicant/%' AND NOT (bucket_id='verification-documents' AND name LIKE 'applications/%'));
 COMMIT;

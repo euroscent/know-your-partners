@@ -1,6 +1,31 @@
 -- Einmal vollständig im SQL Editor des eigenen Projekts ausführen.
 BEGIN;
 
+GRANT SELECT,INSERT,UPDATE ON public.chat_messages TO authenticated;
+GRANT ALL ON public.chat_messages TO service_role;
+ALTER TABLE public.chat_messages ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS euroscent_chat_admin_insert ON public.chat_messages;
+CREATE POLICY euroscent_chat_admin_insert ON public.chat_messages FOR INSERT TO authenticated
+WITH CHECK(public.has_role(auth.uid(),'admin'));
+DROP POLICY IF EXISTS euroscent_chat_employee_read_update ON public.chat_messages;
+CREATE POLICY euroscent_chat_employee_read_update ON public.chat_messages FOR UPDATE TO authenticated
+USING(user_id=auth.uid()) WITH CHECK(user_id=auth.uid());
+DROP POLICY IF EXISTS euroscent_chat_insert_guard ON public.chat_messages;
+CREATE POLICY euroscent_chat_insert_guard ON public.chat_messages AS RESTRICTIVE FOR INSERT TO authenticated
+WITH CHECK(public.has_role(auth.uid(),'admin') OR (user_id=auth.uid() AND role='user'));
+CREATE OR REPLACE FUNCTION public.protect_employee_chat_updates() RETURNS trigger
+LANGUAGE plpgsql SET search_path=public AS $$
+BEGIN
+ IF current_user IN ('authenticated','anon','authenticator') AND NOT public.has_role(auth.uid(),'admin') THEN
+  IF OLD.user_id IS DISTINCT FROM auth.uid() OR (to_jsonb(NEW)-ARRAY['is_read','updated_at']) IS DISTINCT FROM (to_jsonb(OLD)-ARRAY['is_read','updated_at']) THEN
+   RAISE EXCEPTION 'Employees can only change read status on their own conversations';
+  END IF;
+ END IF;
+ RETURN NEW;
+END $$;
+DROP TRIGGER IF EXISTS protect_employee_chat_updates ON public.chat_messages;
+CREATE TRIGGER protect_employee_chat_updates BEFORE UPDATE ON public.chat_messages FOR EACH ROW EXECUTE FUNCTION public.protect_employee_chat_updates();
+
 UPDATE public.company_contact
 SET company_name = 'EuroScent GmbH', website_name = 'EuroScent',
     street_address = 'Königsallee 89', postal_code = '40212', city = 'Düsseldorf',

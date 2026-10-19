@@ -30,11 +30,16 @@ Deno.serve(async req => {
       const { resume, website, ...application } = parsed.data;
       const date = new Date(application.birth_date + 'T00:00:00Z');
       if (Number.isNaN(date.getTime()) || date.toISOString().slice(0,10)!==application.birth_date || date >= new Date()) return respond({ error:'Invalid birth date' },400);
-      const ip = req.headers.get('cf-connecting-ip') || req.headers.get('x-forwarded-for') || 'unknown';
+      const ip = req.headers.get('cf-connecting-ip') || 'unknown';
       const digest = await crypto.subtle.digest('SHA-256',new TextEncoder().encode(ip));
       const key = Array.from(new Uint8Array(digest)).map(x=>x.toString(16).padStart(2,'0')).join('');
       const { data: allowed, error: limitError } = await admin.rpc('applicant_submission_allowed',{ _key:key });
       if (limitError || !allowed) return respond({ error:'Bitte später erneut versuchen / Please try again later' },429);
+      // A shared ceiling prevents rotated/spoofed client headers from bypassing all limits.
+      const globalDigest = await crypto.subtle.digest('SHA-256',new TextEncoder().encode('applicant-global-limit'));
+      const globalKey = Array.from(new Uint8Array(globalDigest)).map(x=>x.toString(16).padStart(2,'0')).join('');
+      const {data:globalAllowed,error:globalError}=await admin.rpc('applicant_global_submission_allowed',{_key:globalKey});
+      if(globalError || !globalAllowed) return respond({error:'Bitte später erneut versuchen / Please try again later'},429);
       let path: string | null = null;
       if (resume) {
         const bytes = Uint8Array.from(atob(resume.split(',')[1]), c=>c.charCodeAt(0));
@@ -68,7 +73,11 @@ Deno.serve(async req => {
     const { data:template } = await admin.from('contract_templates').select('id').eq('id',input.template_id).eq('is_active',true).maybeSingle();
     if (!template) return respond({ error:'Active contract template required' },400);
     const { data:existing } = await admin.from('applicant_workflows').select('user_id').eq('application_id',input.application_id).maybeSingle();
-    if (existing) return respond({ success:true,already_accepted:true });
+    if (existing) {
+      const authClient = createClient(Deno.env.get('SUPABASE_URL') || '',Deno.env.get('SUPABASE_ANON_KEY') || '',{auth:{persistSession:false}});
+      const {error:mailError}=await authClient.auth.resetPasswordForEmail(application.email,{redirectTo:new URL('/reset-password',input.origin).href});
+      return respond({success:true,already_accepted:true,email_sent:!mailError,warning:mailError ? 'Vertrag bereitgestellt. Zugangsmail konnte nicht gesendet werden; Passwortlink erneut senden.' : null});
+    }
     const { data:profile } = await admin.from('profiles').select('id').ilike('email',application.email).maybeSingle();
     let targetId = profile?.id;
     let accountCreated = false;

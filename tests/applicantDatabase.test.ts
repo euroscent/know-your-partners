@@ -31,6 +31,14 @@ test("external SQL enforces the entire applicant journey and authorization", asy
     SELECT set_config('test.role','service_role',false),set_config('test.uid','${admin}',false);
   `);
   await db.exec(readFileSync(new URL('../selfhost/bewerberaufnahme.sql', import.meta.url),'utf8'));
+  const legacy = await db.query<{allowed:boolean}>(`SELECT public.applicant_is_active('${employee}') AS allowed`);
+  expect(legacy.rows[0]?.allowed).toBe(true);
+  const key='a'.repeat(64);
+  for(let i=0;i<5;i++) expect((await db.query<{allowed:boolean}>(`SELECT public.applicant_submission_allowed('${key}') AS allowed`)).rows[0]?.allowed).toBe(true);
+  expect((await db.query<{allowed:boolean}>(`SELECT public.applicant_submission_allowed('${key}') AS allowed`)).rows[0]?.allowed).toBe(false);
+  await db.exec(`INSERT INTO public.applicant_submission_limits(key,attempts) VALUES('${'b'.repeat(64)}',99)`);
+  expect((await db.query<{allowed:boolean}>(`SELECT public.applicant_global_submission_allowed('${'b'.repeat(64)}') AS allowed`)).rows[0]?.allowed).toBe(true);
+  expect((await db.query<{allowed:boolean}>(`SELECT public.applicant_global_submission_allowed('${'b'.repeat(64)}') AS allowed`)).rows[0]?.allowed).toBe(false);
   await db.exec(`SELECT public.applicant_finalize_acceptance('${application}','${employee}','${template}','2026-11-01',2200,'${admin}');`);
   const count=async()=>Number((await db.query<{count:number}>(`SELECT count(*)::integer AS count FROM public.employee_documents`)).rows[0]?.count);
   expect(await count()).toBe(1);
