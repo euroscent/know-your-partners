@@ -47,6 +47,9 @@ Neue Bewerber wählen Benutzername und Passwort selbst, für sie wird keine Zuga
 Die aktuelle Arbeitgeberunterschrift wird bei Annahme eingefroren, wenn sie bereits in den Unternehmenseinstellungen hinterlegt ist. Ein fehlendes Bild wird nicht erfunden. Unterschriften gelten nur für die betreffende Vertragsfassung. Die App dokumentiert eine elektronische Unterschrift, ersetzt aber keine rechtliche Prüfung der Vertragsform oder ein qualifiziertes Signaturverfahren.
 
 ## 6. Kontrolle nach Einrichtung
+
+**„Bitte später erneut versuchen“ bei einer Bewerbung:** Die Schutzprüfung zählt auch fehlgeschlagene Versuche. Pro weitergeleiteter IP sind fünf Versuche pro Stundenfenster erlaubt, insgesamt hundert. Nach mehreren Versuchen bis zu einer Stunde ab dem ersten Versuch warten, ohne erneut abzusenden. Die aktuelle `applicant-api` unterscheidet echte Schutzgrenzen von fehlenden/defekten Prüffunktionen: `submission_rate_limited` / `global_submission_rate_limited` bedeutet warten; `submission_limit_check_failed` / `global_submission_limit_check_failed` bedeutet, dass der Betreiber die Einrichtung von `bewerberaufnahme.sql` und die Funktionsprotokolle prüfen muss. Keine Schutzgrenzen deaktivieren. Nach erneutem Deploy die neue Meldung mitteilen, falls der Fehler fortbesteht.
+
 Eine echte Testbewerbung abgeben und als Admin in **Neue Bewerber** wiederfinden. Dann mit derselben Testperson den kompletten Ablauf einschließlich Zugangsmail, Unterschrift, Bankdaten, Ablehnung/Neuupload, Genehmigung und Task durchspielen. Dieses Paket wurde lokal mit Datenbanktests geprüft; die Einrichtung, Zustellung von Auth-Mails und der angemeldete Gesamtfluss auf deinem eigenen Backend bleiben bis dahin unbestätigt.
 
 Neue Seiten sind Deutsch/Englisch. Bestehende Altseiten behalten ihre bisherigen Übersetzungen. Bestehende Mitarbeiter und bereits unterschriebene Altverträge werden nicht automatisch in den neuen Aufnahmeablauf migriert.

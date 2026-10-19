@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Wartezeit bei Bewerbungen von fehlender Schutzprüfung getrennt; 27 Tests bestanden, eigenes Backend benötigt Betreiber-Deploy und neue Antwort
+
 - [x] Irreführende Konfliktmeldung bei neuen Bewerberkonten korrigiert; 23 Tests bestanden, tatsächlicher Dienstfehler benötigt neue Antwort nach Betreiber-Deploy
 
 - [x] Postfach und Livechat-Assistent aus Menü und Seiten entfernt; Dokumente bleiben zugänglich
