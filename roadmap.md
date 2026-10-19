@@ -7,7 +7,7 @@
 - [x] Automatische Aktivierung und Statusübersicht ergänzen
 - [x] Aufgabenzuweisung lokal gegen Aufnahmefreigaben prüfen; bestehende Statusverfolgung erhalten
 - [x] Lokale Tests und manuelle Einrichtung für eigenen Backend-Betrieb bereitstellen
-- [ ] Angemeldeten Gesamtfluss mit Zugangsmail und echtem Ausweis-Upload prüfen — wartet auf Einrichtung im eigenen Backend; kein verwalteter Testzugang verfügbar
+- [ ] Vollständigen Praxistest nach gemeldeter SQL-/Funktionsbereitstellung durchführen und gefundene Fehler beheben — angemeldeter Zugang zum eigenen Backend noch zu prüfen
 
 - [x] Passwort-Wiederherstellung im Login ergänzen
 - [x] Öffentliche Reset-Seite einbinden
