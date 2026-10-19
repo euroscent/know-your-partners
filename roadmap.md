@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Fehler bei neuen Bewerberkonten unterscheiden und Kontoanlage mit simulierten Dienstfehlern prüfen
+
 - [x] Postfach und Livechat-Assistent aus Menü und Seiten entfernt; Dokumente bleiben zugänglich
 
 - [x] Benutzername und eigenes Passwort im Bewerbungsformular ergänzt
