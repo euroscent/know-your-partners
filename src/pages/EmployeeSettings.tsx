@@ -15,6 +15,9 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { toast } from "@/lib/toast-stub";
 import { Loader2, User, Home, Receipt, FileText, Info, ArrowLeft, Camera, Upload } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ApplicantProgress } from "@/components/ApplicantProgress";
+import { loadApplicantWorkflows } from "@/lib/applicantWorkflow";
+import { useI18n } from "@/lib/i18n";
 
 interface Profile {
   first_name: string | null;
@@ -69,6 +72,9 @@ const formatDateForDatabase = (displayDate: string | null): string | null => {
 };
 
 export default function EmployeeSettings() {
+  const { lang } = useI18n();
+  const [applicantMode, setApplicantMode] = useState(false);
+  useEffect(() => { loadApplicantWorkflows().then(rows => setApplicantMode(rows.length > 0)).catch(() => {}); }, []);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const initialTab = searchParams.get("tab") || "personal";
@@ -316,7 +322,11 @@ export default function EmployeeSettings() {
         church_tax_liable: profile.church_tax_liable,
       };
 
-      console.log("Saving profile for user:", session.user.id, profileData);
+      if (applicantMode) {
+        delete (profileData as Partial<typeof profileData>).iban;
+        delete (profileData as Partial<typeof profileData>).bic;
+        delete (profileData as Partial<typeof profileData>).account_holder;
+      }
 
       // Use upsert to create profile if it doesn't exist (for admin-created accounts)
       const { data, error } = await supabase
@@ -324,7 +334,6 @@ export default function EmployeeSettings() {
         .upsert(profileData, { onConflict: 'id' })
         .select();
 
-      console.log("Upsert result:", { data, error });
 
       if (error) {
         console.error("Profile save error:", error);
@@ -697,6 +706,7 @@ export default function EmployeeSettings() {
             </TabsContent>
 
             <TabsContent value="financial">
+              {applicantMode ? <div className="space-y-4"><p>{lang === 'en' ? 'Manage salary bank details in your protected onboarding area.' : 'Verwalten Sie Ihre Gehaltsbankdaten im geschützten Aufnahmebereich.'}</p><Button onClick={() => navigate('/dashboard/onboarding')}>{lang === 'en' ? 'Open onboarding' : 'Mitarbeiteraufnahme öffnen'}</Button><ApplicantProgress compact /></div> : (
               <Card>
                 <CardContent className="pt-6 space-y-6">
                   <Alert>
@@ -765,6 +775,7 @@ export default function EmployeeSettings() {
                   </div>
                 </CardContent>
               </Card>
+              )}
             </TabsContent>
 
             <TabsContent value="payroll">

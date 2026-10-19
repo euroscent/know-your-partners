@@ -17,6 +17,8 @@ import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { formatContractContent, replaceContractPlaceholders } from "@/lib/formatContractContent";
 import { EmployeeEmailInbox } from "@/components/EmployeeEmailInbox";
+import { ApplicantProgress } from "@/components/ApplicantProgress";
+import { loadApplicantWorkflows } from "@/lib/applicantWorkflow";
 
 interface Document {
   id: string;
@@ -184,6 +186,7 @@ const Documents = () => {
     try {
       const currentUser = user as any;
       if (!currentUser) return;
+      try { if ((await loadApplicantWorkflows()).some(w => w.user_id === currentUser.id)) return; } catch { /* Legacy installation */ }
 
       const hasContract = documents.some((d) => d.document_type === 'contract' && d.user_id === currentUser.id);
       if (hasContract && !manual) return;
@@ -656,11 +659,7 @@ const Documents = () => {
       ));
     }
 
-    // Fallback: wenn das Dokument keine Signatur enthält, aber das verknüpfte Profil eine hat,
-    // füge sie für die Vorschau hinzu, damit "Keine Unterschrift vorhanden" nicht erscheint.
-    const profileSig = (doc as any)?.profiles?.signature_data as string | undefined;
-    const merged = !doc.signature_data && profileSig ? { ...doc, signature_data: profileSig } : doc;
-    setSelectedDocument(merged);
+    setSelectedDocument(doc);
     setIsDialogOpen(true);
   };
   const handleDeleteDocument = async (docId: string) => {
@@ -701,6 +700,7 @@ const Documents = () => {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
+        {!isAdmin && <ApplicantProgress compact />}
         <div className="mb-6 flex items-center gap-3">
           <Inbox className="h-8 w-8 text-primary" />
           <div>
@@ -1021,10 +1021,10 @@ const Documents = () => {
 
                         <div>
                           <p className="text-sm text-muted-foreground mb-2">Arbeitnehmer</p>
-                          {selectedDocument.signature_data || (selectedDocument as any).profiles?.signature_data ? (
+                          {selectedDocument.signature_data ? (
                             <div className="w-full h-32 border-b-2 border-foreground/20 bg-white p-2 rounded flex items-center justify-center">
                               <img 
-                                src={(selectedDocument.signature_data || (selectedDocument as any).profiles?.signature_data) as string}
+                                src={selectedDocument.signature_data}
                                 alt="Unterschrift Arbeitnehmer" 
                                 className="max-h-full max-w-full object-contain"
                               />
