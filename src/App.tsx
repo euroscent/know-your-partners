@@ -54,7 +54,6 @@ import Completions from "./pages/admin/Completions";
 import Contracts from "./pages/admin/Contracts";
 
 import ContractEditor from "./pages/admin/ContractEditor";
-import ChatInbox from "./pages/admin/ChatInbox";
 import VirtualEmployees from "./pages/admin/VirtualEmployees";
 
 import Settings from "./pages/Settings";
@@ -139,9 +138,6 @@ const App = () => (
           </Route>
           <Route path="/dashboard/admin/contracts" element={<Dashboard />}>
             <Route index element={<Contracts />} />
-          </Route>
-          <Route path="/dashboard/admin/chat-inbox" element={<Dashboard />}>
-            <Route index element={<ChatInbox />} />
           </Route>
           <Route path="/dashboard/admin/virtual-employees" element={<Dashboard />}>
             <Route index element={<VirtualEmployees />} />
