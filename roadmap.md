@@ -1,16 +1,18 @@
 # Roadmap
 
-- [ ] Bewerbungsformular und „Neue Bewerber“ verbinden
-- [ ] Annahme mit Vorlagenauswahl und Vertragsbereitstellung verbinden
-- [ ] Bankdateneingabe nach Unterschrift absichern
-- [ ] Ausweisprüfung mit Genehmigung, Ablehnung und erneutem Upload ergänzen
-- [ ] Automatische Aktivierung und Statusübersicht ergänzen
-- [ ] Aufgabenzuweisung und Statusverfolgung prüfen
-- [ ] Ablauf testen und manuelle Einrichtung für eigenen Backend-Betrieb bereitstellen
+- [x] Bewerbungsformular und „Neue Bewerber“ verbinden
+- [x] Annahme mit Vorlagenauswahl und Vertragsbereitstellung verbinden
+- [x] Bankdateneingabe nach Unterschrift absichern
+- [x] Ausweisprüfung mit Genehmigung, Ablehnung und erneutem Upload ergänzen
+- [x] Automatische Aktivierung und Statusübersicht ergänzen
+- [x] Aufgabenzuweisung lokal gegen Aufnahmefreigaben prüfen; bestehende Statusverfolgung erhalten
+- [x] Lokale Tests und manuelle Einrichtung für eigenen Backend-Betrieb bereitstellen
+- [ ] Angemeldeten Gesamtfluss mit Zugangsmail und echtem Ausweis-Upload prüfen — wartet auf Einrichtung im eigenen Backend; kein verwalteter Testzugang verfügbar
 
 - [x] Passwort-Wiederherstellung im Login ergänzen
 - [x] Öffentliche Reset-Seite einbinden
 - [x] Anmeldung und Reset-Ablauf prüfen
-- [ ] Firmendaten und alte Marken in Dokumenten aktualisieren
-- [ ] Mitarbeiter-Livechat reparieren und ES Assistent nennen
-- [ ] Änderungen prüfen und benötigte Dateien bereitstellen
+- [x] Firmendaten und alte Marken in Dokumenten aktualisieren
+- [x] ES Assistent: Nachrichtenablauf, Benachrichtigungen und geschützte Lesestatus-Rechte ergänzen
+- [ ] Mitarbeiter-/Admin-Chat live prüfen — wartet auf Ausführung des Chat-SQL im eigenen Backend und angemeldete Tests
+- [x] Änderungen lokal prüfen und benötigte Dateien bereitstellen

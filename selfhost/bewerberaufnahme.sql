@@ -69,6 +69,7 @@ CREATE POLICY private_application_insert_guard ON public.applications AS RESTRIC
 CREATE OR REPLACE FUNCTION public.applicant_is_active(_user uuid) RETURNS boolean
 LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
 SELECT NOT EXISTS (SELECT 1 FROM public.applicant_workflows WHERE user_id = _user AND NOT active);
+-- No workflow means a legacy employee, not an accepted new applicant; preserve their existing access.
 $$;
 REVOKE ALL ON FUNCTION public.applicant_is_active(uuid) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.applicant_is_active(uuid) TO authenticated, service_role;

@@ -73,7 +73,11 @@ Deno.serve(async req => {
     const { data:template } = await admin.from('contract_templates').select('id').eq('id',input.template_id).eq('is_active',true).maybeSingle();
     if (!template) return respond({ error:'Active contract template required' },400);
     const { data:existing } = await admin.from('applicant_workflows').select('user_id').eq('application_id',input.application_id).maybeSingle();
-    if (existing) return respond({ success:true,already_accepted:true });
+    if (existing) {
+      const authClient = createClient(Deno.env.get('SUPABASE_URL') || '',Deno.env.get('SUPABASE_ANON_KEY') || '',{auth:{persistSession:false}});
+      const {error:mailError}=await authClient.auth.resetPasswordForEmail(application.email,{redirectTo:new URL('/reset-password',input.origin).href});
+      return respond({success:true,already_accepted:true,email_sent:!mailError,warning:mailError ? 'Vertrag bereitgestellt. Zugangsmail konnte nicht gesendet werden; Passwortlink erneut senden.' : null});
+    }
     const { data:profile } = await admin.from('profiles').select('id').ilike('email',application.email).maybeSingle();
     let targetId = profile?.id;
     let accountCreated = false;
