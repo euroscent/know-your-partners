@@ -27,4 +27,4 @@
 - [x] Firmendaten und alte Marken in Dokumenten aktualisieren
 - [x] ES Assistent: Nachrichtenablauf, Benachrichtigungen und geschützte Lesestatus-Rechte ergänzen
 - [x] Chat-Praxistest entfällt: Postfach und Livechat wurden auf Wunsch entfernt
-- [x] Änderungen lokal prüfen und benötigte Dateien bereitstellen
+- [x] Änderungen lokal prüfen und benötigte Dateien bereitstellen- [x] "Passwortlink senden" aus der Bewerberverwaltung entfernt; Bewerber wählen ihren Zugang selbst
