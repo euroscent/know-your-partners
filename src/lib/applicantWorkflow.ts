@@ -13,6 +13,7 @@ export interface ApplicantWorkflow {
   contract_content: string;
   signed_at: string | null;
   signature_data: string | null;
+  company_signature: string | null;
   bank_complete: boolean;
   identity_status: "not_submitted" | "pending" | "approved" | "rejected";
   rejection_reason: string | null;

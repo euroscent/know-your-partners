@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS public.applicant_workflows (
   user_id uuid UNIQUE NOT NULL REFERENCES public.profiles(id),
   template_id uuid NOT NULL REFERENCES public.contract_templates(id),
   template_version text NOT NULL,
+  company_signature text,
   contract_id uuid UNIQUE NOT NULL REFERENCES public.employee_documents(id),
   accepted_by uuid NOT NULL,
   accepted_at timestamptz NOT NULL DEFAULT now(),
@@ -28,6 +29,29 @@ ALTER TABLE public.applicant_workflows ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS applicant_workflow_read ON public.applicant_workflows;
 CREATE POLICY applicant_workflow_read ON public.applicant_workflows FOR SELECT TO authenticated
 USING (user_id = auth.uid() OR public.has_role(auth.uid(), 'admin'));
+
+CREATE TABLE IF NOT EXISTS public.applicant_submission_limits (
+ key text PRIMARY KEY, attempts integer NOT NULL DEFAULT 0, window_start timestamptz NOT NULL DEFAULT now()
+);
+GRANT ALL ON public.applicant_submission_limits TO service_role;
+ALTER TABLE public.applicant_submission_limits ENABLE ROW LEVEL SECURITY;
+CREATE OR REPLACE FUNCTION public.applicant_submission_allowed(_key text) RETURNS boolean
+LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+DECLARE total integer;
+BEGIN
+ IF auth.role() IS DISTINCT FROM 'service_role' OR _key IS NULL OR _key !~ '^[a-f0-9]{64}$' THEN RAISE EXCEPTION 'Service required'; END IF;
+ INSERT INTO public.applicant_submission_limits(key,attempts) VALUES(_key,1)
+ ON CONFLICT(key) DO UPDATE SET attempts=CASE WHEN applicant_submission_limits.window_start < now()-interval '1 hour' THEN 1 ELSE applicant_submission_limits.attempts+1 END,
+ window_start=CASE WHEN applicant_submission_limits.window_start < now()-interval '1 hour' THEN now() ELSE applicant_submission_limits.window_start END
+ RETURNING attempts INTO total;
+ RETURN total <= 5;
+END $$;
+REVOKE ALL ON FUNCTION public.applicant_submission_allowed(text) FROM PUBLIC,anon,authenticated;
+GRANT EXECUTE ON FUNCTION public.applicant_submission_allowed(text) TO service_role;
+DROP POLICY IF EXISTS private_applications_guard ON public.applications;
+CREATE POLICY private_applications_guard ON public.applications AS RESTRICTIVE FOR SELECT TO anon USING(false);
+DROP POLICY IF EXISTS private_application_insert_guard ON public.applications;
+CREATE POLICY private_application_insert_guard ON public.applications AS RESTRICTIVE FOR INSERT TO anon WITH CHECK(false);
 
 CREATE OR REPLACE FUNCTION public.applicant_is_active(_user uuid) RETURNS boolean
 LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
@@ -50,7 +74,7 @@ FOR EACH ROW EXECUTE FUNCTION public.applicant_activation_refresh();
 
 CREATE OR REPLACE FUNCTION public.applicant_finalize_acceptance(_application uuid, _user uuid, _template uuid, _start date, _salary numeric, _admin uuid)
 RETURNS uuid LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
-DECLARE a public.applications; t public.contract_templates; doc uuid; body text; existing uuid; pair record;
+DECLARE a public.applications; t public.contract_templates; doc uuid; body text; existing uuid; pair record; company_sig text;
 BEGIN
   IF auth.role() IS DISTINCT FROM 'service_role' THEN RAISE EXCEPTION 'Service role required'; END IF;
   IF NOT public.has_role(_admin,'admin') THEN RAISE EXCEPTION 'Admin required'; END IF;
@@ -65,15 +89,16 @@ BEGIN
   SELECT * INTO t FROM public.contract_templates WHERE id = _template AND is_active;
   IF NOT FOUND THEN RAISE EXCEPTION 'Active template required'; END IF;
   body := t.content;
+  SELECT signature_data INTO company_sig FROM public.company_signature ORDER BY updated_at DESC LIMIT 1;
   FOR pair IN SELECT * FROM (VALUES
     ('first_name',a.first_name),('vorname',a.first_name),('last_name',a.last_name),('nachname',a.last_name),
     ('full_name',a.first_name || ' ' || a.last_name),('name',a.first_name || ' ' || a.last_name),
-    ('street',coalesce(a.street,'')),('strasse',coalesce(a.street,'')),('straße',coalesce(a.street,'')),
-    ('postal_code',coalesce(a.postal_code,'')),('plz',coalesce(a.postal_code,'')),('city',coalesce(a.city,'')),('ort',coalesce(a.city,'')),
-    ('startdatum',to_char(_start,'DD.MM.YYYY')),('start_date',to_char(_start,'DD.MM.YYYY')),('salary',_salary::text),('gehalt',_salary::text),
+    ('street',coalesce(a.street,'')),('strasse',coalesce(a.street,'')),('straße',coalesce(a.street,'')),('adresse',coalesce(a.street,'')),
+    ('postal_code',coalesce(a.postal_code,'')),('plz',coalesce(a.postal_code,'')),('postleitzahl',coalesce(a.postal_code,'')),('city',coalesce(a.city,'')),('ort',coalesce(a.city,'')),('stadt',coalesce(a.city,'')),
+    ('startdatum',to_char(_start,'DD.MM.YYYY')),('stardatum',to_char(_start,'DD.MM.YYYY')),('start_date',to_char(_start,'DD.MM.YYYY')),('salary',_salary::text),('gehalt',_salary::text),
     ('employee_signature',''),('arbeitnehmer_unterschrift',''),('company_signature',''),('arbeitgeber_unterschrift','')
   ) AS replacements(key,value) LOOP
-    body := regexp_replace(body, '\{\{\s*' || pair.key || '\s*\}\}', pair.value, 'gi');
+    body := regexp_replace(body, '\{\{\s*' || pair.key || '\s*\}\}', replace(pair.value,E'\\',E'\\\\'), 'gi');
   END LOOP;
   -- Remove unresolved placeholders, never silently reuse an employee's old signature.
   body := regexp_replace(body, '\{\{[^}]*\}\}', '', 'g');
@@ -82,8 +107,8 @@ BEGIN
   UPDATE public.applications SET status='approved',employment_type=lower(t.category),reviewed_by=_admin,reviewed_at=now() WHERE id=_application;
   UPDATE public.profiles SET first_name=a.first_name,last_name=a.last_name,phone=a.phone,birth_date=a.birth_date,
     street=a.street,postal_code=a.postal_code,city=a.city,employment_type=lower(t.category),start_date=_start WHERE id=_user;
-  INSERT INTO public.applicant_workflows(application_id,user_id,template_id,template_version,contract_id,accepted_by)
-  VALUES (_application,_user,_template,t.version,doc,_admin);
+  INSERT INTO public.applicant_workflows(application_id,user_id,template_id,template_version,contract_id,accepted_by,company_signature)
+  VALUES (_application,_user,_template,t.version,doc,_admin,company_sig);
   RETURN doc;
 END $$;
 REVOKE ALL ON FUNCTION public.applicant_finalize_acceptance(uuid,uuid,uuid,date,numeric,uuid) FROM PUBLIC,anon,authenticated;
@@ -93,7 +118,7 @@ CREATE OR REPLACE FUNCTION public.get_applicant_workflows() RETURNS jsonb
 LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
 SELECT coalesce(jsonb_agg(jsonb_build_object(
  'application_id',w.application_id,'user_id',w.user_id,'first_name',a.first_name,'last_name',a.last_name,'email',a.email,
- 'contract_id',w.contract_id,'contract_content',d.content,'signature_data',d.signature_data,'signed_at',w.signed_at,
+ 'contract_id',w.contract_id,'contract_content',d.content,'signature_data',d.signature_data,'company_signature',w.company_signature,'signed_at',w.signed_at,
  'bank_complete',w.bank_complete,'identity_status',w.identity_status,'rejection_reason',w.rejection_reason,
  'id_front_path',w.id_front_path,'id_back_path',w.id_back_path,'active',w.active
 ) ORDER BY w.accepted_at DESC),'[]'::jsonb)
@@ -209,6 +234,15 @@ END $$;
 DROP TRIGGER IF EXISTS protect_applicant_assignment ON public.tasks;
 CREATE TRIGGER protect_applicant_assignment BEFORE INSERT OR UPDATE ON public.tasks FOR EACH ROW EXECUTE FUNCTION public.protect_applicant_assignment();
 
+CREATE OR REPLACE FUNCTION public.applicant_application_refresh() RETURNS trigger
+LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+BEGIN
+ UPDATE public.applicant_workflows SET active=active WHERE application_id=NEW.id;
+ RETURN NEW;
+END $$;
+DROP TRIGGER IF EXISTS applicant_application_refresh ON public.applications;
+CREATE TRIGGER applicant_application_refresh AFTER UPDATE OF status ON public.applications FOR EACH ROW EXECUTE FUNCTION public.applicant_application_refresh();
+
 DROP POLICY IF EXISTS applicant_identity_read ON storage.objects;
 CREATE POLICY applicant_identity_read ON storage.objects FOR SELECT TO authenticated USING (
  bucket_id='verification-documents' AND (name LIKE auth.uid()::text || '/applicant/%' OR public.has_role(auth.uid(),'admin')));
@@ -222,4 +256,14 @@ CREATE POLICY applicant_identity_guard ON storage.objects AS RESTRICTIVE FOR ALL
 USING (name NOT LIKE '%/applicant/%' OR (bucket_id='verification-documents' AND (name LIKE auth.uid()::text || '/applicant/%' OR public.has_role(auth.uid(),'admin'))))
 WITH CHECK (name NOT LIKE '%/applicant/%' OR (bucket_id='verification-documents' AND name LIKE auth.uid()::text || '/applicant/%'
  AND EXISTS(SELECT 1 FROM public.applicant_workflows WHERE user_id=auth.uid() AND identity_status IN ('not_submitted','rejected'))));
+DROP POLICY IF EXISTS applicant_identity_delete_guard ON storage.objects;
+CREATE POLICY applicant_identity_delete_guard ON storage.objects AS RESTRICTIVE FOR DELETE TO authenticated USING(name NOT LIKE '%/applicant/%');
+DROP POLICY IF EXISTS applicant_identity_update_guard ON storage.objects;
+CREATE POLICY applicant_identity_update_guard ON storage.objects AS RESTRICTIVE FOR UPDATE TO authenticated USING(name NOT LIKE '%/applicant/%');
+DROP POLICY IF EXISTS applicant_resume_read ON storage.objects;
+CREATE POLICY applicant_resume_read ON storage.objects FOR SELECT TO authenticated USING(bucket_id='verification-documents' AND name LIKE 'applications/%' AND public.has_role(auth.uid(),'admin'));
+DROP POLICY IF EXISTS applicant_resume_guard ON storage.objects;
+CREATE POLICY applicant_resume_guard ON storage.objects AS RESTRICTIVE FOR ALL TO authenticated
+USING(name NOT LIKE 'applications/%' OR (bucket_id='verification-documents' AND public.has_role(auth.uid(),'admin')))
+WITH CHECK(name NOT LIKE 'applications/%' OR (bucket_id='verification-documents' AND public.has_role(auth.uid(),'admin')));
 COMMIT;
