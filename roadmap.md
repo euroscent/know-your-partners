@@ -1,5 +1,7 @@
 # Roadmap
 
+- [ ] Postfach und Livechat-Assistent samt Menü und Seiten entfernen
+
 - [ ] Benutzername und eigenes Passwort im Bewerbungsformular ergänzen
 - [ ] Bewerberlogin bis Admin-Annahme sicher sperren; Anleitung für eigenes Backend und Tests bereitstellen
 
