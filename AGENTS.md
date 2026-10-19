@@ -5,3 +5,4 @@
 - Applicant onboarding is authoritative in applicant_workflows and protected RPCs, including freelancer acceptance; preserve legacy employee access while new applicants require all admission steps, because existing staff must not be silently locked out and alternate acceptance must not bypass activation.
 - External-backend onboarding changes are delivered under selfhost with browser setup instructions; do not apply them to the unrelated managed Cloud instance.
 - Accepted applicant contracts are immutable document instances with a contract-specific signing timestamp; never infer their signature from a previous profile signature.
+- Read function HTTP error payloads from the response context before showing a fallback, because invoke data is empty on non-success responses.

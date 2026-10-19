@@ -1,5 +1,8 @@
 # Roadmap
 
+- [x] Verdeckte Fehler bei der Bewerberannahme aus der Antwort auslesen; Dienst öffentlich erreichbar
+- [ ] Konkrete Annahmeursache im angemeldeten Betrieb bestätigen — erneuter Versuch des Betreibers erforderlich
+
 - [x] Bewerbungsformular und „Neue Bewerber“ verbinden
 - [x] Annahme mit Vorlagenauswahl und Vertragsbereitstellung verbinden
 - [x] Bankdateneingabe nach Unterschrift absichern
