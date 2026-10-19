@@ -28,7 +28,7 @@ Unter **Authentication → URL Configuration**:
 - **Site URL**: deine veröffentlichte Website.
 - **Redirect URLs**: für jede erlaubte Website die Adresse mit `/reset-password` ergänzen.
 
-Zugangsmails verwenden die eingebauten Auth-Mails deines eigenen Backends. Prüfe die SMTP-Einstellungen und die Zustellung für echte Empfänger. Ein angenommener Vertrag bleibt gespeichert, wenn die Mail scheitert; über **Passwortlink senden** kannst du die Mail erneut anfordern. Die App verspricht keine Zustellung, solange sie nicht geprüft ist.
+Neue Bewerber wählen Benutzername und Passwort selbst, für sie wird keine Zugangsmail versandt. Nur alte Bewerbungen ohne eigene Zugangsdaten nutzen die eingebauten Auth-Mails deines eigenen Backends. Prüfe die SMTP-Einstellungen und die Zustellung für echte Empfänger. Ein angenommener Vertrag bleibt gespeichert, wenn eine Mail scheitert; der Bewerber holt sich bei Bedarf selbst einen neuen Link über **Passwort vergessen** auf der Anmeldeseite. Die App verspricht keine Zustellung, solange sie nicht geprüft ist.
 
 ## 5. Ablauf
 1. Bewerber öffnet **Bei EuroScent bewerben** auf der Anmeldeseite und schickt das Formular ab.

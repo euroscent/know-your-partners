@@ -125,7 +125,7 @@ Deno.serve(async req => {
       if(await unlockChosenAccount()) return respond({success:true,already_accepted:true});
       const authClient = createClient(Deno.env.get('SUPABASE_URL') || '',Deno.env.get('SUPABASE_ANON_KEY') || '',{auth:{persistSession:false}});
       const {error:mailError}=await authClient.auth.resetPasswordForEmail(application.email,{redirectTo:new URL('/reset-password',input.origin).href});
-      return respond({success:true,already_accepted:true,email_sent:!mailError,warning:mailError ? 'Vertrag bereitgestellt. Zugangsmail konnte nicht gesendet werden; Passwortlink erneut senden.' : null});
+      return respond({success:true,already_accepted:true,email_sent:!mailError,warning:mailError ? 'Vertrag bereitgestellt. Zugangsmail konnte nicht gesendet werden; der Bewerber nutzt bei Bedarf Passwort vergessen.' : null});
     }
     const { data:profile } = await admin.from('profiles').select('id').ilike('email',application.email).maybeSingle();
     let targetId = profile?.id;
@@ -161,7 +161,7 @@ Deno.serve(async req => {
     // Legacy applications still use the existing recovery-email flow.
     const authClient = createClient(Deno.env.get('SUPABASE_URL') || '',Deno.env.get('SUPABASE_ANON_KEY') || '',{auth:{persistSession:false}});
     const { error:mailError } = await authClient.auth.resetPasswordForEmail(application.email,{redirectTo:new URL('/reset-password',input.origin).href});
-    return respond({ success:true,email_sent:!mailError,warning:mailError ? 'Vertrag bereitgestellt. Zugangsmail konnte nicht gesendet werden; Passwortlink erneut senden.' : null });
+    return respond({ success:true,email_sent:!mailError,warning:mailError ? 'Vertrag bereitgestellt. Zugangsmail konnte nicht gesendet werden; der Bewerber nutzt bei Bedarf Passwort vergessen.' : null });
   } catch {
     return respond({ error:'Vorgang fehlgeschlagen. Einrichtung und Funktionsprotokoll prüfen / Operation failed; check setup and function logs' },500);
   }
