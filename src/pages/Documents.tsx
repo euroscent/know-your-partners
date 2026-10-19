@@ -232,7 +232,7 @@ const Documents = () => {
       let contractContent: string;
       const { data: templateData } = await supabase
         .from("contract_templates")
-        .select("content")
+        .select("content, default_salary")
         .ilike("category", contractTypeMeta)
         .eq("is_active", true)
         .order("updated_at", { ascending: false })
@@ -240,9 +240,13 @@ const Documents = () => {
         .maybeSingle();
 
       if (templateData?.content) {
+        const templateSalary =
+          templateData.default_salary != null
+            ? Number(templateData.default_salary).toLocaleString('de-DE')
+            : monthlySalary;
         contractContent = replaceContractPlaceholders(templateData.content, {
           startDate,
-          salary: monthlySalary,
+          salary: templateSalary,
           firstName: firstName || '',
           lastName: lastName || '',
           street: profile?.street || '',
