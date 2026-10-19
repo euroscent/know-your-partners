@@ -29,6 +29,9 @@ import { ResourceAssignmentModal } from "@/components/ResourceAssignmentModal";
 import { QuestionnaireDialog } from "@/components/onboarding/QuestionnaireDialog";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { InstallAppBanner } from "@/components/InstallAppBanner";
+import { ApplicantProgress } from "@/components/ApplicantProgress";
+import { ApplicantWorkflow, loadApplicantWorkflows } from "@/lib/applicantWorkflow";
+import { useI18n } from "@/lib/i18n";
 
 
 interface UploadedDoc {
@@ -95,6 +98,8 @@ interface Mentor {
 }
 
 const Dashboard = () => {
+  const { lang } = useI18n();
+  const [applicantWorkflow, setApplicantWorkflow] = useState<ApplicantWorkflow | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
@@ -216,6 +221,11 @@ const Dashboard = () => {
     
     const adminStatus = roles?.some((r) => r.role === "admin") || false;
     setIsAdmin(adminStatus);
+    let currentWorkflow: ApplicantWorkflow | null = null;
+    if (!adminStatus) {
+      try { currentWorkflow = (await loadApplicantWorkflows())[0] || null; } catch { /* External SQL may not be installed yet. */ }
+      setApplicantWorkflow(currentWorkflow);
+    }
 
     // Check verification status and set display name
     if (!adminStatus) {
@@ -247,13 +257,13 @@ const Dashboard = () => {
         mustOnboard = meta.must_change_password === true || !(profile?.street && profile?.signature_data);
       }
 
-      setNeedsOnboarding(mustOnboard);
+      setNeedsOnboarding(!currentWorkflow && mustOnboard);
 
       // Questionnaire logic:
       // 1. If manually created: show after onboarding (contract) is done
       // 2. If self-registered: show immediately if not completed
       const questionnaireNeeded = profile?.questionnaire_completed === false && !mustOnboard;
-      setNeedsQuestionnaire(questionnaireNeeded);
+      setNeedsQuestionnaire(!currentWorkflow && questionnaireNeeded);
 
       // Handled above in questionnaireNeeded logic
 
@@ -596,7 +606,7 @@ const Dashboard = () => {
 
   return (
     <SidebarProvider defaultOpen={true}>
-      {needsOnboarding && user && !isAdmin && (
+      {needsOnboarding && user && !isAdmin && !applicantWorkflow && (
         <OnboardingModal
           open={needsOnboarding}
           userId={user.id}
@@ -610,7 +620,7 @@ const Dashboard = () => {
           }}
         />
       )}
-      {needsQuestionnaire && user && !isAdmin && !needsOnboarding && (
+      {needsQuestionnaire && user && !isAdmin && !needsOnboarding && !applicantWorkflow && (
         <QuestionnaireDialog
           open={needsQuestionnaire}
           userId={user.id}
@@ -620,7 +630,7 @@ const Dashboard = () => {
           }}
         />
       )}
-      {showResourceAssignment && user && !isAdmin && !needsOnboarding && !needsQuestionnaire && isDashboardRoot && (
+      {showResourceAssignment && user && !isAdmin && !needsOnboarding && !needsQuestionnaire && !applicantWorkflow && isDashboardRoot && (
         <ResourceAssignmentModal
           open={showResourceAssignment}
           userId={user.id}
@@ -643,9 +653,11 @@ const Dashboard = () => {
                 </p>
               </div>
               <AdminActivityMonitor />
+              <Button variant="outline" className="mt-6" onClick={() => navigate('/dashboard/admin/verifications')}>{lang === 'en' ? 'Employee onboarding overview' : 'Statusübersicht Mitarbeiteraufnahme'}</Button>
             </div>
           ) : showEmployeeDashboard ? (
             <div className="p-4 md:p-6 lg:p-8 space-y-6 md:space-y-8">
+              <ApplicantProgress compact onChange={setApplicantWorkflow} />
               {/* Header */}
               <div className="space-y-4">
                 <div>
@@ -871,7 +883,9 @@ const Dashboard = () => {
                   <h2 className="text-xl md:text-2xl font-semibold">Meine Aufgaben</h2>
                 </div>
                 
-                {!isVerified ? (
+                {applicantWorkflow && !applicantWorkflow.active ? (
+                  <div className="border-y border-border py-8 space-y-4"><p className="text-muted-foreground">{lang === 'en' ? 'Complete your onboarding before working on tasks.' : 'Schließen Sie Ihre Mitarbeiteraufnahme ab, bevor Sie Aufträge bearbeiten.'}</p><Button onClick={() => navigate('/dashboard/onboarding')}>{lang === 'en' ? 'Continue onboarding' : 'Mitarbeiteraufnahme fortsetzen'}</Button></div>
+                ) : !isVerified && !applicantWorkflow?.active ? (
                   <Card className="border-amber-500/50 bg-amber-50/50 dark:bg-amber-900/10">
                     <CardContent className="p-8 text-center">
                       <AlertCircle className="h-12 w-12 mx-auto mb-4 text-amber-600" />
@@ -922,7 +936,7 @@ const Dashboard = () => {
                               : 'cursor-pointer'
                           }`}
                           onClick={() => {
-                            if (showResourceAssignment) {
+                            if (showResourceAssignment && !applicantWorkflow) {
                               toast({
                                 title: "Bitte abschließen",
                                 description: "Bitte schließen Sie zuerst die Ressourcenzuweisung ab, bevor Sie Aufträge öffnen.",

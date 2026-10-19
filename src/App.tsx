@@ -40,6 +40,9 @@ import TaskPostalDocumentsCheck from "./pages/TaskPostalDocumentsCheck";
 import TaskSubmitted from "./pages/TaskSubmitted";
 import Verification from "./pages/Verification";
 import Application from "./pages/Application";
+import ApplicantOnboarding from "./pages/ApplicantOnboarding";
+import { ApplicantTaskGate } from "./components/ApplicantTaskGate";
+import ApplicantVerifications from "./pages/admin/ApplicantVerifications";
 import ApplicationSuccess from "./pages/ApplicationSuccess";
 import AdminApplications from "./pages/AdminApplications";
 import Employees from "./pages/admin/Employees";
@@ -90,21 +93,28 @@ const App = () => (
           <Route path="/install" element={<Install />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/login" element={<Login />} />
+           <Route path="/bewerbung" element={<Application />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/dashboard" element={<Dashboard />} />
+           <Route path="/dashboard/onboarding" element={<Dashboard />}>
+             <Route index element={<ApplicantOnboarding />} />
+           </Route>
+           <Route path="/dashboard/admin/verifications" element={<Dashboard />}>
+             <Route index element={<ApplicantVerifications />} />
+           </Route>
           <Route path="/dashboard/documents" element={<Dashboard />}>
             <Route index element={<Documents />} />
           </Route>
           <Route path="/documents" element={<Navigate to="/dashboard/documents" replace />} />
-          <Route path="/dashboard/tasks" element={<Tasks />} />
+          <Route path="/dashboard/tasks" element={<ApplicantTaskGate><Tasks /></ApplicantTaskGate>} />
           <Route path="/dashboard/library" element={<Dashboard />}>
             <Route index element={<Library />} />
           </Route>
-           <Route path="/dashboard/tasks/:taskId" element={<TaskDetail />} />
-           <Route path="/dashboard/tasks/:taskId/demo-data" element={<TaskDemoData />} />
-           <Route path="/dashboard/tasks/:taskId/product-test" element={<ProductTest />} />
-           <Route path="/dashboard/tasks/:taskId/quality-check" element={<TaskQualityCheck />} />
-           <Route path="/dashboard/tasks/:taskId/postal-documents-check" element={<TaskPostalDocumentsCheck />} />
+           <Route path="/dashboard/tasks/:taskId" element={<ApplicantTaskGate><TaskDetail /></ApplicantTaskGate>} />
+           <Route path="/dashboard/tasks/:taskId/demo-data" element={<ApplicantTaskGate><TaskDemoData /></ApplicantTaskGate>} />
+           <Route path="/dashboard/tasks/:taskId/product-test" element={<ApplicantTaskGate><ProductTest /></ApplicantTaskGate>} />
+           <Route path="/dashboard/tasks/:taskId/quality-check" element={<ApplicantTaskGate><TaskQualityCheck /></ApplicantTaskGate>} />
+           <Route path="/dashboard/tasks/:taskId/postal-documents-check" element={<ApplicantTaskGate><TaskPostalDocumentsCheck /></ApplicantTaskGate>} />
           <Route path="/dashboard/tasks/:taskId/submitted" element={<TaskSubmitted />} />
           <Route path="/verification" element={<Verification />} />
           <Route path="/dashboard/verification" element={<Verification />} />

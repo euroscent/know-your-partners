@@ -4,6 +4,10 @@ export type Lang = "de" | "en";
 
 // German text is the key; English translation is the value.
 const en: Record<string, string> = {
+  "Mitarbeiteraufnahme": "Employee onboarding",
+  "Neue Bewerber": "New applicants",
+  "Verifizierungen": "Verifications",
+  "Tasks": "Tasks",
   "Dashboard": "Dashboard",
   "Mein Postfach": "My inbox",
   "Bibliothek": "Library",

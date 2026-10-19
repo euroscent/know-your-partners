@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { LoadingButton } from "@/components/ui/loading-button";
 import { Input } from "@/components/ui/input";
@@ -258,6 +259,7 @@ const Login = () => {
             </LoadingButton>
 
           </form>
+          <Button asChild variant="link" className="w-full mt-4"><Link to="/bewerbung">{lang === "en" ? "Apply to EuroScent" : "Bei EuroScent bewerben"}</Link></Button>
         </div>
       </div>
     </div>
