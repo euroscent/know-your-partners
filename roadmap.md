@@ -1,5 +1,7 @@
 # Roadmap
 
+- [x] Irreführende Konfliktmeldung bei neuen Bewerberkonten korrigiert; 23 Tests bestanden, tatsächlicher Dienstfehler benötigt neue Antwort nach Betreiber-Deploy
+
 - [x] Postfach und Livechat-Assistent aus Menü und Seiten entfernt; Dokumente bleiben zugänglich
 
 - [x] Benutzername und eigenes Passwort im Bewerbungsformular ergänzt

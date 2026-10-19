@@ -7,7 +7,7 @@ const workerId = "11111111-1111-4111-8111-111111111111";
 const applicationId = "33333333-3333-4333-8333-333333333333";
 const templateId = "44444444-4444-4444-8444-444444444444";
 
-async function harness(failure?: string, existing = false, chosen = false, accepted = false) {
+async function harness(failure?: string, existing = false, chosen = false, accepted = false, authFailure?: {code?: string; status?: number; message?: string}) {
   const calls: string[] = [];
   const createdUsers: Record<string, unknown>[] = [];
   const insertedApplications: Record<string, unknown>[] = [];
@@ -15,7 +15,7 @@ async function harness(failure?: string, existing = false, chosen = false, accep
     auth: {
       getUser: async () => ({ data: { user: { id: adminId } } }),
       admin: {
-        createUser: async (input: Record<string, unknown>) => { createdUsers.push(input); calls.push("create"); return { data: { user: { id: workerId } } }; },
+        createUser: async (input: Record<string, unknown>) => { createdUsers.push(input); calls.push("create"); return authFailure ? { data: { user: null }, error: authFailure } : { data: { user: { id: workerId } } }; },
         updateUserById: async () => { calls.push('unlock'); return {}; },
         deleteUser: async (id: string) => { calls.push(`delete:${id}`); return {}; },
       },
@@ -118,4 +118,37 @@ test('acceptance unlocks chosen account without replacing its password or sendin
   expect(calls).toContain('unlock');
   expect(calls).not.toContain('create');
   expect(calls).not.toContain('mail');
+});
+
+test('new applicant Auth database failure is not treated as a duplicate account', async () => {
+  const {invoke,calls}=await harness(undefined,false,false,false,{code:'unexpected_failure',status:500,message:'private database details'});
+  const response=await invoke(submission);
+  expect(response.status).toBe(500);
+  const body=await response.json();
+  expect(body.code).toBe('unexpected_failure');
+  expect(JSON.stringify(body)).not.toContain('private database details');
+  expect(calls).not.toContain('applications:insert');
+  expect(calls).not.toContain('applicant_accounts:insert');
+});
+
+test.each(['email_exists','user_already_exists'])('only confirmed Auth duplicate %s returns conflict', async code => {
+  const {invoke}=await harness(undefined,false,false,false,{code,status:422});
+  expect((await invoke(submission)).status).toBe(409);
+});
+
+test('Auth password policy rejection is a validation failure', async () => {
+  const {invoke}=await harness(undefined,false,false,false,{code:'weak_password',status:422});
+  expect((await invoke(submission)).status).toBe(422);
+});
+
+test('unrecognized Auth failure remains a service failure without exposing raw errors', async () => {
+  const {invoke}=await harness(undefined,false,false,false,{status:500,message:'private account data'});
+  const response=await invoke(submission);
+  expect(response.status).toBe(500);
+  expect((await response.json()).code).toBe('auth_creation_failed');
+});
+
+test('Auth rate limit remains retryable rather than duplicate conflict', async () => {
+  const {invoke}=await harness(undefined,false,false,false,{code:'over_request_rate_limit',status:429});
+  expect((await invoke(submission)).status).toBe(429);
 });

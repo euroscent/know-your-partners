@@ -12,6 +12,8 @@ Für selbst gewählte Zugangsdaten anschließend `bewerber-zugang.sql` vollstän
 ## 3. Eine neue Serverfunktion anlegen
 Falls **applicant-api** bereits bereitgestellt ist, die bestehende Funktion öffnen, ihren Inhalt durch die aktuelle Datei ersetzen und erneut **Deploy** klicken. Die Aktualisierung behebt die Kontobereinigung bei fehlgeschlagener Annahme und verhindert eine gemeinsame Fünf-Bewerbungen-Grenze bei fehlender IP-Weitergabe. Das SQL muss dafür nicht erneut ausgeführt werden.
 
+Die aktuelle Fassung korrigiert außerdem die irreführende Meldung **„Konto nicht verfügbar“**: Bisher wurde jeder Fehler bei der Kontoanlage als belegte E-Mail dargestellt, selbst ein interner Dienstfehler. Jetzt werden tatsächlich bestehende Konten, abgelehnte Passwörter und Dienstfehler getrennt behandelt. Bei einem Dienstfehler wird ein sicherer Fehlercode angezeigt und protokolliert, keine Passwörter oder Bewerberdaten. Bei `unexpected_failure` muss der Betreiber die Auth-Protokolle und die Auslöser der Profilanlage prüfen. Die Meldung allein beweist nicht, dass eine E-Mail bereits existiert. Nach dem erneuten **Deploy** eine Bewerbung versuchen und bei einem weiteren Fehler die vollständige angezeigte Meldung mitteilen. Eine neue SQL-Abfrage ist für diese Fehleranzeige nicht nötig; die tatsächliche Ursache im eigenen Backend bleibt bis zur neuen Antwort ungeklärt.
+
 Öffne **Edge Functions → Create a new function**.
 - Name: **applicant-api**
 - Kopiere den gesamten Inhalt von `functions/applicant-api/index.ts` in den Editor.

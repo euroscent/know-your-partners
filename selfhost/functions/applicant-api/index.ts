@@ -74,7 +74,29 @@ Deno.serve(async req => {
         if(lookupError) throw lookupError;
         if(taken) { if(path) await admin.storage.from('verification-documents').remove([path]); return respond({error:'Benutzername nicht verfügbar / Username unavailable'},409); }
         const {data:created,error:createError}=await admin.auth.admin.createUser({email:application.email.toLowerCase(),password,email_confirm:false,ban_duration:'876000h',user_metadata:{first_name:application.first_name,last_name:application.last_name}});
-        if(createError || !created.user) { if(path) await admin.storage.from('verification-documents').remove([path]); return respond({error:'Konto nicht verfügbar. Andere E-Mail oder Benutzernamen verwenden / Account unavailable; use another email or username'},409); }
+        if(createError || !created.user) {
+          if(path) await admin.storage.from('verification-documents').remove([path]);
+          // Auth failures are not all duplicate accounts. Never expose raw errors or credentials.
+          const code = createError?.code;
+          const diagnostic = typeof code === 'string' && /^[a-z_]{1,64}$/.test(code) ? code : 'auth_creation_failed';
+          console.error('Applicant Auth creation failed', { code: diagnostic, status: createError?.status });
+          if (code === 'email_exists' || code === 'user_already_exists') {
+            return respond({error:'Für diese E-Mail existiert bereits ein Konto. Bitte anmelden oder Passwort vergessen verwenden / An account already exists for this email; sign in or use password recovery',code:diagnostic},409);
+          }
+          if (code === 'weak_password') {
+            return respond({error:'Das Passwort erfüllt die Sicherheitsanforderungen nicht. Bitte ein stärkeres Passwort wählen / Password does not meet security requirements; choose a stronger password',code:diagnostic},422);
+          }
+          if (code === 'email_address_invalid' || code === 'email_address_not_authorized') {
+            return respond({error:'Diese E-Mail-Adresse wird vom Anmeldedienst nicht akzeptiert / This email address is not accepted by the account service',code:diagnostic},422);
+          }
+          if (code === 'over_request_rate_limit' || code === 'over_email_send_rate_limit' || createError?.status === 429) {
+            return respond({error:'Bitte später erneut versuchen / Please try again later',code:diagnostic},429);
+          }
+          const explanation = code === 'unexpected_failure'
+            ? 'Konto konnte wegen eines internen Fehlers nicht angelegt werden. Der Betreiber muss die Kontoanlage und Datenbank-Auslöser prüfen / Account creation failed internally; the owner must check account creation and database triggers'
+            : 'Konto konnte nicht angelegt werden. Der Betreiber muss die Einrichtung des Anmeldedienstes prüfen / Account creation failed; the owner must check account service setup';
+          return respond({error:`${explanation} (${diagnostic})`,code:diagnostic},500);
+        }
         createdId=created.user.id;
         const {error:profileError}=await admin.from('profiles').upsert({id:createdId,email:application.email.toLowerCase(),username});
         if(profileError) throw profileError;
