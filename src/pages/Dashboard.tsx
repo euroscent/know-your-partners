@@ -20,7 +20,6 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { AdminActivityMonitor } from "@/components/admin/AdminActivityMonitor";
-import { EmployeeChat, EmployeeChatRef } from "@/components/EmployeeChat";
 import { getAvatarById } from "@/assets/avatars";
 import { TaskImageRotator } from "@/components/TaskImageRotator";
 import { getTaskGlowStyles, getBannerUrls, hasDemoDataInAdminData } from "@/lib/taskUtils";
@@ -132,28 +131,6 @@ const Dashboard = () => {
   const [profileLastName, setProfileLastName] = useState<string | null>(null);
   const [showResourceAssignment, setShowResourceAssignment] = useState(false);
   const [needsQuestionnaire, setNeedsQuestionnaire] = useState(false);
-  const chatRef = useRef<EmployeeChatRef>(null);
-
-  useEffect(() => {
-    const handleOpenChat = () => {
-      chatRef.current?.openHRChat();
-    };
-    window.addEventListener("open-employee-chat", handleOpenChat);
-    return () => window.removeEventListener("open-employee-chat", handleOpenChat);
-  }, []);
-
-  const openMentorChat = () => {
-    if (mentor && chatRef.current) {
-      chatRef.current.openWithContact({
-        id: mentor.id,
-        first_name: mentor.first_name,
-        last_name: mentor.last_name,
-        job_title: mentor.job_title,
-        department: mentor.department,
-      });
-    }
-  };
-  
   // Upload constraints
   const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
   const ALLOWED_TYPES = [
@@ -846,15 +823,7 @@ const Dashboard = () => {
                           <p className="text-sm text-muted-foreground">{mentor.job_title}</p>
                           <p className="text-xs text-muted-foreground">{mentor.department}</p>
                         </div>
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="shrink-0"
-                          onClick={openMentorChat}
-                        >
-                          <MessageCircle className="h-4 w-4 mr-2" />
-                          Nachricht
-                        </Button>
+
                       </div>
 
                       {daysLeft !== null && (
@@ -1101,7 +1070,6 @@ const Dashboard = () => {
           
           <Outlet />
         </main>
-        <EmployeeChat ref={chatRef} />
         {!isAdmin && <MobileBottomNav />}
         {!isAdmin && <InstallAppBanner />}
       </div>

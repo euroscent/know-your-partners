@@ -9,6 +9,7 @@ import { useToast } from "@/lib/toast-stub";
 import euroscentLogoAsset from "@/assets/euroscent-logo.png";
 import { Eye, EyeOff } from "lucide-react";
 import { useI18n, LanguageSwitch } from "@/lib/i18n";
+import { readFunctionError } from "@/lib/functionError";
 
 const PUBLISHED_LOGIN_URL = "/login";
 
@@ -90,11 +91,15 @@ const Login = () => {
     try {
       let loginEmail = email.trim();
       if (!loginEmail.includes("@")) {
-        const { data: resolved } = await (supabase as any).rpc("get_login_email", { _username: loginEmail });
-        if (!resolved) throw new Error("Invalid login credentials");
-        loginEmail = resolved as string;
-      }
-      const loginResult = await Promise.race([
+        const {data,error}=await supabase.functions.invoke('applicant-api',{body:{action:'login',username:loginEmail,password}});
+        if(error || data?.error || !data?.session) {
+          const failure=await readFunctionError(error,data);
+          throw new Error(failure.message || (lang==='en' ? 'Username sign-in unavailable. Please try your email address.' : 'Benutzername-Anmeldung nicht verfügbar. Bitte mit E-Mail versuchen.'));
+        }
+        const {error:sessionError}=await supabase.auth.setSession({access_token:data.session.access_token,refresh_token:data.session.refresh_token});
+        if(sessionError) throw sessionError;
+      } else {
+        const loginResult = await Promise.race([
         supabase.auth.signInWithPassword({
           email: loginEmail,
           password,
@@ -110,6 +115,7 @@ const Login = () => {
       const { error } = loginResult;
 
       if (error) throw error;
+      }
 
       // Ensure session is available before navigating to a protected route
       const { data: sessionData } = await supabase.auth.getSession();
@@ -134,7 +140,9 @@ const Login = () => {
       if (error.message?.includes("Invalid login credentials")) {
         description = "E-Mail oder Passwort ist falsch. Bitte überprüfen Sie Ihre Eingaben.";
       } else if (error.message?.includes("Email not confirmed")) {
-        description = "E-Mail wurde noch nicht bestätigt. Bitte prüfen Sie Ihren Posteingang.";
+        description = lang==='en' ? "Access has not yet been approved or the email is not confirmed." : "Der Zugang ist noch nicht freigegeben oder die E-Mail noch nicht bestätigt.";
+      } else if (error.message?.includes("banned")) {
+        description = lang==='en' ? "Your access has not yet been approved." : "Ihr Zugang ist noch nicht freigegeben.";
       } else if (error.message === "AUTH_PREVIEW_TIMEOUT" || error.message?.includes("Failed to fetch")) {
         description = previewAuthBlocked
           ? "Die Preview blockiert aktuell den Auth-Request. Bitte öffnen Sie den Login in einem neuen Tab oder nutzen Sie die veröffentlichte App."

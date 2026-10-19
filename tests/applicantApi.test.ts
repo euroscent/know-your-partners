@@ -7,16 +7,20 @@ const workerId = "11111111-1111-4111-8111-111111111111";
 const applicationId = "33333333-3333-4333-8333-333333333333";
 const templateId = "44444444-4444-4444-8444-444444444444";
 
-async function harness(failure?: string, existing = false) {
+async function harness(failure?: string, existing = false, chosen = false, accepted = false) {
   const calls: string[] = [];
+  const createdUsers: Record<string, unknown>[] = [];
+  const insertedApplications: Record<string, unknown>[] = [];
   const client = {
     auth: {
       getUser: async () => ({ data: { user: { id: adminId } } }),
       admin: {
-        createUser: async () => { calls.push("create"); return { data: { user: { id: workerId } } }; },
+        createUser: async (input: Record<string, unknown>) => { createdUsers.push(input); calls.push("create"); return { data: { user: { id: workerId } } }; },
+        updateUserById: async () => { calls.push('unlock'); return {}; },
         deleteUser: async (id: string) => { calls.push(`delete:${id}`); return {}; },
       },
       resetPasswordForEmail: async () => { calls.push("mail"); return {}; },
+      signInWithPassword: async () => { calls.push('signin'); return {data:{session:{access_token:'test',refresh_token:'test'}}}; },
     },
     rpc: async (name: string) => { calls.push(name); return { data: true, error: failure === name ? new Error("failed") : null }; },
     from: (table: string) => {
@@ -25,11 +29,14 @@ async function harness(failure?: string, existing = false) {
       const result = () => {
         calls.push(`${table}:${operation}`);
         if (failure === `${table}:${operation}`) return { data: null, error: new Error("failed") };
-        if (operation === "upsert" || operation === "insert") return { data: null, error: null };
+        if(table === 'applications' && operation === 'insert') return {data:{id:applicationId},error:null};
+        if (operation === "upsert" || operation === "insert" || operation === 'update' || operation === 'delete') return { data: null, error: null };
+        if(table === 'applicant_accounts') return {data:chosen?{user_id:workerId,accepted_at:accepted?'2026-10-01':null}:null,error:null};
+        if(table === 'applicant_workflows' && chosen && existing) return {data:{user_id:workerId},error:null};
         if (table === "user_roles") return { data: userId === adminId ? { role: "admin" } : null };
         if (table === "applications") return { data: { email: "worker@example.test", status: "pending", first_name: "Max", last_name: "Muster", employment_type: "teilzeit" } };
         if (table === "contract_templates") return { data: { id: templateId } };
-        if (table === "profiles") return { data: existing ? { id: workerId } : null };
+        if (table === "profiles") return { data: existing ? { id: workerId,email:'worker@example.test' } : null };
         return { data: null, error: null };
       };
       const chain = {
@@ -37,7 +44,9 @@ async function harness(failure?: string, existing = false) {
         eq: (column: string, value: string) => { if (column === "user_id") userId = value; return chain; },
         ilike: () => chain,
         upsert: () => { operation = "upsert"; return chain; },
-        insert: () => { operation = "insert"; return chain; },
+        insert: (input: Record<string, unknown>) => { if(table==='applications') insertedApplications.push(input); operation = "insert"; return chain; },
+        update: () => { operation='update'; return chain; },
+        delete: () => { operation='delete'; return chain; },
         maybeSingle: async () => result(),
         single: async () => result(),
         then: (resolve: (value: unknown) => unknown) => Promise.resolve(result()).then(resolve),
@@ -56,7 +65,7 @@ async function harness(failure?: string, existing = false) {
   const invoke = (body: unknown) => handler(new Request("http://localhost/api", {
     method: "POST", headers: { Authorization: "Bearer test", "Content-Type": "application/json" }, body: JSON.stringify(body),
   }));
-  return { calls, invoke };
+  return { calls, invoke, createdUsers, insertedApplications };
 }
 
 const acceptance = { action: "accept", application_id: applicationId, template_id: templateId, start_date: "2026-11-01", salary: 2200, origin: "http://localhost:8080" };
@@ -84,8 +93,29 @@ test("existing applicant account receives required employee role without duplica
 
 test("missing ingress IP does not put all applicants under the same personal quota", async () => {
   const { calls, invoke } = await harness();
-  const response = await invoke({ action: "submit", application: { first_name: "Max", last_name: "Muster", email: "worker@example.test", phone: "0123456789", birth_date: "1990-01-01", street: "Testweg 1", postal_code: "12345", city: "Teststadt", employment_type: "teilzeit" } });
+  const response = await invoke(submission);
   expect(response.status).toBe(200);
   expect(calls).toContain("applicant_global_submission_allowed");
   expect(calls).not.toContain("applicant_submission_allowed");
+});
+
+const submission = {action:'submit',application:{first_name:'Max',last_name:'Muster',email:'worker@example.test',phone:'0123456789',birth_date:'1990-01-01',street:'Testweg 1',postal_code:'12345',city:'Teststadt',employment_type:'teilzeit',username:'max.muster',password:'chosen-password-123'}};
+test('chosen password is sent only to Auth and the account starts banned',async()=>{
+  const {invoke,createdUsers,insertedApplications}=await harness();
+  expect((await invoke(submission)).status).toBe(200);
+  expect(createdUsers[0]?.password).toBe('chosen-password-123');
+  expect(createdUsers[0]?.ban_duration).toBe('876000h');
+  expect(insertedApplications[0]).not.toHaveProperty('password');
+});
+test('pending chosen account cannot sign in',async()=>{
+  const {invoke,calls}=await harness(undefined,true,true,false);
+  expect((await invoke({action:'login',username:'max.muster',password:'chosen-password-123'})).status).toBe(401);
+  expect(calls).not.toContain('signin');
+});
+test('acceptance unlocks chosen account without replacing its password or sending reset mail',async()=>{
+  const {invoke,calls}=await harness(undefined,true,true);
+  expect((await invoke(acceptance)).status).toBe(200);
+  expect(calls).toContain('unlock');
+  expect(calls).not.toContain('create');
+  expect(calls).not.toContain('mail');
 });

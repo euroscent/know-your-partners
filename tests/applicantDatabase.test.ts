@@ -75,5 +75,13 @@ test("external SQL enforces the entire applicant journey and authorization", asy
   await expect(db.exec(`UPDATE public.employee_documents SET signature_data='forged'`)).rejects.toThrow('Use contract signing');
   await db.exec(`RESET ROLE; UPDATE public.applications SET status='rejected';`);
   expect(await active()).toBe(false);
+  await db.exec(readFileSync(new URL('../selfhost/bewerber-zugang.sql', import.meta.url),'utf8'));
+  await db.exec(`INSERT INTO public.applicant_accounts(user_id,application_id) VALUES('${employee}','${application}');`);
+  expect((await db.query<{allowed:boolean}>(`SELECT public.applicant_is_active('${employee}') AS allowed`)).rows[0]?.allowed).toBe(false);
+  await db.exec(`SELECT set_config('test.uid','${admin}',false); UPDATE public.applications SET status='approved'; UPDATE public.applicant_accounts SET accepted_at=now();`);
+  expect((await db.query<{allowed:boolean}>(`SELECT public.applicant_is_active('${employee}') AS allowed`)).rows[0]?.allowed).toBe(true);
+  await db.exec(`SET ROLE authenticated;`);
+  await expect(db.query('SELECT * FROM public.applicant_accounts')).rejects.toThrow('permission denied');
+  await db.exec('RESET ROLE');
   await db.close();
 },30000);

@@ -6,3 +6,4 @@
 - External-backend onboarding changes are delivered under selfhost with browser setup instructions; do not apply them to the unrelated managed Cloud instance.
 - Accepted applicant contracts are immutable document instances with a contract-specific signing timestamp; never infer their signature from a previous profile signature.
 - Read function HTTP error payloads from the response context before showing a fallback, because invoke data is empty on non-success responses.
+- Provision chosen applicant credentials in Auth with an initial ban and service-only applicant_accounts link; unlock only after an authoritative accepted workflow, and resolve username credentials server-side without exposing profile emails.

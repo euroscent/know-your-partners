@@ -12,7 +12,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { to: "/dashboard", label: "Start", icon: Home },
   { to: "/dashboard/tasks", label: "Aufträge", icon: CheckSquare, matchPaths: ["/dashboard/tasks"] },
-  { to: "/dashboard/documents", label: "Postfach", icon: Mail },
+  { to: "/dashboard/documents", label: "Dokumente", icon: Mail },
   { to: "/dashboard/invoices", label: "Honorar", icon: Euro },
   { to: "/dashboard/employee-settings", label: "Profil", icon: User },
 ];
