@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useI18n } from "@/lib/i18n";
 import { PageLoader } from "@/components/PageLoader";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -55,6 +56,12 @@ interface Application {
 
 const AdminApplications = () => {
   const navigate = useNavigate();
+  const { lang } = useI18n();
+  const tr = (de: string, en: string) => lang === "en" ? en : de;
+  const [templates, setTemplates] = useState<{id:string;name:string;category:string;version:string;default_salary:number|null}[]>([]);
+  const [templateId, setTemplateId] = useState("");
+  const [salary, setSalary] = useState("");
+  const [notice, setNotice] = useState("");
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -170,7 +177,8 @@ const AdminApplications = () => {
 
   const openAcceptDialog = (application: Application) => {
     setSelectedApplication(application);
-    setAcceptOption("");
+    setAcceptOption(""); setTemplateId(""); setSalary(""); setNotice("");
+    supabase.from("contract_templates").select("id,name,category,version,default_salary").eq("is_active",true).order("name").then(({data,error}) => { if(error) setNotice(tr("Vorlagen konnten nicht geladen werden.","Could not load templates.")); setTemplates(data || []); });
     // Setze Standard-Startdatum auf den 1. des nächsten Monats
     const today = new Date();
     const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
@@ -183,65 +191,14 @@ const AdminApplications = () => {
   };
 
   const handleAcceptApplication = async () => {
-    if (!selectedApplication || !acceptOption) {
-      toast.error("Bitte wählen Sie eine Option aus.");
-      return;
-    }
-    
-    // Bei festen Anstellungsarten muss ein Startdatum ausgewählt sein
-    const isFreieWahl = acceptOption === "freie_wahl";
-    if (!isFreieWahl && !startDate) {
-      toast.error("Bitte wählen Sie ein Startdatum aus.");
-      return;
-    }
-
-    setIsProcessing(true);
-
+    if (!selectedApplication || !templateId || !startDate || salary === "" || !Number.isFinite(Number(salary))) return;
+    setIsProcessing(true); setNotice("");
     try {
-      // Bestimme die tatsächliche Anstellungsart für die Datenbank
-      const employmentType = isFreieWahl ? null : acceptOption;
-      
-      // Update application status and employment type
-      const { error: updateError } = await supabase
-        .from("applications")
-        .update({ 
-          status: "approved",
-          employment_type: employmentType 
-        })
-        .eq("id", selectedApplication.id);
-
-      if (updateError) throw updateError;
-
-      // Send acceptance email
-      const { error: emailError } = await supabase.functions.invoke("send-acceptance-email", {
-        body: {
-          firstName: selectedApplication.first_name,
-          lastName: selectedApplication.last_name,
-          email: selectedApplication.email,
-          employmentType: isFreieWahl ? null : acceptOption,
-          startDate: isFreieWahl ? null : startDate,
-          lockFields: !isFreieWahl,
-        },
-      });
-
-      if (emailError) {
-        console.error("Email error:", emailError);
-        toast.error("Bewerbung akzeptiert, aber E-Mail konnte nicht gesendet werden.");
-      } else {
-        toast.success("Bewerbung akzeptiert! Der Bewerber erhält eine E-Mail.");
-      }
-
-      setAcceptDialogOpen(false);
-      setSelectedApplication(null);
-      setAcceptOption("");
-      setStartDate("");
-      fetchApplications();
-    } catch (error: any) {
-      console.error("Error accepting application:", error);
-      toast.error(error.message || "Fehler beim Akzeptieren der Bewerbung.");
-    } finally {
-      setIsProcessing(false);
-    }
+      const {data,error} = await supabase.functions.invoke("applicant-api",{body:{action:"accept",application_id:selectedApplication.id,template_id:templateId,start_date:startDate,salary:Number(salary),origin:window.location.origin}});
+      if(error || data?.error) throw new Error(data?.error || tr("Annahme fehlgeschlagen. Bewerbungsdienst einrichten.","Acceptance failed. Configure the application service."));
+      const message = data.warning || tr("Bewerbung angenommen und Vertrag bereitgestellt.","Application accepted and contract provided.");
+      setNotice(message); toast.success(message); setAcceptDialogOpen(false); fetchApplications();
+    } catch(e:any) { setNotice(e.message); } finally {setIsProcessing(false);}
   };
 
   const handleRejectApplication = async (id: string) => {
@@ -535,7 +492,8 @@ const AdminApplications = () => {
     <div className="p-6 space-y-6">
       <div className="flex items-center gap-2">
         <Users className="h-6 w-6" />
-        <h1 className="text-2xl font-semibold">Bewerbungsübersicht ({stats.total})</h1>
+        <h1 className="text-2xl font-semibold">{tr("Neue Bewerber", "New applicants")} ({stats.total})</h1>
+        {notice && <p role="status" className="text-primary">{notice}</p>}
       </div>
 
       {/* Stats Cards */}
@@ -686,14 +644,13 @@ const AdminApplications = () => {
                           {app.status === "pending"
                             ? "Ausstehend"
                             : app.status === "approved"
-                            ? "Eingestellt"
+                            ? tr("Angenommen", "Accepted")
                             : "Abgelehnt"}
                         </Badge>
-                        {app.status === "approved" && (
-                          <Badge variant="outline" className="text-xs">
-                            ✉ E-Mail gesendet
-                          </Badge>
-                        )}
+                        {app.status === "approved" && <Button variant="link" size="sm" onClick={async () => {
+                          const {error} = await supabase.auth.resetPasswordForEmail(app.email,{redirectTo:window.location.origin + '/reset-password'});
+                          setNotice(error ? tr('Passwortlink konnte nicht gesendet werden.','Could not send password link.') : tr('Passwortlink angefordert.','Password link requested.'));
+                        }}>{tr('Passwortlink senden','Send password link')}</Button>}
                       </div>
                     </TableCell>
                     <TableCell>
@@ -720,7 +677,7 @@ const AdminApplications = () => {
 
                             setPreviewLoading(true);
                             supabase.storage
-                              .from('applications')
+                              .from(app.resume_path.startsWith('applications/') ? 'verification-documents' : 'applications')
                               .download(app.resume_path)
                               .then(({ data, error }) => {
                                 if (!error && data) {
@@ -819,54 +776,19 @@ const AdminApplications = () => {
       <Dialog open={acceptDialogOpen} onOpenChange={setAcceptDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Bewerbung akzeptieren</DialogTitle>
-            <DialogDescription>
-              Wählen Sie die Anstellungsart für {selectedApplication?.first_name} {selectedApplication?.last_name}.
-              Der Bewerber erhält automatisch eine E-Mail mit einem personalisierten Registrierungslink.
-            </DialogDescription>
+            <DialogTitle>{tr("Bewerbung annehmen", "Accept application")}</DialogTitle>
+            <DialogDescription>{selectedApplication?.first_name} {selectedApplication?.last_name}</DialogDescription>
           </DialogHeader>
-          
           <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="accept-option">Anstellungsart *</Label>
-              <Select value={acceptOption} onValueChange={setAcceptOption}>
-                <SelectTrigger id="accept-option">
-                  <SelectValue placeholder="Anstellungsart wählen..." />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="freie_wahl">🔓 Freie Wahl (Bewerber wählt selbst)</SelectItem>
-                  <SelectItem value="minijob">Minijob (603€ Basis)</SelectItem>
-                  <SelectItem value="teilzeit">Teilzeit</SelectItem>
-                  <SelectItem value="vollzeit">Vollzeit</SelectItem>
-                  <SelectItem value="freelancer">Freelancer</SelectItem>
-                </SelectContent>
+            <div className="space-y-2"><Label>{tr("Vertragsvorlage", "Contract template")} *</Label>
+              <Select value={templateId} onValueChange={id => {setTemplateId(id);const template=templates.find(t=>t.id===id);setSalary(template?.default_salary == null ? "" : String(template.default_salary));}}>
+                <SelectTrigger><SelectValue placeholder={tr("Vorlage auswählen", "Select template")} /></SelectTrigger>
+                <SelectContent>{templates.map(t=><SelectItem key={t.id} value={t.id}>{t.name} · {t.category} · {t.version}</SelectItem>)}</SelectContent>
               </Select>
-              <p className="text-xs text-muted-foreground">
-                {acceptOption === "freie_wahl" 
-                  ? "Der Bewerber kann Anstellungsart und Startdatum selbst wählen"
-                  : acceptOption 
-                    ? "Anstellungsart und Startdatum sind für den Bewerber vorgegeben"
-                    : ""
-                }
-              </p>
             </div>
-            
-            {/* Startdatum - nur anzeigen bei fester Anstellungsart */}
-            {acceptOption && acceptOption !== "freie_wahl" && (
-              <div className="grid gap-2">
-                <Label htmlFor="start-date">Startdatum *</Label>
-                <Input
-                  id="start-date"
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  min={new Date().toISOString().split('T')[0]}
-                />
-                <p className="text-xs text-muted-foreground">
-                  Das Startdatum wird im Registrierungsformular vorausgefüllt und kann vom Bewerber nicht geändert werden.
-                </p>
-              </div>
-            )}
+            <div className="space-y-2"><Label htmlFor="start-date">{tr("Startdatum", "Start date")} *</Label><Input id="start-date" type="date" value={startDate} onChange={e=>setStartDate(e.target.value)} /></div>
+            <div className="space-y-2"><Label htmlFor="salary">{tr("Vergütung laut Vorlage (€)", "Compensation according to template (€)")} *</Label><Input id="salary" type="number" min="0" max="1000000" step="0.01" value={salary} onChange={e=>setSalary(e.target.value)} /></div>
+            {notice && <p role="alert" className="text-destructive">{notice}</p>}
           </div>
 
           <DialogFooter className="gap-2 sm:gap-0">
@@ -879,10 +801,10 @@ const AdminApplications = () => {
             </Button>
             <Button 
               onClick={handleAcceptApplication}
-              disabled={!acceptOption || (acceptOption !== "freie_wahl" && !startDate) || isProcessing}
-              className="bg-green-600 hover:bg-green-700"
+              disabled={!templateId || !startDate || salary === "" || Number(salary) < 0 || isProcessing}
+              
             >
-              {isProcessing ? "Wird verarbeitet..." : "Akzeptieren & E-Mail senden"}
+              {isProcessing ? tr("Wird verarbeitet…","Processing…") : tr("Bewerbung annehmen","Accept application")}
             </Button>
           </DialogFooter>
         </DialogContent>
