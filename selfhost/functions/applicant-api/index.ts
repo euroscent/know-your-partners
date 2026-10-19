@@ -28,6 +28,8 @@ Deno.serve(async req => {
     const body = await req.json();
     if (body.action === 'login') {
       if (typeof body.username !== 'string' || typeof body.password !== 'string' || body.username.length > 32 || body.password.length > 128) return respond({error:'Invalid login credentials'},400);
+      const {data:allowed,error:limitError}=await admin.rpc('check_brute_force',{_identifier:body.username.trim().toLowerCase(),_action:'applicant_login',_window_minutes:15,_max_attempts:10});
+      if(limitError || !allowed) return respond({error:'Bitte später erneut versuchen / Please try again later'},429);
       const {data:profile,error:lookupError}=await admin.from('profiles').select('id,email').eq('username',body.username.trim().toLowerCase()).maybeSingle();
       if(lookupError || !profile) return respond({error:'Invalid login credentials'},401);
       const {data:account,error:accountError}=await admin.from('applicant_accounts').select('accepted_at').eq('user_id',profile.id).maybeSingle();
@@ -70,9 +72,9 @@ Deno.serve(async req => {
       try {
         const {data:taken,error:lookupError}=await admin.from('profiles').select('id').eq('username',username).maybeSingle();
         if(lookupError) throw lookupError;
-        if(taken) return respond({error:'Benutzername nicht verfügbar / Username unavailable'},409);
+        if(taken) { if(path) await admin.storage.from('verification-documents').remove([path]); return respond({error:'Benutzername nicht verfügbar / Username unavailable'},409); }
         const {data:created,error:createError}=await admin.auth.admin.createUser({email:application.email.toLowerCase(),password,email_confirm:false,ban_duration:'876000h',user_metadata:{first_name:application.first_name,last_name:application.last_name}});
-        if(createError || !created.user) return respond({error:'Konto nicht verfügbar. Andere E-Mail oder Benutzernamen verwenden / Account unavailable; use another email or username'},409);
+        if(createError || !created.user) { if(path) await admin.storage.from('verification-documents').remove([path]); return respond({error:'Konto nicht verfügbar. Andere E-Mail oder Benutzernamen verwenden / Account unavailable; use another email or username'},409); }
         createdId=created.user.id;
         const {error:profileError}=await admin.from('profiles').upsert({id:createdId,email:application.email.toLowerCase(),username});
         if(profileError) throw profileError;
@@ -103,6 +105,8 @@ Deno.serve(async req => {
       const {data:account,error}=await admin.from('applicant_accounts').select('user_id').eq('application_id',input.application_id).maybeSingle();
       if(error) throw error;
       if(!account) return false;
+      const {data:workflow,error:workflowError}=await admin.from('applicant_workflows').select('user_id').eq('application_id',input.application_id).eq('user_id',account.user_id).maybeSingle();
+      if(workflowError || !workflow) throw workflowError || new Error('Accepted workflow required');
       const {error:unlockError}=await admin.auth.admin.updateUserById(account.user_id,{ban_duration:'none',email_confirm:true});
       if(unlockError) throw unlockError;
       const {error:markError}=await admin.from('applicant_accounts').update({accepted_at:new Date().toISOString()}).eq('user_id',account.user_id);
