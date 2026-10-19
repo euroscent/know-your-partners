@@ -1,5 +1,8 @@
 # Roadmap
 
+- [ ] Benutzername und eigenes Passwort im Bewerbungsformular ergänzen
+- [ ] Bewerberlogin bis Admin-Annahme sicher sperren; Anleitung für eigenes Backend und Tests bereitstellen
+
 - [x] Verdeckte Fehler bei der Bewerberannahme aus der Antwort auslesen; Dienst öffentlich erreichbar
 - [ ] Konkrete Annahmeursache im angemeldeten Betrieb bestätigen — erneuter Versuch des Betreibers erforderlich
 
