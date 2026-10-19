@@ -116,7 +116,7 @@ export const EmployeeChat = forwardRef<EmployeeChatRef>((_, ref) => {
           },
           (payload) => {
             const newMessage = payload.new as any;
-            if (newMessage.role === 'admin' && newMessage.user_id === userId) {
+            if (['admin','assistant'].includes(newMessage.role) && newMessage.user_id === userId) {
               setMessages((prev) => prev.some((msg) => msg.id === newMessage.id) ? prev : [
                 ...prev,
                 { role: 'assistant', content: newMessage.message, id: newMessage.id, created_at: newMessage.created_at },
@@ -168,7 +168,7 @@ export const EmployeeChat = forwardRef<EmployeeChatRef>((_, ref) => {
           },
           (payload) => {
             const newMessage = payload.new as any;
-            if (newMessage.role === 'admin' && !newMessage.virtual_employee_id) {
+            if (['admin','assistant'].includes(newMessage.role) && !newMessage.virtual_employee_id) {
               setMessages((prev) => prev.some((msg) => msg.id === newMessage.id) ? prev : [
                 ...prev,
                 { role: 'assistant', content: newMessage.message, id: newMessage.id, created_at: newMessage.created_at },
@@ -233,7 +233,7 @@ export const EmployeeChat = forwardRef<EmployeeChatRef>((_, ref) => {
         async (payload) => {
           const newMessage = payload.new as any;
           // Only notify for admin messages
-          if (newMessage.role === 'admin') {
+          if (['admin','assistant'].includes(newMessage.role)) {
             const isForOpenContact =
               isOpen &&
               selectedContact &&

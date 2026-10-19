@@ -469,7 +469,7 @@ const ChatInbox = () => {
 
   const getReplyAsName = () => {
     if (selectedVirtualEmployeeId === "all") return null;
-    if (selectedVirtualEmployeeId === "hr") return "HR-Team";
+    if (selectedVirtualEmployeeId === "hr") return "ES Assistent";
     return getVirtualEmployeeName(selectedVirtualEmployeeId);
   };
 
@@ -538,8 +538,7 @@ const ChatInbox = () => {
                   key={conv.user_id}
                   onClick={() => {
                     setSelectedUserId(conv.user_id);
-                    // Show all messages by default when opening a conversation
-                    setSelectedVirtualEmployeeId("all");
+                    setSelectedVirtualEmployeeId("hr");
                   }}
                   className={`w-full text-left px-4 py-3 border-b transition-colors ${
                     conv.total_unread > 0 ? "bg-accent/50" : "bg-background"
@@ -620,7 +619,7 @@ const ChatInbox = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">Alle Nachrichten</SelectItem>
-                        <SelectItem value="hr">HR-Team</SelectItem>
+                        <SelectItem value="hr">ES Assistent</SelectItem>
                         {virtualEmployees.map((ve) => (
                           <SelectItem key={ve.id} value={ve.id}>
                             {ve.first_name} {ve.last_name}

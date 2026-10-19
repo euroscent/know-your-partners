@@ -48,6 +48,19 @@ BEGIN
 END $$;
 REVOKE ALL ON FUNCTION public.applicant_submission_allowed(text) FROM PUBLIC,anon,authenticated;
 GRANT EXECUTE ON FUNCTION public.applicant_submission_allowed(text) TO service_role;
+CREATE OR REPLACE FUNCTION public.applicant_global_submission_allowed(_key text) RETURNS boolean
+LANGUAGE plpgsql SECURITY DEFINER SET search_path=public AS $$
+DECLARE total integer;
+BEGIN
+ IF auth.role() IS DISTINCT FROM 'service_role' OR _key IS NULL OR _key !~ '^[a-f0-9]{64}$' THEN RAISE EXCEPTION 'Service required'; END IF;
+ INSERT INTO public.applicant_submission_limits(key,attempts) VALUES(_key,1)
+ ON CONFLICT(key) DO UPDATE SET attempts=CASE WHEN applicant_submission_limits.window_start < now()-interval '1 hour' THEN 1 ELSE applicant_submission_limits.attempts+1 END,
+ window_start=CASE WHEN applicant_submission_limits.window_start < now()-interval '1 hour' THEN now() ELSE applicant_submission_limits.window_start END
+ RETURNING attempts INTO total;
+ RETURN total <= 100;
+END $$;
+REVOKE ALL ON FUNCTION public.applicant_global_submission_allowed(text) FROM PUBLIC,anon,authenticated;
+GRANT EXECUTE ON FUNCTION public.applicant_global_submission_allowed(text) TO service_role;
 DROP POLICY IF EXISTS private_applications_guard ON public.applications;
 CREATE POLICY private_applications_guard ON public.applications AS RESTRICTIVE FOR SELECT TO anon USING(false);
 DROP POLICY IF EXISTS private_application_insert_guard ON public.applications;
