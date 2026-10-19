@@ -29,6 +29,7 @@ import { useI18n, LanguageSwitch } from "@/lib/i18n";
 // Note: Freelancer get different payroll item, handled dynamically
 const getEmployeeItems = (isFreelancer: boolean) => [
   { title: "Dashboard", url: "/dashboard", icon: Home },
+  { title: "Mitarbeiteraufnahme", url: "/dashboard/onboarding", icon: CheckSquare },
   { title: "Mein Postfach", url: "/dashboard/documents", icon: FileText },
   { title: "Bibliothek", url: "/dashboard/library", icon: BookOpen },
   isFreelancer 
@@ -40,6 +41,8 @@ const getEmployeeItems = (isFreelancer: boolean) => [
 // Admin menu items
 const adminOverviewItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
+  { title: "Neue Bewerber", url: "/dashboard/admin/applications", icon: UserPlus },
+  { title: "Verifizierungen", url: "/dashboard/admin/verifications", icon: Shield },
   { title: "Postfach", url: "/dashboard/admin/chat-inbox", icon: MessageCircle },
   { title: "Mitarbeiter", url: "/dashboard/admin/employees", icon: Users },
   { title: "Konto anlegen", url: "/dashboard/admin/create-user", icon: UserPlus },
@@ -50,7 +53,7 @@ const requestItems = [
 ];
 
 const managementItems = [
-  { title: "Taskvorlagen + erstellen", url: "/dashboard/admin/task-management", icon: CheckSquare },
+  { title: "Tasks", url: "/dashboard/admin/task-management", icon: CheckSquare },
   { title: "Taskmails", url: "/dashboard/admin/completions", icon: Trophy },
   { title: "Coupon-Verwaltung", url: "/dashboard/admin/coupons", icon: QrCode },
   { title: "Lohnabrechnungen", url: "/dashboard/admin/payroll", icon: Euro },
@@ -396,7 +399,7 @@ export function AppSidebar() {
                               {unreadMessageCount}
                             </span>
                           )}
-                          {item.title === "Mitarbeiter" && pendingApplicationsCount > 0 && (
+                          {item.title === "Neue Bewerber" && pendingApplicationsCount > 0 && (
                             <span className="bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
                               {pendingApplicationsCount}
                             </span>
