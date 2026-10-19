@@ -38,6 +38,7 @@ import { de } from "date-fns/locale";
 import { Eye, Trash2, Search, Users, Download, Check, X, Calendar, Mail, FileText, Send, UserPlus } from "lucide-react";
 import { formatDateToGerman } from "@/lib/dateUtils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { readFunctionError } from "@/lib/functionError";
 
 interface Application {
   id: string;
@@ -198,7 +199,21 @@ const AdminApplications = () => {
     setIsProcessing(true); setNotice("");
     try {
       const {data,error} = await supabase.functions.invoke("applicant-api",{body:{action:"accept",application_id:selectedApplication.id,template_id:templateId,start_date:startDate,salary:Number(salary),origin:window.location.origin}});
-      if(error || data?.error) throw new Error(data?.error || tr("Annahme fehlgeschlagen. Bewerbungsdienst einrichten.","Acceptance failed. Configure the application service."));
+      if(error || data?.error) {
+        const failure = await readFunctionError(error, data);
+        let message = failure.message;
+        if (message?.includes("APPLICANT_ALLOWED_ORIGINS")) {
+          message = tr(
+            `Diese Website ist für die Bewerberannahme noch nicht freigegeben. Ergänze ${window.location.origin} in der Einstellung APPLICANT_ALLOWED_ORIGINS des Bewerbungsdienstes; vorhandene Adressen beibehalten und mit Komma trennen.`,
+            `This website is not yet allowed to accept applicants. Add ${window.location.origin} to the application service's APPLICANT_ALLOWED_ORIGINS setting; keep existing addresses and separate them with commas.`
+          );
+        } else if (failure.status === 401) {
+          message = tr("Die Anmeldung wurde vom Bewerbungsdienst abgelehnt. Bitte erneut anmelden. Falls der Fehler bleibt, die JWT-Prüfung der Funktion applicant-api kontrollieren; die Funktion prüft den Adminzugang selbst.", "The application service rejected the session. Please sign in again. If this persists, check JWT verification for applicant-api; the function validates admin access itself.");
+        }
+        throw new Error(message || (failure.status === 404
+          ? tr("Der Bewerbungsdienst applicant-api wurde im verbundenen Backend nicht gefunden.", "The applicant-api service was not found in the connected backend.")
+          : tr("Der Bewerbungsdienst konnte nicht erreicht werden. Bitte Verbindung und Funktionsprotokoll von applicant-api prüfen.", "Could not reach the application service. Check the connection and applicant-api function logs.")));
+      }
       const message = data.warning || tr("Bewerbung angenommen und Vertrag bereitgestellt.","Application accepted and contract provided.");
       setNotice(message); toast.success(message); setAcceptDialogOpen(false); fetchApplications();
     } catch(e:any) { setNotice(e.message); } finally {setIsProcessing(false);}
