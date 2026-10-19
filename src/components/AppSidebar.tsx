@@ -22,7 +22,6 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { NotificationBell } from "@/components/admin/NotificationBell";
 import { useI18n, LanguageSwitch } from "@/lib/i18n";
 
 // Employee menu items (for non-admin users) - ohne Meine Aufträge
@@ -531,7 +530,6 @@ export function AppSidebar() {
                     {isAdmin ? t("Administrator") : t("Mitarbeiter")}
                   </span>
                 </div>
-                <NotificationBell />
               </div>
             )}
             {open && (
