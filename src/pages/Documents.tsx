@@ -16,7 +16,6 @@ import { FileText, Download, Calendar, Mail, Inbox, MailOpen, Trash2, Eye, Circl
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { formatContractContent, replaceContractPlaceholders } from "@/lib/formatContractContent";
-import { EmployeeEmailInbox } from "@/components/EmployeeEmailInbox";
 import { ApplicantProgress } from "@/components/ApplicantProgress";
 import { ApplicantWorkflow, loadApplicantWorkflows } from "@/lib/applicantWorkflow";
 
@@ -704,34 +703,18 @@ const Documents = () => {
       <div className="max-w-7xl mx-auto">
         {!isAdmin && <ApplicantProgress compact />}
         <div className="mb-6 flex items-center gap-3">
-          <Inbox className="h-8 w-8 text-primary" />
+          <FileText className="h-8 w-8 text-primary" />
           <div>
-            <h1 className="text-3xl font-bold">Posteingang</h1>
+            <h1 className="text-3xl font-bold">Dokumente</h1>
             <p className="text-muted-foreground mt-1">
-              Ihre Dokumente und E-Mails
+              Ihre Dokumente und Verträge
             </p>
           </div>
         </div>
 
         {/* Main Tabs: Documents vs Emails */}
         {!isAdmin && user && (
-          <Tabs defaultValue="emails" className="space-y-4">
-            <TabsList>
-              <TabsTrigger value="emails" className="gap-2">
-                <Mail className="h-4 w-4" />
-                E-Mails
-              </TabsTrigger>
-              <TabsTrigger value="documents" className="gap-2">
-                <FileText className="h-4 w-4" />
-                Dokumente
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="emails">
-              <EmployeeEmailInbox userId={user.id} />
-            </TabsContent>
-
-            <TabsContent value="documents">
+          <section className="space-y-4">
               {documents.length === 0 ? (
                 <Card className="py-16 text-center">
                   <MailOpen className="h-20 w-20 mx-auto mb-4 opacity-30 text-muted-foreground" />
@@ -763,8 +746,7 @@ const Documents = () => {
                   </div>
                 </Card>
               )}
-            </TabsContent>
-          </Tabs>
+          </section>
         )}
 
         {/* Admin View - same as before */}

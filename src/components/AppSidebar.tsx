@@ -30,7 +30,7 @@ import { useI18n, LanguageSwitch } from "@/lib/i18n";
 const getEmployeeItems = (isFreelancer: boolean) => [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "Mitarbeiteraufnahme", url: "/dashboard/onboarding", icon: CheckSquare },
-  { title: "Mein Postfach", url: "/dashboard/documents", icon: FileText },
+  { title: "Dokumente", url: "/dashboard/documents", icon: FileText },
   { title: "Bibliothek", url: "/dashboard/library", icon: BookOpen },
   isFreelancer 
     ? { title: "Honorarabrechnungen", url: "/dashboard/invoices", icon: Euro }
@@ -43,7 +43,6 @@ const adminOverviewItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "Neue Bewerber", url: "/dashboard/admin/applications", icon: UserPlus },
   { title: "Verifizierungen", url: "/dashboard/admin/verifications", icon: Shield },
-  { title: "Postfach", url: "/dashboard/admin/chat-inbox", icon: MessageCircle },
   { title: "Mitarbeiter", url: "/dashboard/admin/employees", icon: Users },
   { title: "Konto anlegen", url: "/dashboard/admin/create-user", icon: UserPlus },
 ];
@@ -78,7 +77,6 @@ export function AppSidebar() {
   const [isFreelancer, setIsFreelancer] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [verificationRequested, setVerificationRequested] = useState(false);
-  const [unreadMessageCount, setUnreadMessageCount] = useState(0);
   const [pendingApplicationsCount, setPendingApplicationsCount] = useState(0);
   const [pendingTasksCount, setPendingTasksCount] = useState(0);
   const [pendingKycCount, setPendingKycCount] = useState(0);
@@ -120,14 +118,6 @@ export function AppSidebar() {
           // Load counts function
           const loadCounts = async () => {
             if (isAdminUser) {
-              // Load unread message count (only user messages)
-              const { data: unreadMessages } = await supabase
-                .from("chat_messages")
-                .select("id", { count: "exact" })
-                .eq("is_read", false)
-                .eq("role", "user");
-              setUnreadMessageCount(unreadMessages?.length || 0);
-
               // Load pending applications count
               const { data: pendingApplications } = await supabase
                 .from("applications")
@@ -157,16 +147,6 @@ export function AppSidebar() {
 
           // Set up realtime subscriptions for admins
           if (isAdminUser) {
-            // Subscribe to chat messages changes
-            const chatChannel = supabase
-              .channel('chat-changes')
-              .on(
-                'postgres_changes',
-                { event: '*', schema: 'public', table: 'chat_messages' },
-                () => loadCounts()
-              )
-              .subscribe();
-
             // Subscribe to applications changes
             const appsChannel = supabase
               .channel('apps-changes')
@@ -198,7 +178,6 @@ export function AppSidebar() {
               .subscribe();
 
             return () => {
-              supabase.removeChannel(chatChannel);
               supabase.removeChannel(appsChannel);
               supabase.removeChannel(tasksChannel);
               supabase.removeChannel(profilesChannel);
@@ -323,15 +302,6 @@ export function AppSidebar() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Reset chat count when viewing chat inbox
-      if (location.pathname === "/dashboard/admin/chat-inbox" && isAdmin) {
-        await supabase
-          .from("chat_messages")
-          .update({ is_read: true })
-          .eq("is_read", false);
-        setUnreadMessageCount(0);
-      }
-
       // Reset documents count when viewing documents and mark as read in DB
       if (location.pathname === "/dashboard/documents" && user) {
         await supabase
@@ -394,11 +364,6 @@ export function AppSidebar() {
                       {open && (
                         <div className="flex items-center justify-between flex-1">
                           <span>{t(item.title)}</span>
-                          {item.title === "Postfach" && unreadMessageCount > 0 && (
-                            <span className="bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                              {unreadMessageCount}
-                            </span>
-                          )}
                           {item.title === "Neue Bewerber" && pendingApplicationsCount > 0 && (
                             <span className="bg-primary text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center">
                               {pendingApplicationsCount}
