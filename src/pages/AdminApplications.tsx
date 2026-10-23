@@ -35,7 +35,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "@/lib/toast-stub";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
-import { Eye, Trash2, Search, Users, Download, Check, X, Calendar, Mail, FileText, Send, UserPlus } from "lucide-react";
+import { Eye, Trash2, Search, Users, Download, Check, X, Mail, FileText, Send } from "lucide-react";
 import { formatDateToGerman } from "@/lib/dateUtils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { readFunctionError } from "@/lib/functionError";
@@ -236,34 +236,6 @@ const AdminApplications = () => {
     }
   };
 
-  const handleSendMeetingRequest = async (application: Application) => {
-    try {
-      const { error } = await supabase.functions.invoke("send-meeting-request-email", {
-        body: {
-          firstName: application.first_name,
-          lastName: application.last_name,
-          email: application.email,
-        },
-      });
-
-      if (error) throw error;
-
-      // Update the application to mark meeting request as sent
-      const { error: updateError } = await supabase
-        .from("applications")
-        .update({ meeting_requested_at: new Date().toISOString() })
-        .eq("id", application.id);
-
-      if (updateError) throw updateError;
-
-      toast.success("Kennenlern-Gespräch E-Mail wurde erfolgreich gesendet!");
-      fetchApplications(); // Refresh the list
-    } catch (error: any) {
-      console.error("Error sending meeting request:", error);
-      toast.error(error.message || "Fehler beim Senden der E-Mail.");
-    }
-  };
-
   const deleteApplication = async (id: string) => {
     const { error } = await supabase
       .from("applications")
@@ -297,10 +269,6 @@ const AdminApplications = () => {
       console.error("Error sending contract reminder:", error);
       toast.error(error.message || "Fehler beim Senden der Erinnerungs-E-Mail.");
     }
-  };
-
-  const handleConvertToFreelancer = (application: Application) => {
-    openAcceptDialog(application);
   };
 
   const downloadResume = async (resumePath: string, firstName: string, lastName: string) => {
@@ -563,16 +531,6 @@ const AdminApplications = () => {
                           <Eye className="h-4 w-4 mr-1" />
                           Details
                         </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                          onClick={() => handleSendMeetingRequest(app)}
-                          disabled={!!app.meeting_requested_at}
-                        >
-                          <Calendar className="h-4 w-4 mr-1" />
-                          {app.meeting_requested_at ? "Gespräch angefragt" : "Kennenlern-Gespräch"}
-                        </Button>
                         {app.status === "approved" && (
                           <Button
                             size="sm"
@@ -582,17 +540,6 @@ const AdminApplications = () => {
                           >
                             <Mail className="h-4 w-4 mr-1" />
                             Vertragserinnerung
-                          </Button>
-                        )}
-                        {(app.status === "pending" || app.status === "approved") && (
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="text-primary hover:text-primary"
-                            onClick={() => handleConvertToFreelancer(app)}
-                          >
-                            <UserPlus className="h-4 w-4 mr-1" />
-                            {tr("Freelancer-Vertrag auswählen", "Select freelancer contract")}
                           </Button>
                         )}
                         {app.status === "pending" && (
