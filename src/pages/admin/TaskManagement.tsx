@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, MoreVertical, Edit, Copy, Trash2, UserPlus, Clock, ListOrdered, X, ArrowLeft, FileUp, GripVertical, ExternalLink, Image, Upload, Loader2, Download } from "lucide-react";
+import { Plus, MoreVertical, Edit, Copy, Trash2, UserPlus, Clock, ListOrdered, ArrowLeft, GripVertical, ExternalLink, Loader2, Download } from "lucide-react";
 import { toast } from "@/lib/toast-stub";
 import { SortableStepEditor, TaskStep } from "@/components/admin/SortableStepEditor";
 import { format } from "date-fns";
@@ -110,17 +110,13 @@ const TaskManagement = () => {
     due_date: "",
     deadline_days: "3",
     client_id: "",
-    image_url: "",
     branding_url: "",
     primary_color: "",
     secondary_color: "",
     accent_color: "",
     logo_url: "",
     category: "sonstiges",
-    default_info_text: "",
   });
-  const [taskImages, setTaskImages] = useState<string[]>([]);
-  const [uploadingImage, setUploadingImage] = useState(false);
   const [brandingPreview, setBrandingPreview] = useState<{
     primary_color: string;
     secondary_color: string;
@@ -266,18 +262,13 @@ const TaskManagement = () => {
         due_date: task.due_date ? task.due_date.split("T")[0] : "",
         deadline_days: ((task as any).deadline_days ?? 3).toString(),
         client_id: task.client_id || "",
-        image_url: task.image_url || "",
         branding_url: (task as any).branding_url || "",
         primary_color: (task as any).primary_color || "",
         secondary_color: (task as any).secondary_color || "",
         accent_color: (task as any).accent_color || "",
         logo_url: (task as any).logo_url || "",
         category: task.category || "sonstiges",
-        default_info_text: (task as any).default_info_text || "",
       });
-      // Load multiple images
-      const images = (task as any).images;
-      setTaskImages(Array.isArray(images) ? images : []);
       // Show branding preview if task has colors
       if ((task as any).primary_color) {
         setBrandingPreview({
@@ -303,7 +294,6 @@ const TaskManagement = () => {
         due_date: "",
         deadline_days: "3",
         client_id: "",
-        image_url: "",
         branding_url: "",
         primary_color: "",
         secondary_color: "",
@@ -311,9 +301,7 @@ const TaskManagement = () => {
         logo_url: "",
         category: templateTab === "billo" ? "billo" : "sonstiges",
         ...(templateTab === "billo" ? { estimated_hours: "1" } : {}),
-        default_info_text: "",
       });
-      setTaskImages([]);
       setBrandingPreview(null);
       setTaskSteps([]);
     }
@@ -379,15 +367,12 @@ const TaskManagement = () => {
       deadline_days: formData.deadline_days ? Math.max(1, parseInt(formData.deadline_days, 10) || 3) : 3,
       steps: taskSteps,
       client_id: formData.client_id || null,
-      image_url: formData.image_url || null,
-      images: taskImages.length > 0 ? taskImages : [],
       branding_url: formData.branding_url || null,
       primary_color: brandingPreview?.primary_color || formData.primary_color || null,
       secondary_color: brandingPreview?.secondary_color || formData.secondary_color || null,
       accent_color: brandingPreview?.accent_color || formData.accent_color || null,
       logo_url: brandingPreview?.logo || formData.logo_url || null,
       category: formData.category,
-      default_info_text: formData.default_info_text || null,
     };
 
     if (editingTask) {
@@ -918,163 +903,7 @@ const TaskManagement = () => {
                     </Select>
                   </div>
 
-                  <div className="space-y-2 border-t pt-4">
-                    <Label htmlFor="default_info_text">
-                      Fragen und Antworten (Standardtext)
-                    </Label>
-                    <p className="text-xs text-muted-foreground">
-                      Wird beim Befüllen der Demodaten automatisch in das Feld „Info / Fragen und Antworten" eingetragen und kann dort weiter angepasst werden.
-                    </p>
-                    <Textarea
-                      id="default_info_text"
-                      value={formData.default_info_text}
-                      onChange={(e) => setFormData({ ...formData, default_info_text: e.target.value })}
-                      placeholder="z.B. Frage: ...&#10;Antwort: ..."
-                      rows={6}
-                      className="font-mono text-sm"
-                    />
-                  </div>
 
-                  <div className="space-y-3 border-t pt-4">
-                    <Label className="text-base font-semibold flex items-center gap-2">
-                      <Image className="h-4 w-4" />
-                      Auftragsbilder
-                    </Label>
-                    <p className="text-sm text-muted-foreground">
-                      Fügen Sie mehrere Bilder hinzu - sie wechseln sich automatisch alle 5-8 Sekunden in der Demo-Console
-                    </p>
-                    
-                    {/* Image Gallery */}
-                    <div className="flex flex-wrap gap-2">
-                      {taskImages.map((img, idx) => (
-                        <div 
-                          key={idx} 
-                          className="relative w-20 h-20 rounded-lg overflow-hidden border-2 border-muted-foreground/30 group"
-                        >
-                          <img 
-                            src={img} 
-                            alt={`Bild ${idx + 1}`} 
-                            className="w-full h-full object-cover"
-                          />
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            className="absolute top-0.5 right-0.5 h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity"
-                            onClick={() => setTaskImages(prev => prev.filter((_, i) => i !== idx))}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                          <span className="absolute bottom-0.5 left-0.5 text-[9px] font-bold bg-black/60 text-white px-1 rounded">
-                            {idx + 1}
-                          </span>
-                        </div>
-                      ))}
-                      
-                      {/* Add Image Placeholder */}
-                      <label
-                        htmlFor="multi_image_upload"
-                        className="w-20 h-20 rounded-lg border-2 border-dashed border-muted-foreground/30 flex flex-col items-center justify-center bg-muted/50 cursor-pointer hover:bg-muted transition-colors"
-                      >
-                        {uploadingImage ? (
-                          <div className="animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full" />
-                        ) : (
-                          <>
-                            <Plus className="h-5 w-5 text-muted-foreground" />
-                            <span className="text-[10px] text-muted-foreground mt-0.5">Hinzufügen</span>
-                          </>
-                        )}
-                      </label>
-                      <input
-                        id="multi_image_upload"
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        className="hidden"
-                        disabled={uploadingImage}
-                        onChange={async (e) => {
-                          const files = Array.from(e.target.files || []);
-                          if (files.length === 0) return;
-                          
-                          // Filter files by size
-                          const validFiles = files.filter(f => f.size <= 5 * 1024 * 1024);
-                          if (validFiles.length < files.length) {
-                            toast.error(`${files.length - validFiles.length} Bild(er) übersprungen (>5MB)`);
-                          }
-                          if (validFiles.length === 0) return;
-                          
-                          setUploadingImage(true);
-                          const uploaded: string[] = [];
-                          
-                          for (const file of validFiles) {
-                            try {
-                              const fileExt = file.name.split('.').pop();
-                              const fileName = `${crypto.randomUUID()}.${fileExt}`;
-                              const filePath = `task-images/${fileName}`;
-                              
-                              const { error: uploadError } = await supabase.storage
-                                .from("task-files")
-                                .upload(filePath, file, { upsert: true });
-                              
-                              if (uploadError) throw uploadError;
-                              
-                              const { data: { publicUrl } } = supabase.storage
-                                .from("task-files")
-                                .getPublicUrl(filePath);
-                              
-                              uploaded.push(publicUrl);
-                            } catch (error: any) {
-                              console.error("Upload error:", error);
-                            }
-                          }
-                          
-                          if (uploaded.length > 0) {
-                            setTaskImages(prev => [...prev, ...uploaded]);
-                            toast.success(`${uploaded.length} Bild(er) hochgeladen`);
-                          }
-                          setUploadingImage(false);
-                          e.target.value = "";
-                        }}
-                      />
-                    </div>
-                    
-                    {/* URL Input for manual entry */}
-                    <div className="flex gap-2">
-                      <Input
-                        id="image_url_manual"
-                        type="url"
-                        value={formData.image_url}
-                        onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                        placeholder="URL einfügen und Enter drücken"
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' && formData.image_url.trim()) {
-                            e.preventDefault();
-                            setTaskImages(prev => [...prev, formData.image_url.trim()]);
-                            setFormData(prev => ({ ...prev, image_url: "" }));
-                          }
-                        }}
-                        className="flex-1"
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        disabled={!formData.image_url.trim()}
-                        onClick={() => {
-                          if (formData.image_url.trim()) {
-                            setTaskImages(prev => [...prev, formData.image_url.trim()]);
-                            setFormData(prev => ({ ...prev, image_url: "" }));
-                          }
-                        }}
-                      >
-                        <Plus className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    
-                    <p className="text-xs text-muted-foreground">
-                      Max. 5MB pro Bild. {taskImages.length > 0 && <span className="font-medium">{taskImages.length} Bild(er) hinzugefügt</span>}
-                    </p>
-                  </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
