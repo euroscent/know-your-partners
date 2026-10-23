@@ -34,5 +34,5 @@
 - [x] Änderungen lokal prüfen und benötigte Dateien bereitstellen
 - [x] „Passwortlink senden" aus der Bewerberverwaltung entfernt; Bewerber wählen ihren Zugang selbst
 
-- [ ] Postfach, Lohnabrechnungen, Auszahlungs-Freigaben entfernen
-- [ ] ES Assistent entfernen
+- [x] Postfach, Lohnabrechnungen, Auszahlungs-Freigaben entfernen
+- [x] ES Assistent entfernen
