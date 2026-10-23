@@ -12,10 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, MoreVertical, Edit, Copy, Trash2, UserPlus, Clock, ListOrdered, X, ArrowLeft, FileUp, GripVertical, ExternalLink, Image, Upload, Globe, Loader2, Download } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Plus, MoreVertical, Edit, Copy, Trash2, UserPlus, Clock, ListOrdered, X, ArrowLeft, FileUp, GripVertical, ExternalLink, Image, Upload, Loader2, Download } from "lucide-react";
 import { toast } from "@/lib/toast-stub";
-import { DemoConsoleLivePreview } from "@/components/admin/DemoConsoleLivePreview";
 import { SortableStepEditor, TaskStep } from "@/components/admin/SortableStepEditor";
 import { format } from "date-fns";
 import { fetchExportWithFiles, buildExportZip } from "@/lib/exportWithFiles";
@@ -123,7 +121,6 @@ const TaskManagement = () => {
   });
   const [taskImages, setTaskImages] = useState<string[]>([]);
   const [uploadingImage, setUploadingImage] = useState(false);
-  const [extractingBranding, setExtractingBranding] = useState(false);
   const [brandingPreview, setBrandingPreview] = useState<{
     primary_color: string;
     secondary_color: string;
