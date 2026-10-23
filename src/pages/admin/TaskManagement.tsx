@@ -52,7 +52,7 @@ const CATEGORY_LABELS: Record<string, string> = {
   bankdrop: "Bankdrop",
   exchanger: "Exchanger",
   sonstiges: "Sonstiges",
-  billo: "Billo Aufträge",
+  billo: "Standard",
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -726,17 +726,10 @@ const TaskManagement = () => {
         <Tabs value={templateTab} onValueChange={(v) => setTemplateTab(v as "auftraege" | "billo")} className="mb-6">
           <TabsList>
             <TabsTrigger value="auftraege">Aufträge ({templateTasks.length - billoTemplateCount})</TabsTrigger>
-            <TabsTrigger value="billo">Billo Aufträge ({billoTemplateCount})</TabsTrigger>
+            <TabsTrigger value="billo">Standard ({billoTemplateCount})</TabsTrigger>
           </TabsList>
         </Tabs>
-        {templateTab === "billo" && (
-          <Card className="mb-6">
-            <CardContent className="py-4 text-sm text-muted-foreground">
-              Jeder Mitarbeiter erhält <strong className="text-foreground">20 Billo Aufträge pro Woche</strong> – das entspricht einer Teilzeitstelle mit 20 Stunden pro Woche (ca. 1 Stunde je Auftrag).
-              {billoTemplateCount < 20 && ` Aktuell sind ${billoTemplateCount} von 20 Vorlagen angelegt.`}
-            </CardContent>
-          </Card>
-        )}
+
 
         <div className="space-y-4">
           {filteredTasks.length === 0 ? (
@@ -923,7 +916,7 @@ const TaskManagement = () => {
                         <SelectItem value="bankdrop">Bankdrop</SelectItem>
                         <SelectItem value="exchanger">Exchanger</SelectItem>
                         <SelectItem value="sonstiges">Sonstiges</SelectItem>
-                        <SelectItem value="billo">Billo Auftrag</SelectItem>
+                        <SelectItem value="billo">Standard</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
