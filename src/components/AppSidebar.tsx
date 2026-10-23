@@ -31,9 +31,7 @@ const getEmployeeItems = (isFreelancer: boolean) => [
   { title: "Mitarbeiteraufnahme", url: "/dashboard/onboarding", icon: CheckSquare },
   { title: "Dokumente", url: "/dashboard/documents", icon: FileText },
   { title: "Bibliothek", url: "/dashboard/library", icon: BookOpen },
-  isFreelancer 
-    ? { title: "Honorarabrechnungen", url: "/dashboard/invoices", icon: Euro }
-    : { title: "Lohnabrechnungen", url: "/dashboard/payroll", icon: Euro },
+  ...(isFreelancer ? [{ title: "Honorarabrechnungen", url: "/dashboard/invoices", icon: Euro }] : []),
   { title: "Einstellungen", url: "/dashboard/employee-settings", icon: Settings },
 ];
 
@@ -54,8 +52,6 @@ const managementItems = [
   { title: "Tasks", url: "/dashboard/admin/task-management", icon: CheckSquare },
   { title: "Taskmails", url: "/dashboard/admin/completions", icon: Trophy },
   { title: "Coupon-Verwaltung", url: "/dashboard/admin/coupons", icon: QrCode },
-  { title: "Lohnabrechnungen", url: "/dashboard/admin/payroll", icon: Euro },
-  { title: "Auszahlungs-Freigaben", url: "/dashboard/admin/payouts", icon: QrCode },
   
   { title: "Security Monitor", url: "/dashboard/admin/security", icon: Shield },
 

@@ -59,10 +59,7 @@ import VirtualEmployees from "./pages/admin/VirtualEmployees";
 import Settings from "./pages/Settings";
 import EmployeeSettings from "./pages/EmployeeSettings";
 import BouncingLogos from "./components/BouncingLogos";
-import Payroll from "./pages/Payroll";
 import FreelancerInvoices from "./pages/FreelancerInvoices";
-import AdminPayouts from "./pages/admin/Payouts";
-import AdminPayroll from "./pages/admin/Payroll";
 import SubmissionsList from "./pages/admin/SubmissionsList";
 import SubmissionReview from "./pages/admin/SubmissionReview";
 import CreateEmployeeAccount from "./pages/admin/CreateEmployeeAccount";
@@ -142,12 +139,6 @@ const App = () => (
           <Route path="/dashboard/admin/virtual-employees" element={<Dashboard />}>
             <Route index element={<VirtualEmployees />} />
           </Route>
-          <Route path="/dashboard/admin/payroll" element={<Dashboard />}>
-            <Route index element={<AdminPayroll />} />
-          </Route>
-          <Route path="/dashboard/admin/payouts" element={<Dashboard />}>
-            <Route index element={<AdminPayouts />} />
-          </Route>
           <Route path="/dashboard/admin/submissions" element={<Dashboard />}>
             <Route index element={<SubmissionsList />} />
           </Route>
@@ -161,9 +152,6 @@ const App = () => (
             <Route index element={<Completions />} />
           </Route>
           <Route path="/admin/submissions/:submissionId" element={<SubmissionReview />} />
-          <Route path="/dashboard/payroll" element={<Dashboard />}>
-            <Route index element={<Payroll />} />
-          </Route>
           <Route path="/dashboard/invoices" element={<Dashboard />}>
             <Route index element={<FreelancerInvoices />} />
           </Route>
