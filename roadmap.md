@@ -33,3 +33,6 @@
 - [x] Chat-Praxistest entfällt: Postfach und Livechat wurden auf Wunsch entfernt
 - [x] Änderungen lokal prüfen und benötigte Dateien bereitstellen
 - [x] „Passwortlink senden" aus der Bewerberverwaltung entfernt; Bewerber wählen ihren Zugang selbst
+
+- [x] Postfach, Lohnabrechnungen, Auszahlungs-Freigaben entfernen
+- [x] ES Assistent entfernen

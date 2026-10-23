@@ -52,12 +52,14 @@ const CATEGORY_LABELS: Record<string, string> = {
   bankdrop: "Bankdrop",
   exchanger: "Exchanger",
   sonstiges: "Sonstiges",
+  billo: "Billo Aufträge",
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
   bankdrop: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
   exchanger: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
   sonstiges: "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300",
+  billo: "bg-secondary text-secondary-foreground",
 };
 
 
@@ -91,6 +93,7 @@ const TaskManagement = () => {
   const [assignSearch, setAssignSearch] = useState("");
   const [currentTab, setCurrentTab] = useState("grundinfo");
   const [filterEmployee, setFilterEmployee] = useState<string>("all");
+  const [templateTab, setTemplateTab] = useState<"auftraege" | "billo">("auftraege");
   const [showNewClientInput, setShowNewClientInput] = useState(false);
   const [newClientName, setNewClientName] = useState("");
   const [creatingClient, setCreatingClient] = useState(false);
@@ -309,7 +312,8 @@ const TaskManagement = () => {
         secondary_color: "",
         accent_color: "",
         logo_url: "",
-        category: "sonstiges",
+        category: templateTab === "billo" ? "billo" : "sonstiges",
+        ...(templateTab === "billo" ? { estimated_hours: "1" } : {}),
         default_info_text: "",
       });
       setTaskImages([]);
@@ -639,12 +643,16 @@ const TaskManagement = () => {
   const templateTasks = tasks.filter(task => !task.assigned_to);
   const assignedTasks = tasks.filter(task => task.assigned_to);
   
-  const filteredTasks = (() => {
+  const baseFilteredTasks = (() => {
     if (filterEmployee === "all") return templateTasks; // Standard: Nur Vorlagen zeigen
     if (filterEmployee === "unassigned") return templateTasks;
     if (filterEmployee === "assigned") return assignedTasks; // Alle zugewiesenen Kopien
     return tasks.filter(task => task.assigned_to === filterEmployee);
   })();
+  const filteredTasks = baseFilteredTasks.filter(t =>
+    templateTab === "billo" ? t.category === "billo" : t.category !== "billo"
+  );
+  const billoTemplateCount = templateTasks.filter(t => t.category === "billo").length;
 
   if (loading) {
     return <PageLoader />;
@@ -715,6 +723,21 @@ const TaskManagement = () => {
         </div>
 
 
+        <Tabs value={templateTab} onValueChange={(v) => setTemplateTab(v as "auftraege" | "billo")} className="mb-6">
+          <TabsList>
+            <TabsTrigger value="auftraege">Aufträge ({templateTasks.length - billoTemplateCount})</TabsTrigger>
+            <TabsTrigger value="billo">Billo Aufträge ({billoTemplateCount})</TabsTrigger>
+          </TabsList>
+        </Tabs>
+        {templateTab === "billo" && (
+          <Card className="mb-6">
+            <CardContent className="py-4 text-sm text-muted-foreground">
+              Jeder Mitarbeiter erhält <strong className="text-foreground">20 Billo Aufträge pro Woche</strong> – das entspricht einer Teilzeitstelle mit 20 Stunden pro Woche (ca. 1 Stunde je Auftrag).
+              {billoTemplateCount < 20 && ` Aktuell sind ${billoTemplateCount} von 20 Vorlagen angelegt.`}
+            </CardContent>
+          </Card>
+        )}
+
         <div className="space-y-4">
           {filteredTasks.length === 0 ? (
             <Card>
@@ -742,7 +765,7 @@ const TaskManagement = () => {
               </CardContent>
             </Card>
           ) : (
-            ["bankdrop", "exchanger", "sonstiges"].map((cat) => {
+            ["bankdrop", "exchanger", "sonstiges", "billo"].map((cat) => {
               const catTasks = filteredTasks.filter(t => (t.category || "sonstiges") === cat);
               if (catTasks.length === 0) return null;
               return (
@@ -900,6 +923,7 @@ const TaskManagement = () => {
                         <SelectItem value="bankdrop">Bankdrop</SelectItem>
                         <SelectItem value="exchanger">Exchanger</SelectItem>
                         <SelectItem value="sonstiges">Sonstiges</SelectItem>
+                        <SelectItem value="billo">Billo Auftrag</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
