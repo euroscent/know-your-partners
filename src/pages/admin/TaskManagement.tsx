@@ -110,7 +110,6 @@ const TaskManagement = () => {
     due_date: "",
     deadline_days: "3",
     client_id: "",
-    image_url: "",
     branding_url: "",
     primary_color: "",
     secondary_color: "",
