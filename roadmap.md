@@ -35,3 +35,4 @@
 - [x] „Passwortlink senden" aus der Bewerberverwaltung entfernt; Bewerber wählen ihren Zugang selbst
 
 - [ ] Postfach, Lohnabrechnungen, Auszahlungs-Freigaben entfernen
+- [ ] ES Assistent entfernen
