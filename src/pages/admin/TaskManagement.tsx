@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, MoreVertical, Edit, Copy, Trash2, UserPlus, Clock, ListOrdered, X, ArrowLeft, FileUp, GripVertical, ExternalLink, Image, Upload, Loader2, Download } from "lucide-react";
+import { Plus, MoreVertical, Edit, Copy, Trash2, UserPlus, Clock, ListOrdered, ArrowLeft, GripVertical, ExternalLink, Loader2, Download } from "lucide-react";
 import { toast } from "@/lib/toast-stub";
 import { SortableStepEditor, TaskStep } from "@/components/admin/SortableStepEditor";
 import { format } from "date-fns";
@@ -117,10 +117,7 @@ const TaskManagement = () => {
     accent_color: "",
     logo_url: "",
     category: "sonstiges",
-    default_info_text: "",
   });
-  const [taskImages, setTaskImages] = useState<string[]>([]);
-  const [uploadingImage, setUploadingImage] = useState(false);
   const [brandingPreview, setBrandingPreview] = useState<{
     primary_color: string;
     secondary_color: string;
@@ -266,18 +263,13 @@ const TaskManagement = () => {
         due_date: task.due_date ? task.due_date.split("T")[0] : "",
         deadline_days: ((task as any).deadline_days ?? 3).toString(),
         client_id: task.client_id || "",
-        image_url: task.image_url || "",
         branding_url: (task as any).branding_url || "",
         primary_color: (task as any).primary_color || "",
         secondary_color: (task as any).secondary_color || "",
         accent_color: (task as any).accent_color || "",
         logo_url: (task as any).logo_url || "",
         category: task.category || "sonstiges",
-        default_info_text: (task as any).default_info_text || "",
       });
-      // Load multiple images
-      const images = (task as any).images;
-      setTaskImages(Array.isArray(images) ? images : []);
       // Show branding preview if task has colors
       if ((task as any).primary_color) {
         setBrandingPreview({
@@ -303,7 +295,6 @@ const TaskManagement = () => {
         due_date: "",
         deadline_days: "3",
         client_id: "",
-        image_url: "",
         branding_url: "",
         primary_color: "",
         secondary_color: "",
@@ -311,9 +302,7 @@ const TaskManagement = () => {
         logo_url: "",
         category: templateTab === "billo" ? "billo" : "sonstiges",
         ...(templateTab === "billo" ? { estimated_hours: "1" } : {}),
-        default_info_text: "",
       });
-      setTaskImages([]);
       setBrandingPreview(null);
       setTaskSteps([]);
     }
@@ -379,15 +368,12 @@ const TaskManagement = () => {
       deadline_days: formData.deadline_days ? Math.max(1, parseInt(formData.deadline_days, 10) || 3) : 3,
       steps: taskSteps,
       client_id: formData.client_id || null,
-      image_url: formData.image_url || null,
-      images: taskImages.length > 0 ? taskImages : [],
       branding_url: formData.branding_url || null,
       primary_color: brandingPreview?.primary_color || formData.primary_color || null,
       secondary_color: brandingPreview?.secondary_color || formData.secondary_color || null,
       accent_color: brandingPreview?.accent_color || formData.accent_color || null,
       logo_url: brandingPreview?.logo || formData.logo_url || null,
       category: formData.category,
-      default_info_text: formData.default_info_text || null,
     };
 
     if (editingTask) {
